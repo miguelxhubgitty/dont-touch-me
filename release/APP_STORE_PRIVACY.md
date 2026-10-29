@@ -8,7 +8,7 @@ Based on the same version 1.0 source audit as `DATA_SAFETY.md`. No iOS binary ha
 - **Tracking:** No. The game has no cross-app tracking, advertising identifiers, advertising SDKs, or tracking domains.
 - **Account creation / deletion:** No accounts exist in the game.
 - **Permissions:** The gameplay needs no camera, microphone, location, photos, contacts, notifications, or tracking permission. Inspect the generated Info.plist and remove any unnecessary capability or usage-description entries before archiving.
-- **Privacy-policy URL:** Publish and verify the supplied policy page before entering its real HTTPS URL in App Store Connect.
+- **Privacy-policy URL:** Use https://miguelxhubgitty.github.io/dont-touch-me/privacy.html, published and publicly verified. Confirm the declarations as the owner before submission.
 
 ## Required Mac-side verification
 

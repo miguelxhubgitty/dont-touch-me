@@ -1,5 +1,9 @@
 # Validation — 2026-10-29
 
+## Final free-preparation follow-up
+
+See [release/FINAL_AUDIT.md](release/FINAL_AUDIT.md): privacy/support Pages published and verified; existing APK/AAB audited without rebuilding; all 39 original graphics inspected; 237,076 focused desktop release checks and 179 package checks passed. The existing APK also installed and ran in BlueStacks Pie64 (Android 9) at two display profiles; tap reactions, dialogue, sleep/wake and portrait presentation were observed. Original emulator display/security settings were restored/preserved and the test instance closed. No physical device, newer Android OS, iOS build or production credential was used. The game/source/binary hashes are unchanged.
+
 ## Complete publishing-package pass
 
 The latest executed results are in [release/BUILD_REPORT.md](release/BUILD_REPORT.md): all original suites rerun, 179 additional package checks passed (557,525 combined assertions), actual store-sized gameplay renders inspected, final Windows release and signed Android test APK rebuilt, and an unsigned release-mode AAB generated and validated with Google's bundletool. Gameplay code and the 16 reactions are unchanged in this packaging pass. Native mobile tests, production signing, and store submission remain pending.

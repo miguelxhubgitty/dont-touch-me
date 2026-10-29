@@ -1,0 +1,230 @@
+{
+  "audited": "2026-10-29",
+  "files": [
+    {
+      "file": "assets/android/res/mipmap-anydpi-v26/ic_launcher.xml",
+      "bytes": 248,
+      "sha256": "f0ceff8150db3848c40f5057f8afb8b4a54bfd2668ff1a7e26ab5e06f108b8b4"
+    },
+    {
+      "file": "assets/android/res/mipmap-anydpi-v33/ic_launcher.xml",
+      "bytes": 311,
+      "sha256": "12a61b3d728a5fd09dd6d59557b85ce74a855876069e0089cbb0b9c319c83da2"
+    },
+    {
+      "file": "assets/android/res/mipmap-hdpi/ic_launcher_foreground.png",
+      "bytes": 2535,
+      "sha256": "8c02e65ac7502216875a2057e115297c79aad954e86183dd9157967952819fdc"
+    },
+    {
+      "file": "assets/android/res/mipmap-hdpi/ic_launcher_monochrome.png",
+      "bytes": 1801,
+      "sha256": "3ad5b010a24b4cef8c79c008d45ca2a0bdf37b97b886288b66ee8a66dd2384fa"
+    },
+    {
+      "file": "assets/android/res/mipmap-hdpi/ic_launcher.png",
+      "bytes": 1630,
+      "sha256": "dfd36c18fb66ce20503c872e3ec31493b549197d77755c06ca23665acaf29b70"
+    },
+    {
+      "file": "assets/android/res/mipmap-mdpi/ic_launcher_foreground.png",
+      "bytes": 1625,
+      "sha256": "ff71f4b2b79b41b03d78736fe643c0b0c120a6341fefe655fcd37ce4a33988b4"
+    },
+    {
+      "file": "assets/android/res/mipmap-mdpi/ic_launcher_monochrome.png",
+      "bytes": 1132,
+      "sha256": "564c3a5a167066f3c9495de839f6a0f62214bdb1c137c7d880fb3bc2470de594"
+    },
+    {
+      "file": "assets/android/res/mipmap-mdpi/ic_launcher.png",
+      "bytes": 1088,
+      "sha256": "eeb3eaab1f14b44bd8d8b59228274964f2e0adaf30373a0f94c0eead6649c775"
+    },
+    {
+      "file": "assets/android/res/mipmap-xhdpi/ic_launcher_foreground.png",
+      "bytes": 3316,
+      "sha256": "93a50fd7c30d164eec783ee7bab6f85124e76e0ced1db2ef550ddc98ff725a68"
+    },
+    {
+      "file": "assets/android/res/mipmap-xhdpi/ic_launcher_monochrome.png",
+      "bytes": 2366,
+      "sha256": "7b20b80e98ed504d7ab8dee0f6a7b67fbd080c9efc34ff7b3ac741c6fc082970"
+    },
+    {
+      "file": "assets/android/res/mipmap-xhdpi/ic_launcher.png",
+      "bytes": 2145,
+      "sha256": "b04bd9eed78ec80e25969eaef2c67cfb037dc553f0d1ddd3c7557fd09987e033"
+    },
+    {
+      "file": "assets/android/res/mipmap-xxhdpi/ic_launcher_foreground.png",
+      "bytes": 5159,
+      "sha256": "bc552b1e1ba69b6006f49ecec790cdac9721250b9837877534759bb393c1af24"
+    },
+    {
+      "file": "assets/android/res/mipmap-xxhdpi/ic_launcher_monochrome.png",
+      "bytes": 3799,
+      "sha256": "792b737c19e912bd1171b83c1ae7de4aeb9de2bafbaf4d9279a65047e5562cd4"
+    },
+    {
+      "file": "assets/android/res/mipmap-xxhdpi/ic_launcher.png",
+      "bytes": 3240,
+      "sha256": "39f32f992b0d05a17ccdccca6cd5d0ae9aea46cda418c24e3583cdbe6cde8cf3"
+    },
+    {
+      "file": "assets/android/res/mipmap-xxxhdpi/ic_launcher_foreground.png",
+      "bytes": 6961,
+      "sha256": "c6d1f2bc453e83cd71a298039277f6ae17c1dc84890dcdca45c1f36c939fd66d"
+    },
+    {
+      "file": "assets/android/res/mipmap-xxxhdpi/ic_launcher_monochrome.png",
+      "bytes": 5218,
+      "sha256": "8f41bc266580d92884792b691d5a01864e4588684d339a9fa69927622ccde4ff"
+    },
+    {
+      "file": "assets/android/res/mipmap-xxxhdpi/ic_launcher.png",
+      "bytes": 4335,
+      "sha256": "c42cbeed4b613f16762bdbb98bb147c4324459bf0645a0b847072014e1254efb"
+    },
+    {
+      "file": "assets/android/res/values/colors.xml",
+      "bytes": 108,
+      "sha256": "168e02696b00d3ed3a3443648277fb8e8e67fe63836f7a676c162581d93980c8"
+    },
+    {
+      "file": "assets/google-play-feature-1024x500.png",
+      "bytes": 19570,
+      "sha256": "eb3ce329f453fa9fb23ddd9ff28f0b8ba9f32bce06f3766961e0d512488616cf"
+    },
+    {
+      "file": "assets/icons/google-play-512.png",
+      "bytes": 11303,
+      "sha256": "bc5e014e27667a222d68354d71b65e77669579aa74fe69bd46ac9e356b47f6ff"
+    },
+    {
+      "file": "assets/icons/ios/AppIcon.appiconset/AppIcon-1024.png",
+      "bytes": 22296,
+      "sha256": "4b4dfe73463eb1ade9c18344b9b1619e4fd4a9773df9bfb87ab1ba8c883e3f25"
+    },
+    {
+      "file": "assets/icons/ios/AppIcon.appiconset/Contents.json",
+      "bytes": 183,
+      "sha256": "84aab2d4cd479e37090a84fbc549f3b3fe92ec3f716cecc490f48c25bb1341ac"
+    },
+    {
+      "file": "assets/icons/master-1024.png",
+      "bytes": 22296,
+      "sha256": "4b4dfe73463eb1ade9c18344b9b1619e4fd4a9773df9bfb87ab1ba8c883e3f25"
+    },
+    {
+      "file": "assets/manifest.json",
+      "bytes": 6624,
+      "sha256": "ef2798e68e1d0273fd9386a948afc5fce244e25539d0718d33d37a54fbd4c38f"
+    },
+    {
+      "file": "assets/README.md",
+      "bytes": 4852,
+      "sha256": "23d94cdd6f78efd8e8b851e64b0f7652ebb722914a72b2d2b05b377c5ca41b2a"
+    },
+    {
+      "file": "assets/screenshots/google-play/01-calm.png",
+      "bytes": 39004,
+      "sha256": "28e3a9f29b3da29a9f77e64b8d4fb8eea721f248915efaec9e09109a432b61fe"
+    },
+    {
+      "file": "assets/screenshots/google-play/02-annoyed.png",
+      "bytes": 22552,
+      "sha256": "ecbfbcf072af92b0996bcb06ed4736a60b994fe1b8a731f8ce4d99499c04de23"
+    },
+    {
+      "file": "assets/screenshots/google-play/03-angry.png",
+      "bytes": 20020,
+      "sha256": "4e9c445c6d5c4baa303dfbade0da2b6b1860882b439c3b41146d91cc5716ff0b"
+    },
+    {
+      "file": "assets/screenshots/google-play/04-hiding.png",
+      "bytes": 18521,
+      "sha256": "2b337470e6f6825a643b9a66a3271b39203129900a00793a4ba1e8a083b2c487"
+    },
+    {
+      "file": "assets/screenshots/google-play/05-sleeping.png",
+      "bytes": 13589,
+      "sha256": "4f392cd2136758d783d513f0471983303ba059368b40de8a6415c0e909dc2941"
+    },
+    {
+      "file": "assets/screenshots/ipad-reference/01-calm.png",
+      "bytes": 69907,
+      "sha256": "79c2aa624bcb4d56135ab797a8bb3e7a2848aed03baf7528b984862fd0c1826e"
+    },
+    {
+      "file": "assets/screenshots/ipad-reference/02-annoyed.png",
+      "bytes": 39630,
+      "sha256": "bb375257102db1eaa17b61134718905ae3bce4b0355a376d9111e9816fc1b502"
+    },
+    {
+      "file": "assets/screenshots/ipad-reference/03-angry.png",
+      "bytes": 34889,
+      "sha256": "551ae4d59584fd418029832f131986bb4116d9440591397103731b2653c267c9"
+    },
+    {
+      "file": "assets/screenshots/ipad-reference/04-hiding.png",
+      "bytes": 32992,
+      "sha256": "ec9d85528c1eab1930a39334d2682db74a5dadfb608225cd42dd765a4276cade"
+    },
+    {
+      "file": "assets/screenshots/ipad-reference/05-sleeping.png",
+      "bytes": 26047,
+      "sha256": "88594fc97a1b7b7d4a1be107b8890da5bdec99adae1eeaf0193ce92d0b5b1fbf"
+    },
+    {
+      "file": "assets/screenshots/iphone-large-reference/01-calm.png",
+      "bytes": 55475,
+      "sha256": "b2eed9622ecc197c81c7d333322b706df70b17de7752d7c9cf3e8613d35a0226"
+    },
+    {
+      "file": "assets/screenshots/iphone-large-reference/02-annoyed.png",
+      "bytes": 32110,
+      "sha256": "25e1c5a28d983174536d442d4df97ade14253b486574b819d1d106780d591d3d"
+    },
+    {
+      "file": "assets/screenshots/iphone-large-reference/03-angry.png",
+      "bytes": 28579,
+      "sha256": "2c06dd46c9ff36931f3fcab19a94c20603747ab017108c96aae5f71fcbea3944"
+    },
+    {
+      "file": "assets/screenshots/iphone-large-reference/04-hiding.png",
+      "bytes": 26849,
+      "sha256": "e07e88f30118353865654626e142a155c628b5b3611932bb65d1540468e3cfe4"
+    },
+    {
+      "file": "assets/screenshots/iphone-large-reference/05-sleeping.png",
+      "bytes": 21168,
+      "sha256": "d57b74383024575848b85f196de6fa09bf60b4b026b7130214aa8f65171db0f8"
+    },
+    {
+      "file": "assets/screenshots/iphone-medium-reference/01-calm.png",
+      "bytes": 51504,
+      "sha256": "7369a4d42a1faafda6eef0acce596131ab24d75d89a03b512b6337dc16b4b315"
+    },
+    {
+      "file": "assets/screenshots/iphone-medium-reference/02-annoyed.png",
+      "bytes": 27966,
+      "sha256": "7c5c3a64364433ec354c6304d2a3ef816c0f1b43de182428493424a71532fe8e"
+    },
+    {
+      "file": "assets/screenshots/iphone-medium-reference/03-angry.png",
+      "bytes": 24919,
+      "sha256": "861f1e5d95c2adb29166570c2c2de0a92ec2ddcb5bf6c0720146288960e82059"
+    },
+    {
+      "file": "assets/screenshots/iphone-medium-reference/04-hiding.png",
+      "bytes": 23038,
+      "sha256": "d5653fb51084de726bdf700286ea082f69bdb622b48b8acd1ca24a4c8344c010"
+    },
+    {
+      "file": "assets/screenshots/iphone-medium-reference/05-sleeping.png",
+      "bytes": 17977,
+      "sha256": "4409d55f45af36eefe622c6e6b6b61f0a7befd5afc3a8d5c358d18b23e616255"
+    }
+  ]
+}

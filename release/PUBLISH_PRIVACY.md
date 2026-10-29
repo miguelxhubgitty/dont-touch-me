@@ -1,19 +1,24 @@
-# Publish the privacy policy with free GitHub Pages
+# Published privacy policy — maintenance and recovery
 
-Ready-to-host files: `docs/index.html` (support page), `docs/privacy.html` (policy), and `docs/.nojekyll`. No trackers, JavaScript, forms, or external fonts are added. The policy source is `release/PRIVACY_POLICY.md`.
+GitHub Pages is enabled from **main /docs**, with HTTPS enforcement. Both pages were verified publicly without authentication on 2026-10-29:
 
-The repository was verified **public** with its issue tracker enabled on 2026-10-29, so it qualifies for GitHub Pages with GitHub Free. No hosting setting was changed during this task, and no URL is claimed live.
+- Support: https://miguelxhubgitty.github.io/dont-touch-me/
+- Privacy: https://miguelxhubgitty.github.io/dont-touch-me/privacy.html
 
-1. Review and approve `PRIVACY_POLICY.md` as the app operator. Confirm the final binary matches it and the public GitHub issue tracker is a support channel you will monitor. Supply the stores' required working support/review email separately; no email address has been invented.
-2. In the repository, open **Settings > Pages**.
-3. Under **Build and deployment**, select **Deploy from a branch**. Choose branch **main**, folder **/docs**, and save.
-4. Wait for deployment, then open the HTTPS address shown by GitHub. The expected project-site URLs are `https://miguelxhubgitty.github.io/dont-touch-me/` and `https://miguelxhubgitty.github.io/dont-touch-me/privacy.html`; use only the URL that actually loads successfully after deployment.
-5. Verify the policy and support link in a signed-out/private browser on both phone and desktop. Check accessibility and that no login is required to read the policy. The issue tracker requires GitHub sign-in to submit an issue; the game does not.
-6. Paste the tested privacy URL into Google Play's privacy-policy field and Apple's Privacy Policy URL field. Use the verified support page for the support website, and enter a real monitored email where required.
-7. Keep Markdown and HTML policy content synchronized when app practices change. If hosting moves, update every store URL.
+The live policy HTML matched `docs/privacy.html` after newline normalization. There is no remaining hosting activation step for the owner. Use these URLs in the stores; supply a real monitored email where a store requires one.
 
-GitHub hosts these pages under its own website privacy practices; serving a support/policy website is separate from the offline game's behavior. Do not add analytics or contact forms without updating the website disclosures appropriately. GitHub Pages should host this informational material, not be used as a backend or payment service.
+## Updating the policy
 
-If the source repository later becomes private on a free plan, use a separate **public policy-only repository** or another suitable host. Do not make private source public merely to turn on Pages without deciding that explicitly.
+1. Review changed data practices as the operator and update `release/PRIVACY_POLICY.md` and `docs/privacy.html` together. Keep support details current.
+2. Commit/push to main; GitHub Pages deploys the docs folder automatically.
+3. Verify the public HTTPS page still loads and matches the approved text. Update the store disclosures whenever the app's actual practices change.
 
-Official instructions: [creating a GitHub Pages site](https://docs.github.com/en/pages/getting-started-with-github-pages/creating-a-github-pages-site), [publishing source configuration](https://docs.github.com/en/pages/getting-started-with-github-pages/configuring-a-publishing-source-for-your-github-pages-site).
+The source pages contain no JavaScript, forms, analytics or external fonts. GitHub hosting and separately initiated issue-tracker support are subject to GitHub's website policies; they are separate from the offline game. The repository is public; no visibility or access permissions were broadened to publish these pages.
+
+## Recovery only if hosting is disabled later
+
+In the repository's **Settings > Pages**, choose **Deploy from a branch**, branch **main**, folder **/docs**, save and wait for the deployment. Read the actual URL shown by GitHub, then verify the support and privacy pages anonymously before using them in store forms. Do not create a custom domain or paid service merely to restore this existing project site.
+
+If the source repository becomes private on a free plan, decide on a separate public policy-only repository or another suitable free host; do not expose private source just to enable hosting.
+
+Official instructions: [GitHub Pages setup](https://docs.github.com/en/pages/getting-started-with-github-pages/creating-a-github-pages-site), [publishing source](https://docs.github.com/en/pages/getting-started-with-github-pages/configuring-a-publishing-source-for-your-github-pages-site).

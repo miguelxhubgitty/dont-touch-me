@@ -1,5 +1,7 @@
 # Version 1.0 release-package verification
 
+Historical build-generation report for source commit ecdb9bb. For the current published Pages status, Android 9 emulator results and unchanged-artifact audit, see [FINAL_AUDIT.md](FINAL_AUDIT.md). The hosting-pending observations below describe the earlier packaging pass.
+
 Executed 2026-10-29 on Windows using **Godot 4.7.2.stable.official.ed1daf0bf**. Rendering used the Compatibility/OpenGL renderer on NVIDIA GeForce RTX 3080. This is a local-build report, not a store approval or physical-device result.
 
 ## Game preservation and audit

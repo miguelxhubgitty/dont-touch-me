@@ -66,9 +66,9 @@ See CONTENT_RATING.md. Suggested answers are drafts, not assigned ratings. Confi
 
 ## Support and policy fields
 
-- Support website: https://github.com/miguelxhubgitty/dont-touch-me/issues (verified enabled public issue tracker).
+- Support website: https://miguelxhubgitty.github.io/dont-touch-me/ (published and verified); issue tracker linked there.
 - Required store support email: the owner must supply a working monitored address. No address has been invented.
-- Privacy policy source: PRIVACY_POLICY.md; ready-to-host page: ../docs/privacy.html. The GitHub Pages URL is not live until hosting is enabled and checked.
+- Privacy policy URL: https://miguelxhubgitty.github.io/dont-touch-me/privacy.html (published and verified). Source: PRIVACY_POLICY.md and ../docs/privacy.html.
 - Screenshots: assets/screenshots/google-play/ contains actual renderer captures. Apple-sized reference folders require Mac/iOS validation before store use.
 
 ## Character-limit validation

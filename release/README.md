@@ -16,8 +16,11 @@ This folder contains the publishing handoff, not additional gameplay. The projec
 | Executed test/build results | `BUILD_REPORT.md` |
 | Reproducible graphics/notices/validation scripts | `tools/` |
 
-Generated executables, APK, AAB, archives, and SHA-256 manifests belong under ignored `../builds/`. They are **not** downloadable from a source clone. The AAB preparation preset deliberately has no production signature; no production key, developer account, payment, store submission, hosting activation, or physical-device test is represented as completed.
+Generated executables, APK, AAB, archives, and SHA-256 manifests belong under ignored `../builds/`. They are **not** downloadable from a source clone. The AAB preparation preset deliberately has no production signature; no production key, developer account, payment, store submission, or physical-device test is represented as completed. Support/privacy hosting is now published and verified; see PUBLISH_PRIVACY.md.
 
 Apple screenshot dimensions are prepared, but the images are Windows Godot renderer captures, not verified iOS-device captures. Compare/replace them on the Mac before final upload. No gameplay or OS UI was fabricated.
 
 The public repository has no game-code/art license assigned by this task. Commercial publication remains the owner's decision, including ownership and name clearance. Engine and bundled-component notices are generated in `../THIRD_PARTY_NOTICES.txt` and included in app exports.
+
+
+Current handoff: [PACKAGE_INDEX.md](PACKAGE_INDEX.md). Latest unchanged-build audit: [FINAL_AUDIT.md](FINAL_AUDIT.md). Owner-run key procedure: [PRODUCTION_SIGNING.md](PRODUCTION_SIGNING.md). The checklist now contains only owner actions, separated by store.
