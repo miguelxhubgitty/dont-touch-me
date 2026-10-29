@@ -19,6 +19,7 @@ func run() -> void:
 	game.set_process(false)
 	game.rng.seed = 48291
 	check(game.reaction == Blob.Reaction.NONE, "starts idle")
+	check(Blob.DURATIONS.size() == 16, "version 1.0 retains exactly 16 reactions")
 	check(not game.touch_at(Vector2(2, 2)), "background ignores touches")
 	check(game.annoyance == 0, "background does not annoy")
 	for boundary in [0.0, 20.0, 20.01, 50.0, 50.01, 80.0, 80.01, 100.0]:
@@ -52,6 +53,18 @@ func run() -> void:
 		game.advance(0.1)
 		check(game.reaction == Blob.Reaction.NONE, "reaction completes " + str(which))
 		check(game.contains_touch(game.body_position + Vector2(0, -70)), "hitbox follows body")
+	# Cardboard must block touches to the hidden body; visible peek eyes still count.
+	game.asleep = false
+	game.idle_time = 0
+	game.begin_reaction(Blob.Reaction.BOX, game.body_position)
+	game.elapsed = float(Blob.DURATIONS[Blob.Reaction.BOX]) * 0.5
+	game._update_pose()
+	var hidden_annoyance: float = game.annoyance
+	check(not game.touch_at(game.body_position + Vector2(0, -60)), "cardboard occludes hidden body")
+	check(game.annoyance == hidden_annoyance, "touching cardboard does not annoy")
+	check(game.contains_touch(game.body_position + Vector2(28, -148)), "visible peek eyes touchable")
+	game.reaction = Blob.Reaction.NONE
+	game._update_pose()
 	# The widest and most tilted poses also fit at both movement limits.
 	for edge in [190.0, game.last_size.x - 190.0]:
 		for which in Blob.DURATIONS:

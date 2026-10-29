@@ -1,5 +1,22 @@
 # Validation — 2026-10-29
 
+## Final version 1.0 review
+
+Release candidate for physical-device testing; not a claim of store readiness. Original 16 reactions preserved.
+
+- Fixed a reproduced box hit-test bug: cardboard could be tapped through to the hidden body, and visible peek eyes were not touchable. Drawing and hit testing now share the flap geometry. All three regression assertions pass.
+- Final behavior suite: **320,270 checks, 0 failures**. Additional release suite: **237,076 checks, 0 failures** (total **557,346**). The latter dispatches input through real Godot viewports, samples all reactions at four logical phone/tablet aspect ratios, exercises the full 16 × 16 interruption matrix, focus pause/resume, decay/sleep thresholds, and three deterministic mixed-input sessions of 6,000 frames each.
+- Windows renderer: reran and visually inspected all 18 intro/reaction/sleep states and four independent logical aspect ratios (720×1280, 720×1600, 960×1280, 720×1920). Dialogue and poses fit the rendered layouts.
+- Windows x86-64 release executable generated with embedded game data and application/version resources (`Don't Touch Me`, `1.0.0.0`). Interactive desktop check using computer-use mouse input observed tap responses, rapid input, sliding, hiding, recovery, inactivity sleep, and waking. This was a short desktop session, not a complete manual test of every reaction.
+- Final rebuilt Windows executable also completed a 120-frame headless smoke run with exit 0 and no runtime errors. A portable Windows ZIP and local SHA-256 artifact manifest were generated under the ignored `builds/` folder.
+- Android debug APK generated directly through the signing-enabled preset with the existing local debug key. Verified v2/v3 signatures, 16 KB ZIP alignment, and all LOAD segment alignments in both shipped ARM64 native libraries. These are static packaging checks, not a 16 KB device execution test.
+- APK manifest: expected name/package/version, portrait, minimum SDK 24, target SDK 36, ARM64 only, no requested permissions. APK contains no tests, generated builds, or Markdown documentation. Main/adaptive icons and warm startup background configured; opaque 1024-pixel iOS icon prepared.
+- Project import, script loading, export logs, and final automated runs complete without GDScript/runtime errors. Generated output and signing materials are excluded from Git.
+
+Still untested: Android installation/play, mobile frame rate/memory/thermal behavior, device safe areas, iOS build/signing/install, release AAB, and store validation. See `RELEASE_CHECKLIST.md` for the exact remaining steps. No release credentials or device results were invented.
+
+## Initial implementation checks (historical)
+
 Engine: `4.7.2.stable.official.ed1daf0bf`, Windows, OpenGL Compatibility renderer on NVIDIA GeForce RTX 3080.
 
 - Headless editor import and GDScript loading: passed, exit 0. The editor reported missing Android SDK build-tools; no project or script errors remained.

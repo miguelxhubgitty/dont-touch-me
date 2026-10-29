@@ -128,6 +128,18 @@ func choose_reaction() -> int:
 
 func contains_touch(point: Vector2) -> bool:
 	# Test the actual transformed silhouette, never an invisible resting hitbox.
+	if box_amount > 0.0:
+		var box_pos := body_position + Vector2(0, 190 * (1.0 - box_amount))
+		if box_amount > 0.85:
+			for side in [-1.0, 1.0]:
+				var eye_local := (point - box_pos - Vector2(side * 28, -148)) / Vector2(10, 8)
+				if eye_local.length_squared() <= 1.0:
+					return true
+		if Rect2(box_pos + Vector2(-143, -128), Vector2(286, 139)).has_point(point):
+			return false
+		for flap in _box_flaps(box_pos):
+			if Geometry2D.is_point_in_polygon(point, flap):
+				return false
 	var local := (point - body_position).rotated(-body_angle) / body_scale
 	var polygon := _silhouette()
 	return Geometry2D.is_point_in_polygon(local, polygon)
@@ -343,14 +355,21 @@ func _panel(color: Color, radius: int, border := Color.TRANSPARENT) -> StyleBoxF
 	style.anti_aliasing = true
 	return style
 
+func _box_flaps(pos: Vector2) -> Array[PackedVector2Array]:
+	return [
+		PackedVector2Array([pos + Vector2(-143, -128), pos + Vector2(-162, -161), pos + Vector2(-10, -149), pos + Vector2(0, -128)]),
+		PackedVector2Array([pos + Vector2(0, -128), pos + Vector2(16, -150), pos + Vector2(158, -158), pos + Vector2(143, -128)]),
+	]
+
 func _draw_box() -> void:
 	var pos := body_position + Vector2(0, 190 * (1.0 - box_amount))
 	var color := Color("c6a77e")
 	draw_style_box(_panel(color, 5, Color("ae8f67")), Rect2(pos + Vector2(-143, -128), Vector2(286, 139)))
 	draw_line(pos + Vector2(0, -128), pos + Vector2(0, 10), Color("dfc69f"), 32, true)
 	draw_line(pos + Vector2(-143, -126), pos + Vector2(143, -126), Color("997c59"), 3, true)
-	draw_colored_polygon(PackedVector2Array([pos + Vector2(-143, -128), pos + Vector2(-162, -161), pos + Vector2(-10, -149), pos + Vector2(0, -128)]), Color("ddc49f"))
-	draw_colored_polygon(PackedVector2Array([pos + Vector2(0, -128), pos + Vector2(16, -150), pos + Vector2(158, -158), pos + Vector2(143, -128)]), Color("d5b98e"))
+	var flaps := _box_flaps(pos)
+	draw_colored_polygon(flaps[0], Color("ddc49f"))
+	draw_colored_polygon(flaps[1], Color("d5b98e"))
 	_text_center("definitely empty", pos + Vector2(-3, -44), 19, Color("826a4c"))
 	if box_amount > 0.85:
 		for side in [-1.0, 1.0]:

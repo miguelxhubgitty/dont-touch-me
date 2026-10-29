@@ -19,6 +19,7 @@ From this folder (substitute the path to your Godot executable):
 ```text
 godot --headless --path . --editor --import --quit
 godot --headless --path . --script tests/behavior.gd
+godot --headless --path . --script tests/release.gd
 godot --path . --script tests/render.gd
 ```
 
@@ -26,6 +27,10 @@ The behavior suite checks tier boundaries, random coverage, repetition avoidance
 
 ## Android / future iOS
 
-An **unsigned**, ARM64 Android preset is included. Install matching Godot export templates and configure the Android SDK and JDK in the editor before exporting. Create `builds/android/` if needed. The application ID is `com.littlebutterflyproductions.donttouchme`; version is `1.0.0` (code 1). The vector application icon is generated locally. No signing credentials are required to open or test the project; installing an APK on a device requires a signed debug or release build. Turn signing on and configure your own debug keystore when you are ready for device testing. Keystores, local credentials, and builds are ignored by Git.
+An ARM64 Android preset is included, with signing enabled. Install matching Godot export templates and configure the Android SDK, JDK, and local debug keystore in the editor before exporting a debug APK. Create `builds/android/` if needed. The application ID is `com.littlebutterflyproductions.donttouchme`; version is `1.0.0` (code 1). Main and adaptive launcher icons are generated locally. No credentials are required to open or play the project in the editor. Release signing requires your own release/upload key; none is included. Keystores, local credentials, and builds are ignored by Git.
 
 iOS uses the same GDScript/Compatibility renderer and portrait layout. An iOS export will require matching templates, macOS/Xcode and your own signing configuration. No publishing setup is included.
+
+A Windows x86-64 preset exports `builds/windows/DontTouchMe.exe` with embedded game data and version 1.0.0 metadata. Create `builds/windows/` before exporting. No Godot installation is needed to run the exported executable. On the development PC, current test artifacts are `builds/windows/DontTouchMe.exe` and `builds/android/dont-touch-me-debug.apk`; these files are local and are not downloadable from the source repository.
+
+See [TESTING.md](TESTING.md) for observed results and [RELEASE_CHECKLIST.md](RELEASE_CHECKLIST.md) for the remaining store submission steps. Version 1.0 keeps the original 16 reactions; release preparation does not add gameplay.

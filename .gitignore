@@ -18,6 +18,10 @@ test-output/
 *.jks
 *.mobileprovision
 *.p12
+*.p8
+*.pfx
+*.pem
+*.key
 *.log
 
 # Operating system/editor clutter
