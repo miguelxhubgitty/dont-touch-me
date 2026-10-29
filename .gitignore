@@ -1,0 +1,28 @@
+# Godot generated imports, editor state, and shader caches
+.godot/
+.import/
+export.cfg
+export_credentials.cfg
+*.translation
+mono_crash.*.json
+.mono/
+
+# Local exports and signing secrets
+builds/
+test-output/
+*.apk
+*.aab
+*.ipa
+*.pck
+*.keystore
+*.jks
+*.mobileprovision
+*.p12
+*.log
+
+# Operating system/editor clutter
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+*~
