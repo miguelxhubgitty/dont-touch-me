@@ -30,3 +30,5 @@ Version 1.0.0; exactly 16 original reactions. This handoff preserves the existin
 The source/assets are available from the GitHub repository. Binaries/complete local archive are still on the build PC, not uploaded to GitHub Releases. Use your existing remote-PC file-transfer facility to retrieve them; no external binary distribution was added by this task.
 
 No production key, password, certificate secret, store-account credential, app submission, or paid service is included. Do not treat Apple reference renders as device-test evidence.
+
+Integrity check: run `pwsh -File release/tools/verify_inventory.ps1` from a clone or extracted source archive. PNG checksums use the exact binary bytes; XML/JSON/Markdown checksums normalize UTF-8 text to LF so Windows checkout line endings do not create false mismatches. The inventory states each file's hash mode.
