@@ -11,3 +11,9 @@ Engine: `4.7.2.stable.official.ed1daf0bf`, Windows, OpenGL Compatibility rendere
 Not tested: manual desktop playthrough, physical touchscreen interaction, Android APK export/install, or iOS export. Automated input tests exercise the same game handlers but do not establish physical device usability. Android requires local SDK/JDK/templates and a signed debug build for installation. iOS export requires macOS/Xcode and signing configuration.
 
 No known gameplay or GDScript errors remain from these checks.
+
+## Android toolchain follow-up — 2026-10-29
+
+Installed and configured on the development PC: Temurin OpenJDK 17, Android command-line tools, Platform-Tools, SDK Platform and Build-Tools 35 and 36, NDK r28b, CMake 3.10.2, and Godot 4.7.2 stable export templates. Java, command-line tools, and template archives were verified against official SHA-256 checksums. The installed Godot template targets Android SDK 36, so matching SDK 36 packages were added beyond the versions listed by the online setup guide.
+
+The first Android export identified a required project setting: `rendering/textures/vram_compression/import_etc2_astc`. Enabled it and successfully exported an ARM64 Android debug APK. Package metadata confirms the correct application name and ID, version 1.0.0, minimum SDK 24, target SDK 36, and no requested permissions. A standard local debug key is used for the installable test copy; signing credentials and APKs remain outside Git. Physical Android installation/play and iOS export remain untested.
