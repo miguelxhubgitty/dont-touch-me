@@ -34,3 +34,11 @@ iOS uses the same GDScript/Compatibility renderer and portrait layout. An iOS ex
 A Windows x86-64 preset exports `builds/windows/DontTouchMe.exe` with embedded game data and version 1.0.0 metadata. Create `builds/windows/` before exporting. No Godot installation is needed to run the exported executable. On the development PC, current test artifacts are `builds/windows/DontTouchMe.exe` and `builds/android/dont-touch-me-debug.apk`; these files are local and are not downloadable from the source repository.
 
 See [TESTING.md](TESTING.md) for observed results and [RELEASE_CHECKLIST.md](RELEASE_CHECKLIST.md) for the remaining store submission steps. Version 1.0 keeps the original 16 reactions; release preparation does not add gameplay.
+
+## Complete publishing package
+
+[release/README.md](release/README.md) indexes all store graphics, actual gameplay renders, copyable store listings, code-based privacy/rating drafts, policy-hosting pages, and the Mac/Xcode handoff. Release materials are excluded from game exports.
+
+The **Android AAB Unsigned** preset prepares a release-mode bundle with Gradle, target SDK 36, and no production signature. Install the Gradle template using Godot's Android build-template setup (or `--install-android-build-template` with the export command). An unsigned AAB is not ready to upload to Google Play: configure your own upload key, enable signing in a store-upload preset, and validate the signed result. No production key is included or generated.
+
+Engine and bundled-component acknowledgments are in `THIRD_PARTY_NOTICES.txt`, generated using Godot's license metadata. This file is explicitly included in game exports and should accompany the portable Windows build. It does not license the original game's code/art.

@@ -6,6 +6,9 @@ export_credentials.cfg
 *.translation
 mono_crash.*.json
 .mono/
+android/build/
+android/.build_version
+.gradle/
 
 # Local exports and signing secrets
 builds/

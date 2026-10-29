@@ -1,0 +1,281 @@
+{
+	"assets": [
+		{
+			"file": "icons/master-1024.png",
+			"height": 1024,
+			"kind": "master_icon",
+			"opaque": true,
+			"width": 1024
+		},
+		{
+			"file": "icons/google-play-512.png",
+			"height": 512,
+			"kind": "play_icon",
+			"opaque": false,
+			"width": 512
+		},
+		{
+			"file": "icons/ios/AppIcon.appiconset/AppIcon-1024.png",
+			"height": 1024,
+			"kind": "ios_icon",
+			"opaque": true,
+			"width": 1024
+		},
+		{
+			"file": "android/res/mipmap-mdpi/ic_launcher.png",
+			"height": 48,
+			"kind": "android_launcher",
+			"opaque": false,
+			"width": 48
+		},
+		{
+			"file": "android/res/mipmap-mdpi/ic_launcher_foreground.png",
+			"height": 108,
+			"kind": "android_adaptive_foreground",
+			"opaque": false,
+			"width": 108
+		},
+		{
+			"file": "android/res/mipmap-mdpi/ic_launcher_monochrome.png",
+			"height": 108,
+			"kind": "android_monochrome",
+			"opaque": false,
+			"width": 108
+		},
+		{
+			"file": "android/res/mipmap-hdpi/ic_launcher.png",
+			"height": 72,
+			"kind": "android_launcher",
+			"opaque": false,
+			"width": 72
+		},
+		{
+			"file": "android/res/mipmap-hdpi/ic_launcher_foreground.png",
+			"height": 162,
+			"kind": "android_adaptive_foreground",
+			"opaque": false,
+			"width": 162
+		},
+		{
+			"file": "android/res/mipmap-hdpi/ic_launcher_monochrome.png",
+			"height": 162,
+			"kind": "android_monochrome",
+			"opaque": false,
+			"width": 162
+		},
+		{
+			"file": "android/res/mipmap-xhdpi/ic_launcher.png",
+			"height": 96,
+			"kind": "android_launcher",
+			"opaque": false,
+			"width": 96
+		},
+		{
+			"file": "android/res/mipmap-xhdpi/ic_launcher_foreground.png",
+			"height": 216,
+			"kind": "android_adaptive_foreground",
+			"opaque": false,
+			"width": 216
+		},
+		{
+			"file": "android/res/mipmap-xhdpi/ic_launcher_monochrome.png",
+			"height": 216,
+			"kind": "android_monochrome",
+			"opaque": false,
+			"width": 216
+		},
+		{
+			"file": "android/res/mipmap-xxhdpi/ic_launcher.png",
+			"height": 144,
+			"kind": "android_launcher",
+			"opaque": false,
+			"width": 144
+		},
+		{
+			"file": "android/res/mipmap-xxhdpi/ic_launcher_foreground.png",
+			"height": 324,
+			"kind": "android_adaptive_foreground",
+			"opaque": false,
+			"width": 324
+		},
+		{
+			"file": "android/res/mipmap-xxhdpi/ic_launcher_monochrome.png",
+			"height": 324,
+			"kind": "android_monochrome",
+			"opaque": false,
+			"width": 324
+		},
+		{
+			"file": "android/res/mipmap-xxxhdpi/ic_launcher.png",
+			"height": 192,
+			"kind": "android_launcher",
+			"opaque": false,
+			"width": 192
+		},
+		{
+			"file": "android/res/mipmap-xxxhdpi/ic_launcher_foreground.png",
+			"height": 432,
+			"kind": "android_adaptive_foreground",
+			"opaque": false,
+			"width": 432
+		},
+		{
+			"file": "android/res/mipmap-xxxhdpi/ic_launcher_monochrome.png",
+			"height": 432,
+			"kind": "android_monochrome",
+			"opaque": false,
+			"width": 432
+		},
+		{
+			"file": "google-play-feature-1024x500.png",
+			"height": 500,
+			"kind": "feature_graphic",
+			"opaque": true,
+			"width": 1024
+		},
+		{
+			"file": "screenshots/google-play/01-calm.png",
+			"height": 1920,
+			"kind": "actual_gameplay_render",
+			"opaque": true,
+			"width": 1080
+		},
+		{
+			"file": "screenshots/google-play/02-annoyed.png",
+			"height": 1920,
+			"kind": "actual_gameplay_render",
+			"opaque": true,
+			"width": 1080
+		},
+		{
+			"file": "screenshots/google-play/03-angry.png",
+			"height": 1920,
+			"kind": "actual_gameplay_render",
+			"opaque": true,
+			"width": 1080
+		},
+		{
+			"file": "screenshots/google-play/04-hiding.png",
+			"height": 1920,
+			"kind": "actual_gameplay_render",
+			"opaque": true,
+			"width": 1080
+		},
+		{
+			"file": "screenshots/google-play/05-sleeping.png",
+			"height": 1920,
+			"kind": "actual_gameplay_render",
+			"opaque": true,
+			"width": 1080
+		},
+		{
+			"file": "screenshots/iphone-medium-reference/01-calm.png",
+			"height": 2556,
+			"kind": "actual_gameplay_render",
+			"opaque": true,
+			"width": 1179
+		},
+		{
+			"file": "screenshots/iphone-medium-reference/02-annoyed.png",
+			"height": 2556,
+			"kind": "actual_gameplay_render",
+			"opaque": true,
+			"width": 1179
+		},
+		{
+			"file": "screenshots/iphone-medium-reference/03-angry.png",
+			"height": 2556,
+			"kind": "actual_gameplay_render",
+			"opaque": true,
+			"width": 1179
+		},
+		{
+			"file": "screenshots/iphone-medium-reference/04-hiding.png",
+			"height": 2556,
+			"kind": "actual_gameplay_render",
+			"opaque": true,
+			"width": 1179
+		},
+		{
+			"file": "screenshots/iphone-medium-reference/05-sleeping.png",
+			"height": 2556,
+			"kind": "actual_gameplay_render",
+			"opaque": true,
+			"width": 1179
+		},
+		{
+			"file": "screenshots/iphone-large-reference/01-calm.png",
+			"height": 2868,
+			"kind": "actual_gameplay_render",
+			"opaque": true,
+			"width": 1320
+		},
+		{
+			"file": "screenshots/iphone-large-reference/02-annoyed.png",
+			"height": 2868,
+			"kind": "actual_gameplay_render",
+			"opaque": true,
+			"width": 1320
+		},
+		{
+			"file": "screenshots/iphone-large-reference/03-angry.png",
+			"height": 2868,
+			"kind": "actual_gameplay_render",
+			"opaque": true,
+			"width": 1320
+		},
+		{
+			"file": "screenshots/iphone-large-reference/04-hiding.png",
+			"height": 2868,
+			"kind": "actual_gameplay_render",
+			"opaque": true,
+			"width": 1320
+		},
+		{
+			"file": "screenshots/iphone-large-reference/05-sleeping.png",
+			"height": 2868,
+			"kind": "actual_gameplay_render",
+			"opaque": true,
+			"width": 1320
+		},
+		{
+			"file": "screenshots/ipad-reference/01-calm.png",
+			"height": 2752,
+			"kind": "actual_gameplay_render",
+			"opaque": true,
+			"width": 2064
+		},
+		{
+			"file": "screenshots/ipad-reference/02-annoyed.png",
+			"height": 2752,
+			"kind": "actual_gameplay_render",
+			"opaque": true,
+			"width": 2064
+		},
+		{
+			"file": "screenshots/ipad-reference/03-angry.png",
+			"height": 2752,
+			"kind": "actual_gameplay_render",
+			"opaque": true,
+			"width": 2064
+		},
+		{
+			"file": "screenshots/ipad-reference/04-hiding.png",
+			"height": 2752,
+			"kind": "actual_gameplay_render",
+			"opaque": true,
+			"width": 2064
+		},
+		{
+			"file": "screenshots/ipad-reference/05-sleeping.png",
+			"height": 2752,
+			"kind": "actual_gameplay_render",
+			"opaque": true,
+			"width": 2064
+		}
+	],
+	"engine": "4.7.2-stable (official)",
+	"generated_by": "release/tools/generate_assets.gd",
+	"screenshot_provenance": "Actual Blob Node2D rendering in Godot SubViewports on Windows. Deterministic reachable reaction poses; no compositing, captions, fake OS frames, or post-capture resizing. Apple files are dimension-ready reference renders, not verified iOS device captures.",
+	"source_script_sha256": "1092a56ec887a26f583507271484a59285995a62678e68b62f882a27efffc7ec"
+}

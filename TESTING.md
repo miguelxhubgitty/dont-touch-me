@@ -1,5 +1,9 @@
 # Validation — 2026-10-29
 
+## Complete publishing-package pass
+
+The latest executed results are in [release/BUILD_REPORT.md](release/BUILD_REPORT.md): all original suites rerun, 179 additional package checks passed (557,525 combined assertions), actual store-sized gameplay renders inspected, final Windows release and signed Android test APK rebuilt, and an unsigned release-mode AAB generated and validated with Google's bundletool. Gameplay code and the 16 reactions are unchanged in this packaging pass. Native mobile tests, production signing, and store submission remain pending.
+
 ## Final version 1.0 review
 
 Release candidate for physical-device testing; not a claim of store readiness. Original 16 reactions preserved.
