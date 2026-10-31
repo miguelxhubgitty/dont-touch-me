@@ -19,3 +19,11 @@
 
 - Maintain `docs/INTERNAL_DEVELOPER_JOURNAL.md` as the owner's thorough, plain-English, source-grounded explanation of current mechanics, decisions, history, known bugs, tests, and every meaningful change. Update it alongside implementation and verified release changes; keep planned vs shipped distinct. Link exact functions/commits and explain technical concepts digestibly. Never invent unverified details.
 - Public itch.io devlogs are short, curt, dry, candid and focused on annoyances, overlooked problems, and concrete fixes. Write under the byline `— Butter Boy`. Avoid marketing hype, forced positivity, internal implementation minutiae, or unsupported anecdotes. Do not publish posts without approval; keep drafts separate from the internal journal.
+
+## Design-first implementation approval
+
+- For every meaningful gameplay, animation, audio, or system change, first create/update a plan under `plans/` describing player-visible behavior, source-grounded current behavior, proposed pseudocode, edge cases, acceptance criteria, and relevant design choices. Add a Mermaid state/decision flowchart when helpful.
+- Present the proposed pseudocode and trade-offs to the owner and **obtain explicit approval before implementing**. Approval of the overall workflow is not approval of individual future changes.
+- After approval, implement on the gameplay development branch using the approved design. If the code requires a material deviation, document it and request approval rather than silently changing the intended behavior.
+- Validate against the approved pseudocode, update the plan with implementation/test/commit status, and synchronize the detailed internal journal's English explanations, pseudocode, flowcharts, and code references.
+- Trivial typo, formatting, and nonbehavioral documentation corrections may skip full pseudocode review; record meaningful changes as usual.
