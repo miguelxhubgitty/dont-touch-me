@@ -8,6 +8,10 @@
 ## Observation
 During the sleeping/breathing animation, the blob's eyes visibly jump at small intervals, as if they are attempting to hold their position while the body moves. The motion looks unstable rather than smooth.
 
+## Preferred proposed solution
+
+Hide the eyes entirely during the fully sleeping state while retaining the body's breathing animation. Restore them cleanly when waking, with no flicker or snapping. Validate that the result still looks asleep. If the hidden-eye appearance is unsuitable, investigate smooth eye anchoring as an alternative.
+
 ## Investigation and implementation plan
 1. Reproduce and record several uninterrupted sleep/breathing cycles before changing code.
 2. Examine how eye positions and body deformation/transforms are calculated, including any per-frame rounding, discrete steps, independent animation clocks, and transitions.
