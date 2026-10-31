@@ -20,6 +20,10 @@ class PhraseCanvas extends Node2D:
 		draw_string(face, baseline, text, HORIZONTAL_ALIGNMENT_LEFT, -1, BASE_SIZE, Color.WHITE)
 
 func _initialize() -> void:
+	if not OS.get_cmdline_user_args().has("--finalize-release"):
+		printerr("Typography authoring is release-only. See BRANCH_WORKFLOW.md; pass -- --finalize-release after text freeze.")
+		quit(1)
+		return
 	call_deferred("run")
 
 func run() -> void:
@@ -64,5 +68,5 @@ func run() -> void:
 	code += "}\n"
 	var file := FileAccess.open("res://assets/typography/phrases.gd", FileAccess.WRITE)
 	file.store_string(code)
-	print("Rendered 10 complete Ink Free phrases. No font file or individual-glyph atlas included.")
+	print("Rendered %d complete Ink Free phrases. No font file or individual-glyph atlas included." % PHRASES.size())
 	quit()

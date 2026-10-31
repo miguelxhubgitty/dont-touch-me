@@ -1,5 +1,7 @@
 extends SceneTree
 const Typography = preload("res://scripts/typography.gd")
+const Blob = preload("res://scripts/blob.gd")
+const Authoring = preload("res://release/tools/generate_typography.gd")
 var failures := 0
 var checks := 0
 
@@ -14,7 +16,25 @@ func _initialize() -> void:
 	# the title variation below explicitly selects weight 600.
 	check(Typography.TITLE_FONT.get_font_name().begins_with("Space Grotesk"), "Actual title font resolves to Space Grotesk")
 	check(Typography.TITLE_FONT.variation_opentype.get(TextServerManager.get_primary_interface().name_to_tag("wght")) == 600.0, "Title uses semibold weight")
-	check(Typography.Phrases.PHRASES.size() == 10, "All 10 fixed handwritten phrases are supplied")
+	check(Typography.Phrases.PHRASES.size() == Authoring.PHRASES.size(), "Cached phrases match the authoring list")
+	for phrase in Authoring.PHRASES:
+		check(Typography.Phrases.PHRASES.has(phrase), "Authoring phrase has a cached image: " + phrase)
+	# New gameplay dialogue must not silently fall back to a different typeface.
+	var game := Blob.new()
+	root.add_child(game)
+	game.set_process(false)
+	for reaction in Blob.DURATIONS:
+		game.reaction = Blob.Reaction.NONE
+		game.begin_reaction(reaction, game.body_position)
+		if not game.bubble.is_empty():
+			check(Typography.Phrases.PHRASES.has(game.bubble), "Current gameplay dialogue has handwriting: " + game.bubble)
+	game.free()
+	var captions := RegEx.new()
+	captions.compile('_text_center\\("([^"\\n]+)"')
+	for found in captions.search_all(FileAccess.get_file_as_string("res://scripts/blob.gd")):
+		var caption: String = found.get_string(1)
+		if caption not in ["Don't Touch Me", "z"]:
+			check(Typography.Phrases.PHRASES.has(caption), "Current caption/sign has handwriting: " + caption)
 	for phrase in Typography.Phrases.PHRASES:
 		var entry: Dictionary = Typography.Phrases.PHRASES[phrase]
 		var image: Image = entry.texture.get_image()

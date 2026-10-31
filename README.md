@@ -31,6 +31,8 @@ The portrait canvas uses a 720 × 1280 reference with expanding canvas stretch, 
 
 ## Local checks
 
+This branch preserves the approved release presentation, not a separate gameplay line. Develop on `main` with its basic font; start each release from current `main` and apply only the aesthetic layer. Follow [BRANCH_WORKFLOW.md](BRANCH_WORKFLOW.md). Normal tests never regenerate the cached phrase graphics or store captures.
+
 From this folder (substitute the path to your Godot executable):
 
 ```text
