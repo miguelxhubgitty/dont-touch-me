@@ -1,5 +1,7 @@
 # itch.io draft distribution with official Butler
 
+**Current status:** Public Alpha v0.1.0-alpha is published, with separate explicit authorization. See [PUBLICATION_v0.1.0-alpha.md](PUBLICATION_v0.1.0-alpha.md). The setup sections below preserve the historical draft workflow; the adapter now rejects pushes to a listing recorded as published. Future releases require a separately reviewed versioned process.
+
 Follow BRANCH_WORKFLOW.md, WORKFLOW_VALIDATION.md and release/RELEASE_SYSTEM.md. Tooling changes may use a feature branch based on the current release. Merge reviewed tooling into that release normally; do not merge aesthetics into main or move existing tags. No runtime/assets changes or exports are necessary for this setup.
 
 ## Authentication and initial draft

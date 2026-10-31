@@ -6,6 +6,10 @@ spec=importlib.util.spec_from_file_location('itch',ROOT/'release/tools/itch.py')
 itch=importlib.util.module_from_spec(spec); spec.loader.exec_module(itch)
 
 class ItchTests(unittest.TestCase):
+    def test_draft_uploader_rejects_live_listing(self):
+        with patch.object(itch.sys,'argv',['itch.py','push','--confirm-draft-no-payments']), patch.object(itch,'read',side_effect=[{}, {'target':'wandiel/dont-touch-me','publication_status':'published'}]), patch.object(itch.subprocess,'run') as run:
+            with self.assertRaisesRegex(ValueError,'already published'): itch.main()
+            run.assert_not_called()
     def test_path_escape(self):
         with self.assertRaises(ValueError): itch.inside(ROOT,'../escape')
     def test_free_policy(self):

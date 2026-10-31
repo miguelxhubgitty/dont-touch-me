@@ -57,6 +57,8 @@ def main():
     config=read(ROOT/'release/distribution/itch.json')
     target=config['target']
     if target!='wandiel/dont-touch-me': raise ValueError('Unexpected upload destination')
+    if args.command=='push' and config.get('publication_status')=='published':
+        raise ValueError('Draft uploader refuses an already published listing. Future public updates require a separately authorized versioned workflow.')
     out=ROOT/'builds'/('v'+catalog['version'])
     folder=out/'itch'; folder.mkdir(exist_ok=True)
     if args.command=='status':

@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "shared_catalog": "release/catalog/game.json",
-  "policy": "All destinations remain unpublished. Never infer publication from a local build or source push. Publication updates require verified live URL/version/date and owner authorization.",
+  "policy": "Publication updates require owner authorization and verified live URL/version/date. Never infer publication from a local build, source push or upload; only verified destinations are marked published.",
   "platforms": [
     {
       "id": "itch",
@@ -38,9 +38,14 @@
       "requirements_checked": "2026-10-31",
       "console_review_required": true,
       "publication": {
-        "status": "not_published",
-        "live_url": null,
-        "last_successfully_published_version": null
+        "status": "published",
+        "live_url": "https://wandiel.itch.io/dont-touch-me",
+        "last_successfully_published_version": "0.1.0-alpha",
+        "publication_date": "2026-10-31",
+        "release_status": "Public Alpha / In development",
+        "channels": {"windows":{"version":"v0.1.0-alpha","upload_id":20184231,"build_id":2263119},"html5":{"version":"v0.1.0-alpha","upload_id":20184236,"build_id":2263122}},
+        "verification": "Anonymous HTTP 200, public browser render and Windows ZIP download verified; all downloaded ZIP file bytes match original validated package. No payments or donations.",
+        "report": "release/PUBLICATION_v0.1.0-alpha.md"
       },
       "required_assets": [
         "assets.branding",
