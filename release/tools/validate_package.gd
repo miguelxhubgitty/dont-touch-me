@@ -16,8 +16,6 @@ func _initialize() -> void:
 	check(listing.apple_keywords.to_utf8_buffer().size() <= 100, "Apple keyword byte limit")
 	var manifest = JSON.parse_string(FileAccess.get_file_as_string("res://release/assets/manifest.json"))
 	check(manifest.source_script_sha256 == FileAccess.get_sha256("res://scripts/blob.gd"), "screenshots match current gameplay source")
-	for source in manifest.get("typography_sources_sha256", {}):
-		check(manifest.typography_sources_sha256[source] == FileAccess.get_sha256("res://" + source), "captures match typography source: " + source)
 	check(manifest.assets.size() == 39, "complete 39-PNG graphics package")
 	var image_preview := Image.create(864, 2400, false, Image.FORMAT_RGB8)
 	image_preview.fill(Color("dfd8ca"))

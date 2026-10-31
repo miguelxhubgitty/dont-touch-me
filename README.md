@@ -1,23 +1,6 @@
 # Don't Touch Me
 
-A tiny, offline comedy about a blob and its personal space. Built with **Godot 4.7.2 stable**, GDScript, and procedural shapes. The title uses bundled, SIL Open Font License Space Grotesk Semibold; the fixed captions and character dialogue use complete Ink Free phrase graphics. No network dependencies or proprietary font file is included.
-
-## Typography
-
-The actual game renderer and release graphics share `scripts/typography.gd`. Space Grotesk is included with its licence in `assets/fonts/`; the title variation selects weight 600. Ink Free captions, speech, the NO sign and the box label are transparent images of complete words/phrases in `assets/typography/`, measured consistently for centering and speech-bubble sizing. Sleep marks use Space Grotesk.
-
-Ink Free itself is **not** bundled, converted to a font atlas, or looked up at runtime. Microsoft permits complete-phrase graphics in games, but its standard Windows font terms do not permit embedding the font file or a glyph atlas. See https://learn.microsoft.com/en-us/typography/fonts/font-faq (graphic-files-in-games section). This authoring machine resolves the real installed Ink Free face, rather than approximating it with generated artwork.
-
-To change a fixed line, update `release/tools/generate_typography.gd` and regenerate on a Windows authoring machine with Ink Free installed:
-
-```text
-godot --path . --script release/tools/generate_typography.gd
-godot --headless --path . --editor --import --quit
-godot --headless --path . --script tests/typography.gd
-godot --path . --script release/tools/generate_assets.gd
-```
-
-These authoring tools are excluded from game exports. Actual gameplay captures are regenerated from the updated renderer; no screenshot text is painted over afterward. Previously exported APK/AAB/Windows binaries are not updated by editing source; create fresh exports before distributing the new typography.
+A tiny, offline comedy about a blob and its personal space. Built with **Godot 4.7.2 stable**, GDScript, procedural shapes, and the engine's bundled font. No dependencies or downloaded assets.
 
 ## Open and play
 
