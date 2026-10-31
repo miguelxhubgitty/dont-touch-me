@@ -170,10 +170,14 @@ class Release:
         for folder in ['shared','checklists','logs','windows','web','android','linux','macos','ios']:
             (self.out / folder).mkdir(parents=True, exist_ok=True)
 
-    def run(self, command, label, timeout=600, allow_failure=False):
+    def run(self, command, label, timeout=600, allow_failure=False, cwd=None):
         log = self.out / 'logs' / (label + '.log')
         with log.open('w', encoding='utf-8') as stream:
-            result = subprocess.run(list(map(str, command)), cwd=ROOT, stdout=stream, stderr=subprocess.STDOUT, timeout=timeout)
+            env=dict(os.environ)
+            # A persistent Gradle child can keep Godot's Windows console launcher
+            # alive after a completed export. Use a single-use build process.
+            env['GRADLE_OPTS']=(env.get('GRADLE_OPTS','')+' -Dorg.gradle.daemon=false').strip()
+            result = subprocess.run(list(map(str, command)), cwd=cwd or ROOT, env=env, stdout=stream, stderr=subprocess.STDOUT, timeout=timeout)
         text = log.read_text(encoding='utf-8', errors='replace')
         if not allow_failure and (result.returncode or 'SCRIPT ERROR:' in text or re.search(r'(?m)^ERROR:', text)):
             raise RuntimeError(f'{label} failed; see {log}\n' + text[-2000:])
@@ -282,7 +286,7 @@ class Release:
         checks = {'structure':'passed','runtime':'unverified'}
         if key == 'windows':
             if path.read_bytes()[:2] != b'MZ': raise RuntimeError('Not a Windows PE executable')
-            self.run([path,'--headless','--quit-after','120'], 'windows-runtime-smoke')
+            self.run([path,'--headless','--quit-after','120'], 'windows-runtime-smoke', cwd=path.parent)
             checks['runtime'] = 'passed: exported executable, 120 headless frames'
         elif key == 'linux':
             data = path.read_bytes()[:64]
@@ -406,6 +410,7 @@ class Release:
                     entry=self.receipts['artifacts'][available[fmt]]
                     key=available[fmt]
                     location=f'{key}/raw-{key}/' if fmt.endswith('-directory') else entry['package']
+                    if fmt=='macos-app': location+=' (ZIP input; extract .app preserving permissions, then verify on Mac)'
                     body+=f'- [ ] {fmt}: ../{location} — {entry["signing"]}; runtime: {entry["validation"]["runtime"]}\n'
                 else: body+=f'- [ ] {fmt}: MISSING / requires a platform adapter or authorized release signing.\n'
             body+='\n## Before any upload\n\n- [ ] Owner explicitly authorizes this destination; this tool never uploads.\n- [ ] Confirm free/no payments/no donations/no currency integration.\n'

@@ -28,7 +28,8 @@ const { chromium } = require(process.env.PLAYWRIGHT_MODULE_PATH || 'playwright')
     await page.waitForFunction(() => {
       const status = document.getElementById('status');
       const canvas = document.getElementById('canvas');
-      return canvas && canvas.width > 0 && status && getComputedStyle(status).visibility === 'hidden';
+      // Godot 4.7 removes the loading overlay; earlier shells hid it.
+      return canvas && canvas.width > 0 && (!status || getComputedStyle(status).visibility === 'hidden');
     }, null, { timeout: 90000 });
     await page.waitForTimeout(700);
     const canvas = page.locator('#canvas');
