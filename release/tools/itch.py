@@ -69,7 +69,7 @@ def main():
                      'version':'v'+catalog['version'],'target':target+':'+channel})
     (folder/'upload-plan.json').write_text(json.dumps(plan,indent=2),encoding='utf-8')
     text=catalog['store_text']
-    page={'title':text['name'],'publisher':catalog['publisher']['brand'],
+    page={'title':text['name'],'publisher':catalog['publisher']['brand'],'tagline':config['tagline'],
           'version':catalog['phase']+' v'+catalog['version'],'description':text['google_play_full'],
           'release_notes':text['release_notes'],'visibility':'draft','pricing':'No payments',
           'kind':'HTML','embed_width':432,'embed_height':768,
