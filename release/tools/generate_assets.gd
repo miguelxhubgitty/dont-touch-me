@@ -79,8 +79,8 @@ func run() -> void:
 	var typography_sources := {}
 	for source in ["scripts/typography.gd", "assets/typography/phrases.gd", "assets/fonts/SpaceGrotesk.ttf", "assets/fonts/title.tres"]:
 		typography_sources[source] = Fingerprint.digest("res://" + source)
-	for index in range(10):
-		var source := "assets/typography/phrase-%02d.png" % index
+	for phrase in Typography.Phrases.PHRASES.values():
+		var source: String = phrase.texture.resource_path.trim_prefix("res://")
 		typography_sources[source] = Fingerprint.digest("res://" + source)
 	write_text(OUT + "manifest.json", JSON.stringify({
 		"generated_by": "release/tools/generate_assets.gd",
