@@ -43,6 +43,8 @@ try {
     $base = Invoke-CheckedGit -Arguments @('rev-parse', '--verify', '5be3a20475bba305c3ca26a07141771792e6b309^{commit}')
     $tip = Invoke-CheckedGit -Arguments @('rev-parse', '--verify', '--end-of-options', "$AestheticRef^{commit}")
     $null = Invoke-CheckedGit -Arguments @('merge-base', '--is-ancestor', $reviewed, $tip)
+    $null = Invoke-CheckedGit -Arguments @('cat-file', '-e', "$($tip):scripts/typography.gd")
+    $null = Invoke-CheckedGit -Arguments @('cat-file', '-e', "$($tip):assets/fonts/SpaceGrotesk.ttf")
     # Keep this allowlist narrow. Never add project.godot/main.tscn or whole
     # release/assets folders: those would overwrite current gameplay/metadata.
     $paths = @(
