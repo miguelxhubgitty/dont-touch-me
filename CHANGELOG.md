@@ -2,6 +2,7 @@
 
 ## Unreleased — itch.io draft automation
 
+- Verify the existing Windows upload without duplicating it; enable its missing Windows platform tag, preserve HTML5 browser play and record package checksum/download configuration on the same free draft listing.
 - Add an explicit official-Butler adapter for existing validated Windows/html5 packages, four reusable channels, local checksum/provenance guards and append-only attempt receipts. Reject Linux/macOS uploads until native runtime validation passes.
 - Prepare draft page material from the shared catalog, document No payments/draft review, credential handling, channel verification and separate public approval. Preserve Alpha binaries, graphics, fonts and gameplay.
 - Verify Butler v15.32.0 authentication as wandiel and create draft project 5273390 with existing artwork and No payments. Initial upload was rejected by itch.io pending account-email verification; no accepted build or public publication is claimed.

@@ -5,8 +5,8 @@
   "draft_uploads": {
     "version": "v0.1.0-alpha",
     "verified_date": "2026-10-31",
-    "windows": {"upload_id":20184231,"build_id":2263119,"processing":"complete"},
-    "html5": {"upload_id":20184236,"build_id":2263122,"processing":"complete"}
+    "windows": {"upload_id":20184231,"build_id":2263119,"processing":"complete","downloadable":true,"platforms":["windows"],"browser_play":false,"package_sha256":"42a43d68e9c0dd2af46da6dfa6f74d32b4e4c2242a68771dc046900134bcbdc9"},
+    "html5": {"upload_id":20184236,"build_id":2263122,"processing":"complete","browser_play":true}
   },
   "shared_catalog": "release/catalog/game.json",
   "required_visibility": "draft",
