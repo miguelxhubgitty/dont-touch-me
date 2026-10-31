@@ -1,6 +1,6 @@
 # Privacy Policy — Don't Touch Me
 
-Last updated: October 29, 2026. Applies to version 1.0.
+Last updated: October 31, 2026. Release-preparation policy for Public Alpha v0.1.0-alpha. The native game remains offline; browser delivery additionally involves the selected host's normal HTTP requests and policies. No hosting analytics or advertising integration is added by this release.
 
 ## The game
 

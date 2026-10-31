@@ -277,5 +277,22 @@
 	"engine": "4.7.2-stable (official)",
 	"generated_by": "release/tools/generate_assets.gd",
 	"screenshot_provenance": "Actual Blob Node2D rendering in Godot SubViewports on Windows. Deterministic reachable reaction poses; no compositing, captions, fake OS frames, or post-capture resizing. Apple files are dimension-ready reference renders, not verified iOS device captures.",
-	"source_script_sha256": "1092a56ec887a26f583507271484a59285995a62678e68b62f882a27efffc7ec"
+	"source_hash_mode": "text-lf-binary-raw-v1",
+	"source_script_sha256": "1d6abd344ce9c2834785bbdb17ecf408627414a3a10ab88bbbf82525cf3e31c9",
+	"typography_sources_sha256": {
+		"assets/fonts/SpaceGrotesk.ttf": "acad6de1fc93436f5c0f1f4137751ef04f1aea3063e7036535970ffcfbd79f72",
+		"assets/fonts/title.tres": "e14dadf32ec77b912da3c0b2d5658a84de01801993e8c9f1d1cd81433b190f7e",
+		"assets/typography/phrase-00.png": "99eea3f67425674e0a44d779cecfdd2327f2e4acb9046b0100772c9e67859ee3",
+		"assets/typography/phrase-01.png": "9993072da5d1ac6fbf17f794cf12973bbbbed5fbf1fa30ac84a2f2908cd6d3e6",
+		"assets/typography/phrase-02.png": "a434797795616d06e9edeb29886da3c0497d1cfb81106959b8bb73cc8b468b64",
+		"assets/typography/phrase-03.png": "4483f031d4fd7da2289bb36c02340cc796c06c61acb0b95d865a30f0d8cf8a63",
+		"assets/typography/phrase-04.png": "2261f7f958c03ffd703efe62a70b54772b05a174035e63e14fcfa9e91f8f3e1f",
+		"assets/typography/phrase-05.png": "35c9778f285321fc091111c5e4ad43aebad847a7d9a145d017bdb5919fa48e13",
+		"assets/typography/phrase-06.png": "711fa2cf4834f1ff668f02b9c1c5da284f49e0d372752ad0b62e6511308b3606",
+		"assets/typography/phrase-07.png": "bb9ebaf23b2a9cda91707a9dcd86981200e0b2032e88f045cc03ee3501ab0c82",
+		"assets/typography/phrase-08.png": "d080da34cb431ca14dfb3bb903c59dd056dfb7a062eec90ddd3daa817d69cf79",
+		"assets/typography/phrase-09.png": "e8c1b934cf214e9130e2dbdfb18187201e3f15bfd125225a3539515a1a1f7f6d",
+		"assets/typography/phrases.gd": "ab16684961add94adfa9140ce3b053d6c9ff783b35756bdda6aa1ff2ef4b1be9",
+		"scripts/typography.gd": "b7256876d0f9dce876f7fa5f83994dacdcde7e5097c9e98be8a474b52e46fbc8"
+	}
 }
