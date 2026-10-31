@@ -73,6 +73,21 @@ try {
         Invoke-Git -Arguments @('commit', '--quiet', '-m', 'Fixture: verify staged typography integration')
         Assert-Rejected { & ./release/tools/apply_aesthetics.ps1 -AestheticRef $aesthetic -CheckOnly } 'already present'
         Assert-Workflow (-not (Invoke-Git -Arguments @('status', '--porcelain'))) 'Fixture ends clean'
+
+        # A real overlapping font edit must be rejected before touching files,
+        # including when the caller omits CheckOnly.
+        Invoke-Git -Arguments @('switch', '--quiet', '-c', 'release/workflow-conflict', $main)
+        $blobPath = Join-Path $fixture 'scripts/blob.gd'
+        [IO.File]::WriteAllText($blobPath, [IO.File]::ReadAllText($blobPath).Replace('font = ThemeDB.fallback_font', 'font = SystemFont.new()'))
+        Invoke-Git -Arguments @('add', 'scripts/blob.gd')
+        Invoke-Git -Arguments @('commit', '--quiet', '-m', 'Fixture: simulate overlapping font edit')
+        $beforeIndex = Invoke-Git -Arguments @('write-tree')
+        $blobHash = (Get-FileHash -LiteralPath $blobPath).Hash
+        Assert-Rejected { & ./release/tools/apply_aesthetics.ps1 -AestheticRef $aesthetic } 'Git failed'
+        Assert-Workflow ((Invoke-Git -Arguments @('write-tree')) -eq $beforeIndex) 'Conflict preflight preserves real index'
+        Assert-Workflow ((Get-FileHash -LiteralPath $blobPath).Hash -eq $blobHash) 'Conflict preflight preserves gameplay file'
+        Assert-Workflow (-not (Invoke-Git -Arguments @('status', '--porcelain'))) 'Rejected conflict leaves tree clean'
+        Assert-Workflow (-not (Test-Path -LiteralPath 'scripts/typography.gd')) 'Rejected conflict leaves no partial typography resources'
         Write-Output "Workflow: $checks checks passed; local fixture retained at $fixture"
     } finally { Pop-Location }
 } finally { Pop-Location }
