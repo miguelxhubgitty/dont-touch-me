@@ -3,6 +3,7 @@ extends SceneTree
 ## Screenshots come from the existing Blob renderer, with no image compositing.
 const Blob = preload("res://scripts/blob.gd")
 const Fingerprint = preload("res://release/tools/source_fingerprint.gd")
+const Typography = preload("res://scripts/typography.gd")
 const OUT := "res://release/assets/"
 const PAPER := Color("f6f2e9")
 var records: Array[Dictionary] = []
@@ -11,10 +12,9 @@ var failed := false
 class FeatureGraphic extends Node2D:
 	func _draw() -> void:
 		draw_rect(Rect2(0, 0, 1024, 500), Color("f6f2e9"))
-		var font := ThemeDB.fallback_font
-		draw_string(font, Vector2(72, 219), "Don't Touch Me", HORIZONTAL_ALIGNMENT_LEFT, -1, 65, Color("202124"))
-		draw_string(font, Vector2(75, 269), "a little personal space, please.", HORIZONTAL_ALIGNMENT_LEFT, -1, 24, Color("7f786c"))
-		draw_string(font, Vector2(75, 412), "A tiny interactive comedy.", HORIZONTAL_ALIGNMENT_LEFT, -1, 19, Color("7f786c"))
+		Typography.draw_text(self, "Don't Touch Me", Vector2(72, 219), 65, Color("202124"), true)
+		Typography.draw_text(self, "a little personal space, please.", Vector2(75, 269), 24, Color("7f786c"))
+		Typography.draw_text(self, "A tiny interactive comedy.", Vector2(75, 412), 19, Color("7f786c"))
 
 func _initialize() -> void:
 	if not OS.get_cmdline_user_args().has("--finalize-release"):
@@ -76,11 +76,18 @@ func run() -> void:
 	for target in targets:
 		for situation in ["01-calm", "02-annoyed", "03-angry", "04-hiding", "05-sleeping"]:
 			await capture(target, targets[target], situation)
+	var typography_sources := {}
+	for source in ["scripts/typography.gd", "assets/typography/phrases.gd", "assets/fonts/SpaceGrotesk.ttf", "assets/fonts/title.tres"]:
+		typography_sources[source] = Fingerprint.digest("res://" + source)
+	for phrase in Typography.Phrases.PHRASES.values():
+		var source: String = phrase.texture.resource_path.trim_prefix("res://")
+		typography_sources[source] = Fingerprint.digest("res://" + source)
 	write_text(OUT + "manifest.json", JSON.stringify({
 		"generated_by": "release/tools/generate_assets.gd",
 		"engine": Engine.get_version_info().string,
 		"source_script_sha256": Fingerprint.digest("res://scripts/blob.gd"),
 		"source_hash_mode": Fingerprint.MODE,
+		"typography_sources_sha256": typography_sources,
 		"screenshot_provenance": "Actual Blob Node2D rendering in Godot SubViewports on Windows. Deterministic reachable reaction poses; no compositing, captions, fake OS frames, or post-capture resizing. Apple files are dimension-ready reference renders, not verified iOS device captures.",
 		"assets": records,
 	}, "\t"))
