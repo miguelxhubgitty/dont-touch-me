@@ -7,3 +7,10 @@
 - Regenerate typography-dependent assets once after gameplay/text freeze, using the explicit `--finalize-release` authoring flag. Validate before exporting fresh binaries.
 - Do not merge the aesthetic/release branch wholesale into `main`. Backport only focused gameplay fixes, keeping basic-font development intact.
 - Preserve history; no resets, force pushes, moved tags or automatic publication. Store credentials stay out of Git. Changes in this repository do not authorize website/business repository changes.
+
+## Planning and tracking
+
+- Before changing gameplay, check `GAME_ROADMAP.md` and the relevant files under `plans/` for proposed features and reported bugs.
+- Treat newly reported bugs and feature ideas as **plans**, not as authorization to immediately implement, regenerate assets, or change a published release. Record a focused plan with observed behavior, investigation, acceptance criteria and target release when appropriate.
+- Keep planning commits distinct from implementation commits. When implementing an approved item, update its status and reference the implementation commit; do not mark an item complete without validation.
+- Preserve the development/release branch rules above and never silently alter an existing published build.
