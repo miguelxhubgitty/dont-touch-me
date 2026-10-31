@@ -8,13 +8,13 @@ The actual game renderer and release graphics share `scripts/typography.gd`. Spa
 
 Ink Free itself is **not** bundled, converted to a font atlas, or looked up at runtime. Microsoft permits complete-phrase graphics in games, but its standard Windows font terms do not permit embedding the font file or a glyph atlas. See https://learn.microsoft.com/en-us/typography/fonts/font-faq (graphic-files-in-games section). This authoring machine resolves the real installed Ink Free face, rather than approximating it with generated artwork.
 
-To change a fixed line, update `release/tools/generate_typography.gd` and regenerate on a Windows authoring machine with Ink Free installed:
+Only after gameplay/text freeze on `release/<version>`, reconcile fixed lines in `release/tools/generate_typography.gd` and regenerate once on a Windows authoring machine with Ink Free installed. Follow [BRANCH_WORKFLOW.md](BRANCH_WORKFLOW.md); do not author images during normal `main` development:
 
 ```text
-godot --path . --script release/tools/generate_typography.gd
+godot --path . --script release/tools/generate_typography.gd -- --finalize-release
 godot --headless --path . --editor --import --quit
 godot --headless --path . --script tests/typography.gd
-godot --path . --script release/tools/generate_assets.gd
+godot --path . --script release/tools/generate_assets.gd -- --finalize-release
 ```
 
 These authoring tools are excluded from game exports. Actual gameplay captures are regenerated from the updated renderer; no screenshot text is painted over afterward. Previously exported APK/AAB/Windows binaries are not updated by editing source; create fresh exports before distributing the new typography.
@@ -32,6 +32,8 @@ The portrait canvas uses a 720 × 1280 reference with expanding canvas stretch, 
 ## Local checks
 
 This branch preserves the approved release presentation, not a separate gameplay line. Develop on `main` with its basic font; start each release from current `main` and apply only the aesthetic layer. Follow [BRANCH_WORKFLOW.md](BRANCH_WORKFLOW.md). Normal tests never regenerate the cached phrase graphics or store captures.
+
+Current branch/integration results: [WORKFLOW_VALIDATION.md](WORKFLOW_VALIDATION.md).
 
 From this folder (substitute the path to your Godot executable):
 
