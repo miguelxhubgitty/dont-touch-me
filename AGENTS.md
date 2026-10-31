@@ -14,3 +14,8 @@
 - Treat newly reported bugs and feature ideas as **plans**, not as authorization to immediately implement, regenerate assets, or change a published release. Record a focused plan with observed behavior, investigation, acceptance criteria and target release when appropriate.
 - Keep planning commits distinct from implementation commits. When implementing an approved item, update its status and reference the implementation commit; do not mark an item complete without validation.
 - Preserve the development/release branch rules above and never silently alter an existing published build.
+
+## Development journal and public devlogs
+
+- Maintain `docs/INTERNAL_DEVELOPER_JOURNAL.md` as the owner's thorough, plain-English, source-grounded explanation of current mechanics, decisions, history, known bugs, tests, and every meaningful change. Update it alongside implementation and verified release changes; keep planned vs shipped distinct. Link exact functions/commits and explain technical concepts digestibly. Never invent unverified details.
+- Public itch.io devlogs are short, curt, dry, candid and focused on annoyances, overlooked problems, and concrete fixes. Write under the byline `— Butter Boy`. Avoid marketing hype, forced positivity, internal implementation minutiae, or unsupported anecdotes. Do not publish posts without approval; keep drafts separate from the internal journal.
