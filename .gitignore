@@ -27,6 +27,9 @@ test-output/
 *.pfx
 *.pem
 *.key
+butler_creds
+.env
+.env.*
 *.log
 
 # Operating system/editor clutter

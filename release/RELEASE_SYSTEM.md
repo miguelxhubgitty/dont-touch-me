@@ -1,6 +1,6 @@
 # Local multi-platform release system
 
-This is a local, free Public Alpha preparation system, not a store uploader. No account, payment, signing identity or distribution publication is created. Follow `../BRANCH_WORKFLOW.md` first: current gameplay from main, a fresh `release/v<version>` branch and the reviewed aesthetic patch. Never merge release presentation into main.
+The core system prepares free Public Alpha artifacts offline. The separately invoked [itch.io Butler adapter](ITCH_PUBLISHING.md) can upload verified packages to an operator-reviewed draft; it never publishes a page. Follow `../BRANCH_WORKFLOW.md` first: current gameplay from main, a fresh `release/v<version>` branch and the reviewed aesthetic patch. Never merge release presentation into main.
 
 ## Canonical editable information
 
