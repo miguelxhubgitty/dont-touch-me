@@ -50,8 +50,9 @@ func _initialize() -> void:
 		check(not gameplay.contains(forbidden), "offline/no-persistence source check: " + forbidden)
 	var presets := ConfigFile.new()
 	check(presets.load("res://export_presets.cfg") == OK, "export presets load")
-	for index in range(3):
-		var section := "preset.%d" % index
+	for section in presets.get_sections():
+		if not section.begins_with("preset.") or section.ends_with(".options"):
+			continue
 		check(str(presets.get_value(section, "exclude_filter")).contains("release/*"), "release material excluded from game")
 		check(str(presets.get_value(section, "include_filter")).contains("THIRD_PARTY_NOTICES.txt"), "license notices included")
 		if FileAccess.file_exists("res://assets/fonts/OFL-Space-Grotesk.txt"):

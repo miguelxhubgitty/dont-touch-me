@@ -1,0 +1,1491 @@
+{
+  "schema_version": 1,
+  "shared_catalog": "release/catalog/game.json",
+  "policy": "All destinations remain unpublished. Never infer publication from a local build or source push. Publication updates require verified live URL/version/date and owner authorization.",
+  "platforms": [
+    {
+      "id": "itch",
+      "name": "itch.io",
+      "submission_url": "https://itch.io/game/new",
+      "accepted_formats": [
+        "windows-zip",
+        "web-zip",
+        "linux-zip",
+        "macos-zip",
+        "android-release-apk"
+      ],
+      "shared_material": [
+        "store_text",
+        "publisher",
+        "assets",
+        "content",
+        "privacy",
+        "licenses",
+        "rights",
+        "release_notes",
+        "pricing"
+      ],
+      "overrides": {
+        "cover": "release/catalog/branding/itch-cover-630x500.png (shared 315:250 actual-renderer cover)"
+      },
+      "prerequisites": [
+        "Owner-controlled account, accurate legal publisher identity, terms acceptance and explicit publication authorization.",
+        "Owner confirms rights, audience/rating, support/privacy URLs and free/no-payments setting.",
+        "HTML5 ZIP must have index.html at root; disable payments/donations. Debug APK is testing-only, not the Android store package."
+      ],
+      "requirements_source": "https://itch.io/docs/creators/getting-started",
+      "requirements_checked": "2026-10-31",
+      "console_review_required": true,
+      "publication": {
+        "status": "not_published",
+        "live_url": null,
+        "last_successfully_published_version": null
+      },
+      "required_assets": [
+        "assets.branding",
+        "assets.screenshots",
+        "licenses"
+      ],
+      "required_metadata": [
+        "store_text",
+        "publisher",
+        "content",
+        "privacy",
+        "release_notes",
+        "pricing"
+      ],
+      "account_requirements": [
+        "Owner-controlled account, accurate legal publisher identity, terms acceptance and explicit publication authorization."
+      ],
+      "signing_requirements": [
+        "See artifact signing status; confirm destination-specific requirements"
+      ],
+      "sdk_requirements": [
+        "No added runtime SDK; native export/platform toolchain prerequisites still apply"
+      ],
+      "approval_requirements": [
+        "Owner upload/publication authorization and applicable platform verification/review required"
+      ]
+    },
+    {
+      "id": "gamejolt",
+      "name": "Game Jolt",
+      "submission_url": "https://gamejolt.com/dashboard/games",
+      "accepted_formats": [
+        "windows-zip",
+        "web-zip",
+        "linux-zip",
+        "macos-zip"
+      ],
+      "shared_material": [
+        "store_text",
+        "publisher",
+        "assets",
+        "content",
+        "privacy",
+        "licenses",
+        "rights",
+        "release_notes",
+        "pricing"
+      ],
+      "overrides": {},
+      "prerequisites": [
+        "Owner-controlled account, accurate legal publisher identity, terms acceptance and explicit publication authorization.",
+        "Owner confirms rights, audience/rating, support/privacy URLs and free/no-payments setting.",
+        "Configure game/package/release, thumbnail and maturity rating; verify current creator-console rules."
+      ],
+      "requirements_source": "https://gamejolt.com/dashboard/games",
+      "requirements_checked": null,
+      "console_review_required": true,
+      "publication": {
+        "status": "not_published",
+        "live_url": null,
+        "last_successfully_published_version": null
+      },
+      "required_assets": [
+        "assets.branding",
+        "assets.screenshots",
+        "licenses"
+      ],
+      "required_metadata": [
+        "store_text",
+        "publisher",
+        "content",
+        "privacy",
+        "release_notes",
+        "pricing"
+      ],
+      "account_requirements": [
+        "Owner-controlled account, accurate legal publisher identity, terms acceptance and explicit publication authorization."
+      ],
+      "signing_requirements": [
+        "See artifact signing status; confirm destination-specific requirements"
+      ],
+      "sdk_requirements": [
+        "No added runtime SDK; native export/platform toolchain prerequisites still apply"
+      ],
+      "approval_requirements": [
+        "Owner upload/publication authorization and applicable platform verification/review required"
+      ]
+    },
+    {
+      "id": "newgrounds",
+      "name": "Newgrounds",
+      "submission_url": "https://www.newgrounds.com/projects/games",
+      "accepted_formats": [
+        "web-zip"
+      ],
+      "shared_material": [
+        "store_text",
+        "publisher",
+        "assets",
+        "content",
+        "privacy",
+        "licenses",
+        "rights",
+        "release_notes",
+        "pricing"
+      ],
+      "overrides": {},
+      "prerequisites": [
+        "Owner-controlled account, accurate legal publisher identity, terms acceptance and explicit publication authorization.",
+        "Owner confirms rights, audience/rating, support/privacy URLs and free/no-payments setting.",
+        "Root index.html; touchscreen declaration; community judgment."
+      ],
+      "requirements_source": "https://www.newgrounds.com/wiki/help-information/content-submission/games-and-movies",
+      "requirements_checked": "2026-10-31",
+      "console_review_required": true,
+      "publication": {
+        "status": "not_published",
+        "live_url": null,
+        "last_successfully_published_version": null
+      },
+      "required_assets": [
+        "assets.branding",
+        "assets.screenshots",
+        "licenses"
+      ],
+      "required_metadata": [
+        "store_text",
+        "publisher",
+        "content",
+        "privacy",
+        "release_notes",
+        "pricing"
+      ],
+      "account_requirements": [
+        "Owner-controlled account, accurate legal publisher identity, terms acceptance and explicit publication authorization."
+      ],
+      "signing_requirements": [
+        "See artifact signing status; confirm destination-specific requirements"
+      ],
+      "sdk_requirements": [
+        "No added runtime SDK; native export/platform toolchain prerequisites still apply"
+      ],
+      "approval_requirements": [
+        "Owner upload/publication authorization and applicable platform verification/review required"
+      ]
+    },
+    {
+      "id": "github-releases",
+      "name": "GitHub Releases",
+      "submission_url": "https://github.com/miguelxhubgitty/dont-touch-me/releases/new",
+      "accepted_formats": [
+        "windows-zip",
+        "web-zip",
+        "linux-zip",
+        "macos-zip",
+        "android-debug-apk"
+      ],
+      "shared_material": [
+        "store_text",
+        "publisher",
+        "assets",
+        "content",
+        "privacy",
+        "licenses",
+        "rights",
+        "release_notes",
+        "pricing"
+      ],
+      "overrides": {},
+      "prerequisites": [
+        "Owner-controlled account, accurate legal publisher identity, terms acceptance and explicit publication authorization.",
+        "Create public Release only after separate authorization; attach manifests/checksums. Mark alpha prerelease; describe debug/unsigned limitations."
+      ],
+      "requirements_source": "https://github.com/miguelxhubgitty/dont-touch-me/releases/new",
+      "requirements_checked": null,
+      "console_review_required": true,
+      "publication": {
+        "status": "not_published",
+        "live_url": null,
+        "last_successfully_published_version": null
+      },
+      "required_assets": [
+        "assets.branding",
+        "assets.screenshots",
+        "licenses"
+      ],
+      "required_metadata": [
+        "store_text",
+        "publisher",
+        "content",
+        "privacy",
+        "release_notes",
+        "pricing"
+      ],
+      "account_requirements": [
+        "Owner-controlled account, accurate legal publisher identity, terms acceptance and explicit publication authorization."
+      ],
+      "signing_requirements": [
+        "See artifact signing status; confirm destination-specific requirements"
+      ],
+      "sdk_requirements": [
+        "No added runtime SDK; native export/platform toolchain prerequisites still apply"
+      ],
+      "approval_requirements": [
+        "Owner upload/publication authorization and applicable platform verification/review required"
+      ]
+    },
+    {
+      "id": "github-pages",
+      "name": "GitHub Pages (game)",
+      "submission_url": "https://github.com/miguelxhubgitty/dont-touch-me/settings/pages",
+      "accepted_formats": [
+        "web-directory"
+      ],
+      "shared_material": [
+        "store_text",
+        "publisher",
+        "assets",
+        "content",
+        "privacy",
+        "licenses",
+        "rights",
+        "release_notes",
+        "pricing"
+      ],
+      "overrides": {},
+      "prerequisites": [
+        "Owner-controlled account, accurate legal publisher identity, terms acceptance and explicit publication authorization.",
+        "Separate game hosting configuration/approval; existing support Pages is not a published playable game. Confirm Pages usage policy before commercial hosting."
+      ],
+      "requirements_source": "https://github.com/miguelxhubgitty/dont-touch-me/settings/pages",
+      "requirements_checked": null,
+      "console_review_required": true,
+      "publication": {
+        "status": "not_published",
+        "live_url": null,
+        "last_successfully_published_version": null
+      },
+      "required_assets": [
+        "assets.branding",
+        "assets.screenshots",
+        "licenses"
+      ],
+      "required_metadata": [
+        "store_text",
+        "publisher",
+        "content",
+        "privacy",
+        "release_notes",
+        "pricing"
+      ],
+      "account_requirements": [
+        "Owner-controlled account, accurate legal publisher identity, terms acceptance and explicit publication authorization."
+      ],
+      "signing_requirements": [
+        "See artifact signing status; confirm destination-specific requirements"
+      ],
+      "sdk_requirements": [
+        "No added runtime SDK; native export/platform toolchain prerequisites still apply"
+      ],
+      "approval_requirements": [
+        "Owner upload/publication authorization and applicable platform verification/review required"
+      ]
+    },
+    {
+      "id": "cloudflare-pages",
+      "name": "Cloudflare Pages",
+      "submission_url": "https://dash.cloudflare.com/",
+      "accepted_formats": [
+        "web-directory"
+      ],
+      "shared_material": [
+        "store_text",
+        "publisher",
+        "assets",
+        "content",
+        "privacy",
+        "licenses",
+        "rights",
+        "release_notes",
+        "pricing"
+      ],
+      "overrides": {},
+      "prerequisites": [
+        "Owner-controlled account, accurate legal publisher identity, terms acceptance and explicit publication authorization.",
+        "HTTPS hosting and correct MIME types. No domain/DNS work authorized; custom domain setup is separate."
+      ],
+      "requirements_source": "https://dash.cloudflare.com/",
+      "requirements_checked": null,
+      "console_review_required": true,
+      "publication": {
+        "status": "not_published",
+        "live_url": null,
+        "last_successfully_published_version": null
+      },
+      "required_assets": [
+        "assets.branding",
+        "assets.screenshots",
+        "licenses"
+      ],
+      "required_metadata": [
+        "store_text",
+        "publisher",
+        "content",
+        "privacy",
+        "release_notes",
+        "pricing"
+      ],
+      "account_requirements": [
+        "Owner-controlled account, accurate legal publisher identity, terms acceptance and explicit publication authorization."
+      ],
+      "signing_requirements": [
+        "See artifact signing status; confirm destination-specific requirements"
+      ],
+      "sdk_requirements": [
+        "No added runtime SDK; native export/platform toolchain prerequisites still apply"
+      ],
+      "approval_requirements": [
+        "Owner upload/publication authorization and applicable platform verification/review required"
+      ]
+    },
+    {
+      "id": "crazygames",
+      "name": "CrazyGames",
+      "submission_url": "https://developer.crazygames.com/",
+      "accepted_formats": [
+        "web-zip"
+      ],
+      "shared_material": [
+        "store_text",
+        "publisher",
+        "assets",
+        "content",
+        "privacy",
+        "licenses",
+        "rights",
+        "release_notes",
+        "pricing"
+      ],
+      "overrides": {},
+      "prerequisites": [
+        "Owner-controlled account, accurate legal publisher identity, terms acceptance and explicit publication authorization.",
+        "Owner confirms rights, audience/rating, support/privacy URLs and free/no-payments setting.",
+        "Platform acceptance and viewport/performance requirements; complete required SDK/lifecycle integration before full launch. No SDK/ads added for this alpha."
+      ],
+      "requirements_source": "https://docs.crazygames.com/requirements/gameplay/",
+      "requirements_checked": "2026-10-31",
+      "console_review_required": true,
+      "publication": {
+        "status": "not_published",
+        "live_url": null,
+        "last_successfully_published_version": null
+      },
+      "required_assets": [
+        "assets.branding",
+        "assets.screenshots",
+        "licenses"
+      ],
+      "required_metadata": [
+        "store_text",
+        "publisher",
+        "content",
+        "privacy",
+        "release_notes",
+        "pricing"
+      ],
+      "account_requirements": [
+        "Owner-controlled account, accurate legal publisher identity, terms acceptance and explicit publication authorization."
+      ],
+      "signing_requirements": [
+        "See artifact signing status; confirm destination-specific requirements"
+      ],
+      "sdk_requirements": [
+        "Platform integration not implemented; review official SDK/adapter requirements"
+      ],
+      "approval_requirements": [
+        "Owner upload/publication authorization and applicable platform verification/review required"
+      ]
+    },
+    {
+      "id": "poki",
+      "name": "Poki",
+      "submission_url": "https://developers.poki.com/",
+      "accepted_formats": [
+        "web-zip"
+      ],
+      "shared_material": [
+        "store_text",
+        "publisher",
+        "assets",
+        "content",
+        "privacy",
+        "licenses",
+        "rights",
+        "release_notes",
+        "pricing"
+      ],
+      "overrides": {},
+      "prerequisites": [
+        "Owner-controlled account, accurate legal publisher identity, terms acceptance and explicit publication authorization.",
+        "Owner confirms rights, audience/rating, support/privacy URLs and free/no-payments setting.",
+        "Publisher acceptance, commercial terms and SDK integration; landscape/viewport adaptation required. No SDK/ads added."
+      ],
+      "requirements_source": "https://developers.poki.com/guide/requirements-quality",
+      "requirements_checked": "2026-10-31",
+      "console_review_required": true,
+      "publication": {
+        "status": "not_published",
+        "live_url": null,
+        "last_successfully_published_version": null
+      },
+      "required_assets": [
+        "assets.branding",
+        "assets.screenshots",
+        "licenses"
+      ],
+      "required_metadata": [
+        "store_text",
+        "publisher",
+        "content",
+        "privacy",
+        "release_notes",
+        "pricing"
+      ],
+      "account_requirements": [
+        "Owner-controlled account, accurate legal publisher identity, terms acceptance and explicit publication authorization."
+      ],
+      "signing_requirements": [
+        "See artifact signing status; confirm destination-specific requirements"
+      ],
+      "sdk_requirements": [
+        "Platform integration not implemented; review official SDK/adapter requirements"
+      ],
+      "approval_requirements": [
+        "Owner upload/publication authorization and applicable platform verification/review required"
+      ]
+    },
+    {
+      "id": "playgama",
+      "name": "Playgama",
+      "submission_url": "https://developer.playgama.com/",
+      "accepted_formats": [
+        "web-zip"
+      ],
+      "shared_material": [
+        "store_text",
+        "publisher",
+        "assets",
+        "content",
+        "privacy",
+        "licenses",
+        "rights",
+        "release_notes",
+        "pricing"
+      ],
+      "overrides": {
+        "requirements_status": "planned; current submission/SDK details require publisher confirmation"
+      },
+      "prerequisites": [
+        "Owner-controlled account, accurate legal publisher identity, terms acceptance and explicit publication authorization.",
+        "Owner confirms rights, audience/rating, support/privacy URLs and free/no-payments setting.",
+        "Verify current official submission route, editorial acceptance, SDK requirements and commercial terms before preparing a portal-specific adapter."
+      ],
+      "requirements_source": "https://developer.playgama.com/",
+      "requirements_checked": null,
+      "console_review_required": true,
+      "publication": {
+        "status": "not_published",
+        "live_url": null,
+        "last_successfully_published_version": null
+      },
+      "required_assets": [
+        "assets.branding",
+        "assets.screenshots",
+        "licenses"
+      ],
+      "required_metadata": [
+        "store_text",
+        "publisher",
+        "content",
+        "privacy",
+        "release_notes",
+        "pricing"
+      ],
+      "account_requirements": [
+        "Owner-controlled account, accurate legal publisher identity, terms acceptance and explicit publication authorization."
+      ],
+      "signing_requirements": [
+        "See artifact signing status; confirm destination-specific requirements"
+      ],
+      "sdk_requirements": [
+        "Platform integration not implemented; review official SDK/adapter requirements"
+      ],
+      "approval_requirements": [
+        "Owner upload/publication authorization and applicable platform verification/review required"
+      ]
+    },
+    {
+      "id": "gamedistribution",
+      "name": "GameDistribution",
+      "submission_url": "https://gamedistribution.com/",
+      "accepted_formats": [
+        "web-zip"
+      ],
+      "shared_material": [
+        "store_text",
+        "publisher",
+        "assets",
+        "content",
+        "privacy",
+        "licenses",
+        "rights",
+        "release_notes",
+        "pricing"
+      ],
+      "overrides": {
+        "requirements_status": "planned; current submission/SDK details require publisher confirmation"
+      },
+      "prerequisites": [
+        "Owner-controlled account, accurate legal publisher identity, terms acceptance and explicit publication authorization.",
+        "Owner confirms rights, audience/rating, support/privacy URLs and free/no-payments setting.",
+        "Verify current official submission route, editorial acceptance, SDK requirements and commercial terms before preparing a portal-specific adapter."
+      ],
+      "requirements_source": "https://gamedistribution.com/",
+      "requirements_checked": null,
+      "console_review_required": true,
+      "publication": {
+        "status": "not_published",
+        "live_url": null,
+        "last_successfully_published_version": null
+      },
+      "required_assets": [
+        "assets.branding",
+        "assets.screenshots",
+        "licenses"
+      ],
+      "required_metadata": [
+        "store_text",
+        "publisher",
+        "content",
+        "privacy",
+        "release_notes",
+        "pricing"
+      ],
+      "account_requirements": [
+        "Owner-controlled account, accurate legal publisher identity, terms acceptance and explicit publication authorization."
+      ],
+      "signing_requirements": [
+        "See artifact signing status; confirm destination-specific requirements"
+      ],
+      "sdk_requirements": [
+        "Platform integration not implemented; review official SDK/adapter requirements"
+      ],
+      "approval_requirements": [
+        "Owner upload/publication authorization and applicable platform verification/review required"
+      ]
+    },
+    {
+      "id": "y8",
+      "name": "Y8",
+      "submission_url": "https://developer.y8.com/",
+      "accepted_formats": [
+        "web-zip"
+      ],
+      "shared_material": [
+        "store_text",
+        "publisher",
+        "assets",
+        "content",
+        "privacy",
+        "licenses",
+        "rights",
+        "release_notes",
+        "pricing"
+      ],
+      "overrides": {
+        "requirements_status": "planned; current submission/SDK details require publisher confirmation"
+      },
+      "prerequisites": [
+        "Owner-controlled account, accurate legal publisher identity, terms acceptance and explicit publication authorization.",
+        "Owner confirms rights, audience/rating, support/privacy URLs and free/no-payments setting.",
+        "Verify current official submission route, editorial acceptance, SDK requirements and commercial terms before preparing a portal-specific adapter."
+      ],
+      "requirements_source": "https://docs.y8.com/studio/overview/",
+      "requirements_checked": "2026-10-31",
+      "console_review_required": true,
+      "publication": {
+        "status": "not_published",
+        "live_url": null,
+        "last_successfully_published_version": null
+      },
+      "required_assets": [
+        "assets.branding",
+        "assets.screenshots",
+        "licenses"
+      ],
+      "required_metadata": [
+        "store_text",
+        "publisher",
+        "content",
+        "privacy",
+        "release_notes",
+        "pricing"
+      ],
+      "account_requirements": [
+        "Owner-controlled account, accurate legal publisher identity, terms acceptance and explicit publication authorization."
+      ],
+      "signing_requirements": [
+        "See artifact signing status; confirm destination-specific requirements"
+      ],
+      "sdk_requirements": [
+        "Platform integration not implemented; review official SDK/adapter requirements"
+      ],
+      "approval_requirements": [
+        "Owner upload/publication authorization and applicable platform verification/review required"
+      ]
+    },
+    {
+      "id": "gamepix",
+      "name": "GamePix",
+      "submission_url": "https://partners.gamepix.com/developers",
+      "accepted_formats": [
+        "web-zip"
+      ],
+      "shared_material": [
+        "store_text",
+        "publisher",
+        "assets",
+        "content",
+        "privacy",
+        "licenses",
+        "rights",
+        "release_notes",
+        "pricing"
+      ],
+      "overrides": {
+        "requirements_status": "planned; current submission/SDK details require publisher confirmation"
+      },
+      "prerequisites": [
+        "Owner-controlled account, accurate legal publisher identity, terms acceptance and explicit publication authorization.",
+        "Owner confirms rights, audience/rating, support/privacy URLs and free/no-payments setting.",
+        "Verify current official submission route, editorial acceptance, SDK requirements and commercial terms before preparing a portal-specific adapter."
+      ],
+      "requirements_source": "https://www.gamepix.com/",
+      "requirements_checked": "2026-10-31",
+      "console_review_required": true,
+      "publication": {
+        "status": "not_published",
+        "live_url": null,
+        "last_successfully_published_version": null
+      },
+      "required_assets": [
+        "assets.branding",
+        "assets.screenshots",
+        "licenses"
+      ],
+      "required_metadata": [
+        "store_text",
+        "publisher",
+        "content",
+        "privacy",
+        "release_notes",
+        "pricing"
+      ],
+      "account_requirements": [
+        "Owner-controlled account, accurate legal publisher identity, terms acceptance and explicit publication authorization."
+      ],
+      "signing_requirements": [
+        "See artifact signing status; confirm destination-specific requirements"
+      ],
+      "sdk_requirements": [
+        "Platform integration not implemented; review official SDK/adapter requirements"
+      ],
+      "approval_requirements": [
+        "Owner upload/publication authorization and applicable platform verification/review required"
+      ]
+    },
+    {
+      "id": "coolmath",
+      "name": "Coolmath Games",
+      "submission_url": "https://developers.coolmathgames.com/",
+      "accepted_formats": [
+        "web-zip"
+      ],
+      "shared_material": [
+        "store_text",
+        "publisher",
+        "assets",
+        "content",
+        "privacy",
+        "licenses",
+        "rights",
+        "release_notes",
+        "pricing"
+      ],
+      "overrides": {
+        "requirements_status": "planned; current submission/SDK details require publisher confirmation"
+      },
+      "prerequisites": [
+        "Owner-controlled account, accurate legal publisher identity, terms acceptance and explicit publication authorization.",
+        "Owner confirms rights, audience/rating, support/privacy URLs and free/no-payments setting.",
+        "Verify current official submission route, editorial acceptance, SDK requirements and commercial terms before preparing a portal-specific adapter."
+      ],
+      "requirements_source": "https://www.coolmathgames.com/",
+      "requirements_checked": "2026-10-31",
+      "console_review_required": true,
+      "publication": {
+        "status": "not_published",
+        "live_url": null,
+        "last_successfully_published_version": null
+      },
+      "required_assets": [
+        "assets.branding",
+        "assets.screenshots",
+        "licenses"
+      ],
+      "required_metadata": [
+        "store_text",
+        "publisher",
+        "content",
+        "privacy",
+        "release_notes",
+        "pricing"
+      ],
+      "account_requirements": [
+        "Owner-controlled account, accurate legal publisher identity, terms acceptance and explicit publication authorization."
+      ],
+      "signing_requirements": [
+        "See artifact signing status; confirm destination-specific requirements"
+      ],
+      "sdk_requirements": [
+        "Platform integration not implemented; review official SDK/adapter requirements"
+      ],
+      "approval_requirements": [
+        "Owner upload/publication authorization and applicable platform verification/review required"
+      ]
+    },
+    {
+      "id": "armorgames",
+      "name": "Armor Games",
+      "submission_url": "https://developers.armorgames.com/",
+      "accepted_formats": [
+        "web-zip"
+      ],
+      "shared_material": [
+        "store_text",
+        "publisher",
+        "assets",
+        "content",
+        "privacy",
+        "licenses",
+        "rights",
+        "release_notes",
+        "pricing"
+      ],
+      "overrides": {
+        "requirements_status": "planned; current submission/SDK details require publisher confirmation"
+      },
+      "prerequisites": [
+        "Owner-controlled account, accurate legal publisher identity, terms acceptance and explicit publication authorization.",
+        "Owner confirms rights, audience/rating, support/privacy URLs and free/no-payments setting.",
+        "Verify current official submission route, editorial acceptance, SDK requirements and commercial terms before preparing a portal-specific adapter."
+      ],
+      "requirements_source": "https://armorgames.com/",
+      "requirements_checked": "2026-10-31",
+      "console_review_required": true,
+      "publication": {
+        "status": "not_published",
+        "live_url": null,
+        "last_successfully_published_version": null
+      },
+      "required_assets": [
+        "assets.branding",
+        "assets.screenshots",
+        "licenses"
+      ],
+      "required_metadata": [
+        "store_text",
+        "publisher",
+        "content",
+        "privacy",
+        "release_notes",
+        "pricing"
+      ],
+      "account_requirements": [
+        "Owner-controlled account, accurate legal publisher identity, terms acceptance and explicit publication authorization."
+      ],
+      "signing_requirements": [
+        "See artifact signing status; confirm destination-specific requirements"
+      ],
+      "sdk_requirements": [
+        "Platform integration not implemented; review official SDK/adapter requirements"
+      ],
+      "approval_requirements": [
+        "Owner upload/publication authorization and applicable platform verification/review required"
+      ]
+    },
+    {
+      "id": "google-play",
+      "name": "Google Play",
+      "submission_url": "https://play.google.com/console/signup",
+      "accepted_formats": [
+        "android-signed-aab"
+      ],
+      "shared_material": [
+        "store_text",
+        "publisher",
+        "assets",
+        "content",
+        "privacy",
+        "licenses",
+        "rights",
+        "release_notes",
+        "pricing"
+      ],
+      "overrides": {
+        "assets": "Use shared Play icon/feature graphic/phone screenshots; native-device compatibility remains unverified."
+      },
+      "prerequisites": [
+        "Owner-controlled account, accurate legal publisher identity, terms acceptance and explicit publication authorization.",
+        "Owner confirms rights, audience/rating, support/privacy URLs and free/no-payments setting.",
+        "Developer registration/organization verification, Play App Signing and authorized production upload key. Current AAB is unsigned preparation only.",
+        "Complete Data safety, app access, ads, content rating, target audience and applicable testing/review requirements. Target API 36; validate actual delivered binary."
+      ],
+      "requirements_source": "https://support.google.com/googleplay/android-developer/answer/6112435?hl=en",
+      "requirements_checked": "2026-10-31",
+      "console_review_required": true,
+      "publication": {
+        "status": "not_published",
+        "live_url": null,
+        "last_successfully_published_version": null
+      },
+      "required_assets": [
+        "assets.branding",
+        "assets.screenshots",
+        "licenses"
+      ],
+      "required_metadata": [
+        "store_text",
+        "publisher",
+        "content",
+        "privacy",
+        "release_notes",
+        "pricing"
+      ],
+      "account_requirements": [
+        "Owner-controlled account, accurate legal publisher identity, terms acceptance and explicit publication authorization."
+      ],
+      "signing_requirements": [
+        "Authorized production Android signing required"
+      ],
+      "sdk_requirements": [
+        "No added runtime SDK; native export/platform toolchain prerequisites still apply"
+      ],
+      "approval_requirements": [
+        "Owner upload/publication authorization and applicable platform verification/review required"
+      ]
+    },
+    {
+      "id": "apple",
+      "name": "Apple App Store",
+      "submission_url": "https://appstoreconnect.apple.com/",
+      "accepted_formats": [
+        "ios-signed-archive"
+      ],
+      "shared_material": [
+        "store_text",
+        "publisher",
+        "assets",
+        "content",
+        "privacy",
+        "licenses",
+        "rights",
+        "release_notes",
+        "pricing"
+      ],
+      "overrides": {
+        "screenshots": "Shared Apple-sized images are Windows reference renders, not native iOS captures."
+      },
+      "prerequisites": [
+        "Owner-controlled account, accurate legal publisher identity, terms acceptance and explicit publication authorization.",
+        "Owner confirms rights, audience/rating, support/privacy URLs and free/no-payments setting.",
+        "Apple Developer membership, legal entity/D-U-N-S/domain verification, macOS/Xcode, Team ID, provisioning/signing and archive validation.",
+        "Native captures/privacy/export-compliance declarations and App Review required."
+      ],
+      "requirements_source": "https://developer.apple.com/programs/enroll/",
+      "requirements_checked": "2026-10-31",
+      "console_review_required": true,
+      "publication": {
+        "status": "not_published",
+        "live_url": null,
+        "last_successfully_published_version": null
+      },
+      "required_assets": [
+        "assets.branding",
+        "assets.screenshots",
+        "licenses"
+      ],
+      "required_metadata": [
+        "store_text",
+        "publisher",
+        "content",
+        "privacy",
+        "release_notes",
+        "pricing"
+      ],
+      "account_requirements": [
+        "Owner-controlled account, accurate legal publisher identity, terms acceptance and explicit publication authorization."
+      ],
+      "signing_requirements": [
+        "Apple signing/provisioning required"
+      ],
+      "sdk_requirements": [
+        "No added runtime SDK; native export/platform toolchain prerequisites still apply"
+      ],
+      "approval_requirements": [
+        "Owner upload/publication authorization and applicable platform verification/review required"
+      ]
+    },
+    {
+      "id": "samsung",
+      "name": "Samsung Galaxy Store",
+      "submission_url": "https://seller.samsungapps.com/",
+      "accepted_formats": [
+        "android-release-apk",
+        "android-signed-aab"
+      ],
+      "shared_material": [
+        "store_text",
+        "publisher",
+        "assets",
+        "content",
+        "privacy",
+        "licenses",
+        "rights",
+        "release_notes",
+        "pricing"
+      ],
+      "overrides": {},
+      "prerequisites": [
+        "Owner-controlled account, accurate legal publisher identity, terms acceptance and explicit publication authorization.",
+        "Owner confirms rights, audience/rating, support/privacy URLs and free/no-payments setting.",
+        "Seller verification/commercial seller status as required, production signing, Android compatibility and store review. Confirm AAB processing/signing in console."
+      ],
+      "requirements_source": "https://developer.samsung.com/galaxy-store/prepare.html",
+      "requirements_checked": "2026-10-31",
+      "console_review_required": true,
+      "publication": {
+        "status": "not_published",
+        "live_url": null,
+        "last_successfully_published_version": null
+      },
+      "required_assets": [
+        "assets.branding",
+        "assets.screenshots",
+        "licenses"
+      ],
+      "required_metadata": [
+        "store_text",
+        "publisher",
+        "content",
+        "privacy",
+        "release_notes",
+        "pricing"
+      ],
+      "account_requirements": [
+        "Owner-controlled account, accurate legal publisher identity, terms acceptance and explicit publication authorization."
+      ],
+      "signing_requirements": [
+        "Authorized production Android signing required"
+      ],
+      "sdk_requirements": [
+        "No added runtime SDK; native export/platform toolchain prerequisites still apply"
+      ],
+      "approval_requirements": [
+        "Owner upload/publication authorization and applicable platform verification/review required"
+      ]
+    },
+    {
+      "id": "microsoft",
+      "name": "Microsoft Store",
+      "submission_url": "https://storedeveloper.microsoft.com/",
+      "accepted_formats": [
+        "windows-msixvc"
+      ],
+      "shared_material": [
+        "store_text",
+        "publisher",
+        "assets",
+        "content",
+        "privacy",
+        "licenses",
+        "rights",
+        "release_notes",
+        "pricing"
+      ],
+      "overrides": {},
+      "prerequisites": [
+        "Owner-controlled account, accurate legal publisher identity, terms acceptance and explicit publication authorization.",
+        "Owner confirms rights, audience/rating, support/privacy URLs and free/no-payments setting.",
+        "Company verification, GDK/MSIXVC game packaging and certification. Generic Windows ZIP/EXE is reusable input, not a completed Store package."
+      ],
+      "requirements_source": "https://learn.microsoft.com/en-us/windows/apps/publish/whats-new-game-publishing",
+      "requirements_checked": "2026-10-31",
+      "console_review_required": true,
+      "publication": {
+        "status": "not_published",
+        "live_url": null,
+        "last_successfully_published_version": null
+      },
+      "required_assets": [
+        "assets.branding",
+        "assets.screenshots",
+        "licenses"
+      ],
+      "required_metadata": [
+        "store_text",
+        "publisher",
+        "content",
+        "privacy",
+        "release_notes",
+        "pricing"
+      ],
+      "account_requirements": [
+        "Owner-controlled account, accurate legal publisher identity, terms acceptance and explicit publication authorization."
+      ],
+      "signing_requirements": [
+        "See artifact signing status; confirm destination-specific requirements"
+      ],
+      "sdk_requirements": [
+        "Platform integration not implemented; review official SDK/adapter requirements"
+      ],
+      "approval_requirements": [
+        "Owner upload/publication authorization and applicable platform verification/review required"
+      ]
+    },
+    {
+      "id": "steam",
+      "name": "Steam",
+      "submission_url": "https://partner.steamgames.com/steamdirect",
+      "accepted_formats": [
+        "windows-directory",
+        "linux-directory",
+        "macos-app"
+      ],
+      "shared_material": [
+        "store_text",
+        "publisher",
+        "assets",
+        "content",
+        "privacy",
+        "licenses",
+        "rights",
+        "release_notes",
+        "pricing"
+      ],
+      "overrides": {},
+      "prerequisites": [
+        "Owner-controlled account, accurate legal publisher identity, terms acceptance and explicit publication authorization.",
+        "Owner confirms rights, audience/rating, support/privacy URLs and free/no-payments setting.",
+        "Steam Direct fee, tax/bank onboarding, SteamPipe depots, store/build review and required waiting/Coming Soon periods. Reuse exported desktop binaries."
+      ],
+      "requirements_source": "https://partner.steamgames.com/steamdirect",
+      "requirements_checked": "2026-10-31",
+      "console_review_required": true,
+      "publication": {
+        "status": "not_published",
+        "live_url": null,
+        "last_successfully_published_version": null
+      },
+      "required_assets": [
+        "assets.branding",
+        "assets.screenshots",
+        "licenses"
+      ],
+      "required_metadata": [
+        "store_text",
+        "publisher",
+        "content",
+        "privacy",
+        "release_notes",
+        "pricing"
+      ],
+      "account_requirements": [
+        "Owner-controlled account, accurate legal publisher identity, terms acceptance and explicit publication authorization."
+      ],
+      "signing_requirements": [
+        "See artifact signing status; confirm destination-specific requirements"
+      ],
+      "sdk_requirements": [
+        "Platform integration not implemented; review official SDK/adapter requirements"
+      ],
+      "approval_requirements": [
+        "Owner upload/publication authorization and applicable platform verification/review required"
+      ]
+    },
+    {
+      "id": "epic",
+      "name": "Epic Games Store",
+      "submission_url": "https://dev.epicgames.com/portal/",
+      "accepted_formats": [
+        "windows-directory",
+        "macos-app"
+      ],
+      "shared_material": [
+        "store_text",
+        "publisher",
+        "assets",
+        "content",
+        "privacy",
+        "licenses",
+        "rights",
+        "release_notes",
+        "pricing"
+      ],
+      "overrides": {},
+      "prerequisites": [
+        "Owner-controlled account, accurate legal publisher identity, terms acceptance and explicit publication authorization.",
+        "Owner confirms rights, audience/rating, support/privacy URLs and free/no-payments setting.",
+        "Developer/product onboarding, current submission fee/agreements, BuildPatchTool packaging and store approval; confirm current eligibility."
+      ],
+      "requirements_source": "https://store.epicgames.com/distribution?lang=en-US",
+      "requirements_checked": "2026-10-31",
+      "console_review_required": true,
+      "publication": {
+        "status": "not_published",
+        "live_url": null,
+        "last_successfully_published_version": null
+      },
+      "required_assets": [
+        "assets.branding",
+        "assets.screenshots",
+        "licenses"
+      ],
+      "required_metadata": [
+        "store_text",
+        "publisher",
+        "content",
+        "privacy",
+        "release_notes",
+        "pricing"
+      ],
+      "account_requirements": [
+        "Owner-controlled account, accurate legal publisher identity, terms acceptance and explicit publication authorization."
+      ],
+      "signing_requirements": [
+        "See artifact signing status; confirm destination-specific requirements"
+      ],
+      "sdk_requirements": [
+        "Platform integration not implemented; review official SDK/adapter requirements"
+      ],
+      "approval_requirements": [
+        "Owner upload/publication authorization and applicable platform verification/review required"
+      ]
+    },
+    {
+      "id": "amazon",
+      "name": "Amazon Appstore (Fire devices)",
+      "submission_url": "https://developer.amazon.com/apps-and-games",
+      "accepted_formats": [
+        "android-release-apk"
+      ],
+      "shared_material": [
+        "store_text",
+        "publisher",
+        "assets",
+        "content",
+        "privacy",
+        "licenses",
+        "rights",
+        "release_notes",
+        "pricing"
+      ],
+      "overrides": {},
+      "prerequisites": [
+        "Owner-controlled account, accurate legal publisher identity, terms acceptance and explicit publication authorization.",
+        "Owner confirms rights, audience/rating, support/privacy URLs and free/no-payments setting.",
+        "Fire-device compatibility, release signing and current submission review. Android-phone Appstore support ended in 2025; do not treat as a generic Android-phone destination."
+      ],
+      "requirements_source": "https://developer.amazon.com/apps-and-games/blogs/2025/02/upcoming-changes-to-amazon-appstore-for-android-devices-and-coins-program",
+      "requirements_checked": "2026-10-31",
+      "console_review_required": true,
+      "publication": {
+        "status": "not_published",
+        "live_url": null,
+        "last_successfully_published_version": null
+      },
+      "required_assets": [
+        "assets.branding",
+        "assets.screenshots",
+        "licenses"
+      ],
+      "required_metadata": [
+        "store_text",
+        "publisher",
+        "content",
+        "privacy",
+        "release_notes",
+        "pricing"
+      ],
+      "account_requirements": [
+        "Owner-controlled account, accurate legal publisher identity, terms acceptance and explicit publication authorization."
+      ],
+      "signing_requirements": [
+        "Authorized production Android signing required"
+      ],
+      "sdk_requirements": [
+        "No added runtime SDK; native export/platform toolchain prerequisites still apply"
+      ],
+      "approval_requirements": [
+        "Owner upload/publication authorization and applicable platform verification/review required"
+      ]
+    },
+    {
+      "id": "fdroid",
+      "name": "F-Droid",
+      "submission_url": "https://f-droid.org/en/docs/Submitting_to_F-Droid/",
+      "accepted_formats": [
+        "android-source-build"
+      ],
+      "shared_material": [
+        "store_text",
+        "publisher",
+        "assets",
+        "content",
+        "privacy",
+        "licenses",
+        "rights",
+        "release_notes",
+        "pricing"
+      ],
+      "overrides": {},
+      "prerequisites": [
+        "Owner-controlled account, accurate legal publisher identity, terms acceptance and explicit publication authorization.",
+        "Not eligible as currently licensed: original game code/art has no FOSS license. Owner must explicitly choose compatible licensing before any application.",
+        "F-Droid source-build/inclusion policy and dependency/license review; do not upload a debug APK as a substitute."
+      ],
+      "requirements_source": "https://f-droid.org/en/docs/Inclusion_Policy/",
+      "requirements_checked": "2026-10-31",
+      "console_review_required": true,
+      "publication": {
+        "status": "not_published",
+        "live_url": null,
+        "last_successfully_published_version": null
+      },
+      "required_assets": [
+        "assets.branding",
+        "assets.screenshots",
+        "licenses"
+      ],
+      "required_metadata": [
+        "store_text",
+        "publisher",
+        "content",
+        "privacy",
+        "release_notes",
+        "pricing"
+      ],
+      "account_requirements": [
+        "Owner-controlled account, accurate legal publisher identity, terms acceptance and explicit publication authorization."
+      ],
+      "signing_requirements": [
+        "See artifact signing status; confirm destination-specific requirements"
+      ],
+      "sdk_requirements": [
+        "No added runtime SDK; native export/platform toolchain prerequisites still apply"
+      ],
+      "approval_requirements": [
+        "Owner upload/publication authorization and applicable platform verification/review required"
+      ]
+    },
+    {
+      "id": "uptodown",
+      "name": "Uptodown",
+      "submission_url": "https://developers.uptodown.com/",
+      "accepted_formats": [
+        "android-release-apk"
+      ],
+      "shared_material": [
+        "store_text",
+        "publisher",
+        "assets",
+        "content",
+        "privacy",
+        "licenses",
+        "rights",
+        "release_notes",
+        "pricing"
+      ],
+      "overrides": {},
+      "prerequisites": [
+        "Owner-controlled account, accurate legal publisher identity, terms acceptance and explicit publication authorization.",
+        "Owner confirms rights, audience/rating, support/privacy URLs and free/no-payments setting.",
+        "Production-signed APK and publisher/security review; verify current official console requirements."
+      ],
+      "requirements_source": "https://developers.uptodown.com/",
+      "requirements_checked": null,
+      "console_review_required": true,
+      "publication": {
+        "status": "not_published",
+        "live_url": null,
+        "last_successfully_published_version": null
+      },
+      "required_assets": [
+        "assets.branding",
+        "assets.screenshots",
+        "licenses"
+      ],
+      "required_metadata": [
+        "store_text",
+        "publisher",
+        "content",
+        "privacy",
+        "release_notes",
+        "pricing"
+      ],
+      "account_requirements": [
+        "Owner-controlled account, accurate legal publisher identity, terms acceptance and explicit publication authorization."
+      ],
+      "signing_requirements": [
+        "Authorized production Android signing required"
+      ],
+      "sdk_requirements": [
+        "No added runtime SDK; native export/platform toolchain prerequisites still apply"
+      ],
+      "approval_requirements": [
+        "Owner upload/publication authorization and applicable platform verification/review required"
+      ]
+    },
+    {
+      "id": "aptoide",
+      "name": "Aptoide",
+      "submission_url": "https://connect.aptoide.com/",
+      "accepted_formats": [
+        "android-release-apk"
+      ],
+      "shared_material": [
+        "store_text",
+        "publisher",
+        "assets",
+        "content",
+        "privacy",
+        "licenses",
+        "rights",
+        "release_notes",
+        "pricing"
+      ],
+      "overrides": {},
+      "prerequisites": [
+        "Owner-controlled account, accurate legal publisher identity, terms acceptance and explicit publication authorization.",
+        "Owner confirms rights, audience/rating, support/privacy URLs and free/no-payments setting.",
+        "Production-signed APK and publisher/security review; verify current official console requirements."
+      ],
+      "requirements_source": "https://www.aptoide.com/",
+      "requirements_checked": "2026-10-31",
+      "console_review_required": true,
+      "publication": {
+        "status": "not_published",
+        "live_url": null,
+        "last_successfully_published_version": null
+      },
+      "required_assets": [
+        "assets.branding",
+        "assets.screenshots",
+        "licenses"
+      ],
+      "required_metadata": [
+        "store_text",
+        "publisher",
+        "content",
+        "privacy",
+        "release_notes",
+        "pricing"
+      ],
+      "account_requirements": [
+        "Owner-controlled account, accurate legal publisher identity, terms acceptance and explicit publication authorization."
+      ],
+      "signing_requirements": [
+        "Authorized production Android signing required"
+      ],
+      "sdk_requirements": [
+        "No added runtime SDK; native export/platform toolchain prerequisites still apply"
+      ],
+      "approval_requirements": [
+        "Owner upload/publication authorization and applicable platform verification/review required"
+      ]
+    },
+    {
+      "id": "own-site",
+      "name": "WANDIEL website",
+      "submission_url": "https://wandiel.com",
+      "accepted_formats": [
+        "windows-zip",
+        "web-directory",
+        "linux-zip",
+        "macos-zip"
+      ],
+      "shared_material": [
+        "store_text",
+        "publisher",
+        "assets",
+        "content",
+        "privacy",
+        "licenses",
+        "rights",
+        "release_notes",
+        "pricing"
+      ],
+      "overrides": {},
+      "prerequisites": [
+        "Owner-controlled account, accurate legal publisher identity, terms acceptance and explicit publication authorization.",
+        "Separate website/deployment authorization required; this release task does not change the website repository or DNS."
+      ],
+      "requirements_source": "https://wandiel.com",
+      "requirements_checked": null,
+      "console_review_required": true,
+      "publication": {
+        "status": "not_published",
+        "live_url": null,
+        "last_successfully_published_version": null
+      },
+      "required_assets": [
+        "assets.branding",
+        "assets.screenshots",
+        "licenses"
+      ],
+      "required_metadata": [
+        "store_text",
+        "publisher",
+        "content",
+        "privacy",
+        "release_notes",
+        "pricing"
+      ],
+      "account_requirements": [
+        "Owner-controlled account, accurate legal publisher identity, terms acceptance and explicit publication authorization."
+      ],
+      "signing_requirements": [
+        "See artifact signing status; confirm destination-specific requirements"
+      ],
+      "sdk_requirements": [
+        "No added runtime SDK; native export/platform toolchain prerequisites still apply"
+      ],
+      "approval_requirements": [
+        "Owner upload/publication authorization and applicable platform verification/review required"
+      ]
+    }
+  ]
+}
