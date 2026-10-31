@@ -40,3 +40,13 @@ Subsequent verification supersedes that initial blocked attempt: the owner verif
 The privately hosted Run game action launched the uploaded Godot game and visibly rendered the animated blob in its canvas. This is a hosted-browser startup observation, not physical-device or full compatibility certification. A local screenshot is retained in the ignored `builds/v0.1.0-alpha/itch/draft-preview.png`.
 
 For later gameplay releases, carry the focused adapter tooling changes into the new release (or backport only these tooling/config/docs/tests to basic-font main after review). Never copy a previous release's gameplay/assets as part of installing the adapter. `prepare` derives the version and package names from that new release's own catalog and manifest; old draft-upload IDs remain historical evidence for their recorded version.
+
+## Same-listing Windows verification — October 31, 2026
+
+Rechecked Butler authentication and both completed channels on existing project 5273390 (`wandiel/dont-touch-me`). Windows upload 20184231 / build 2263119 already existed, so **no duplicate push** was performed. HTML5 upload 20184236 / build 2263122 was preserved. Both remain v0.1.0-alpha.
+
+Windows ZIP SHA-256 matched the saved manifest and handoff ledger: `42a43d68e9c0dd2af46da6dfa6f74d32b4e4c2242a68771dc046900134bcbdc9`. Offline preparation also rechecked ZIP integrity and original raw-file hashes without exporting or generating assets.
+
+The Windows ZIP was already downloadable but its Windows platform checkbox was unset. Enabled only **Download for Windows** and saved; rereading the editor confirmed it persisted. Windows stays Executable, not browser-played, and not hidden. HTML5 stays browser-played. The same private game page showed Run game and the Windows ZIP download with version v0.1.0-alpha. Draft and No payments were retained. Channel names alone are not proof that platform checkboxes are set: verify these in the editor for every new upload.
+
+Remaining before public release: owner reviews the private page, existing unsigned-Windows compatibility/signing limitations and current support/privacy information, then explicitly approves publication. Do not set a published version/live URL until actual public release is authorized and verified.
