@@ -1,5 +1,12 @@
 # Changelog
 
+## Unreleased — itch.io draft automation
+
+- Add an explicit official-Butler adapter for existing validated Windows/html5 packages, four reusable channels, local checksum/provenance guards and append-only attempt receipts. Reject Linux/macOS uploads until native runtime validation passes.
+- Prepare draft page material from the shared catalog, document No payments/draft review, credential handling, channel verification and separate public approval. Preserve Alpha binaries, graphics, fonts and gameplay.
+- Verify Butler v15.32.0 authentication as wandiel and create draft project 5273390 with existing artwork and No payments. Initial upload was rejected by itch.io pending account-email verification; no accepted build or public publication is claimed.
+- After owner email verification, upload and verify completed Windows build 2263119 and HTML5 build 2263122 at v0.1.0-alpha; enable private browser play and Windows download. Preserve Draft/No payments and remove the requested risk phrase from the itch-specific tagline. No public release occurred.
+
 ## 0.1.0-alpha — Public Alpha (prepared, not published)
 
 - Create `release/v0.1.0-alpha` from gameplay main and apply the reviewed typography layer without changing gameplay or application identifiers.

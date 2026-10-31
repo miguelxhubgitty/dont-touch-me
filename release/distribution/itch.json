@@ -1,0 +1,18 @@
+{
+  "target": "wandiel/dont-touch-me",
+  "project_id": 5273390,
+  "tagline": "A tiny blob. A big need for personal space.",
+  "draft_uploads": {
+    "version": "v0.1.0-alpha",
+    "verified_date": "2026-10-31",
+    "windows": {"upload_id":20184231,"build_id":2263119,"processing":"complete"},
+    "html5": {"upload_id":20184236,"build_id":2263122,"processing":"complete"}
+  },
+  "shared_catalog": "release/catalog/game.json",
+  "required_visibility": "draft",
+  "required_pricing": "No payments",
+  "channels": {"windows":"windows-zip", "html5":"web-zip", "linux":"linux-zip", "mac":"macos-zip"},
+  "publication_status": "not_published",
+  "live_url": null,
+  "last_successfully_published_version": null
+}

@@ -26,6 +26,7 @@
         "pricing"
       ],
       "overrides": {
+        "automation": "release/tools/itch.py; release/distribution/itch.json; release/ITCH_PUBLISHING.md",
         "cover": "release/catalog/branding/itch-cover-630x500.png (shared 315:250 actual-renderer cover)"
       },
       "prerequisites": [
