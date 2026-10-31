@@ -160,13 +160,24 @@ class Release:
         self.godot = str(Path(godot).resolve()) if godot else shutil.which('godot')
         self.receipts = load(self.out / 'manifest.json') if (self.out / 'manifest.json').exists() else {'schema_version':1,'version':self.catalog['version'],'artifacts':{}}
         self.settings = {}
-        appdata = Path(os.environ.get('APPDATA', str(Path.home() / '.local/share')))
-        for settings in (appdata / 'Godot').glob('editor_settings-*.tres'):
+        if os.name=='nt':
+            settings_root=data_root=Path(os.environ['APPDATA'])/'Godot'
+        elif platform.system()=='Darwin':
+            settings_root=data_root=Path.home()/'Library/Application Support/Godot'
+        else:
+            settings_root=Path(os.environ.get('XDG_CONFIG_HOME',str(Path.home()/'.config')))/'godot'
+            data_root=Path(os.environ.get('XDG_DATA_HOME',str(Path.home()/'.local/share')))/'godot'
+        for settings in settings_root.glob('editor_settings-*.tres'):
             for match in re.finditer(r'^export/android/(android_sdk_path|java_sdk_path|debug_keystore) = (".*")$', settings.read_text(), re.M):
                 self.settings[match[1]] = json.loads(match[2])
         self.sdk = Path(os.environ.get('ANDROID_HOME', self.settings.get('android_sdk_path','__missing_sdk__')))
         self.jdk = Path(os.environ.get('JAVA_HOME', self.settings.get('java_sdk_path','__missing_jdk__')))
-        self.templates = Path(os.environ.get('GODOT_TEMPLATES', str(appdata / 'Godot/export_templates' / self.catalog['engine'])))
+        self.templates = Path(os.environ.get('GODOT_TEMPLATES', str(data_root/'export_templates'/self.catalog['engine'])))
+        if self.godot and Path(self.godot).is_file():
+            version=subprocess.check_output([self.godot,'--version'],text=True).strip()
+            if not version.startswith(self.catalog['engine']+'.'):
+                raise RuntimeError('Godot version does not match the canonical release engine: '+version)
+            self.receipts['engine']={'version':version,'executable_sha256':sha(self.godot)}
         for folder in ['shared','checklists','logs','windows','web','android','linux','macos','ios']:
             (self.out / folder).mkdir(parents=True, exist_ok=True)
 
@@ -390,13 +401,17 @@ class Release:
             record['validation']['runtime']='passed: local HTTP, WebGL2, desktop click, mobile-sized touch and resize; automated browser smoke only'
             record['validation']['browser_evidence']='logs/web-smoke.json'
             self.write_manifest()
+        except (RuntimeError,subprocess.SubprocessError) as error:
+            record['validation']['runtime']='failed: '+str(error).splitlines()[0]
+            self.write_manifest()
+            raise
         finally:
             server.shutdown(); server.server_close(); thread.join()
 
     def report(self):
         self.write_manifest()
         # Copy a curated shared handoff once, not once per destination.
-        files=['release/catalog/game.json',self.catalog['release_notes'],*self.catalog['licenses'],self.catalog['privacy']['policy'],'release/CONTENT_RATING.md','release/DATA_SAFETY.md','release/APP_STORE_PRIVACY.md','release/listing.json','release/STORE_LISTING.md',*self.catalog['assets']['branding']]
+        files=['release/catalog/game.json','release/distribution/platforms.json',self.catalog['release_notes'],*self.catalog['licenses'],self.catalog['privacy']['policy'],'release/CONTENT_RATING.md','release/DATA_SAFETY.md','release/APP_STORE_PRIVACY.md','release/listing.json','release/STORE_LISTING.md',*self.catalog['assets']['branding']]
         for file in files:
             dest=self.out/'shared'/file
             dest.parent.mkdir(parents=True,exist_ok=True)
