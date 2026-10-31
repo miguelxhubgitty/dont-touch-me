@@ -20,12 +20,14 @@ class CatalogTests(unittest.TestCase):
     def test_current_catalog_and_all_platforms(self):
         dist.check_catalog(self.catalog,self.registry)
         self.assertEqual(len(self.registry['platforms']),25)
-        self.assertTrue(all(p['publication']['live_url'] is None for p in self.registry['platforms']))
+        self.assertTrue(all(p['publication']['live_url'] is None for p in self.registry['platforms'] if p['publication']['status']!='published'))
     def test_monetization_rejected(self):
         self.catalog['pricing']['payments']=True
         with self.assertRaises(ValueError): dist.check_catalog(self.catalog,self.registry)
     def test_false_publication_rejected(self):
         self.registry['platforms'][0]['publication']['status']='published'
+        self.registry['platforms'][0]['publication']['live_url']=None
+        self.registry['platforms'][0]['publication']['last_successfully_published_version']=None
         with self.assertRaises(ValueError): dist.check_catalog(self.catalog,self.registry)
     def test_duplicate_platform_rejected(self):
         self.registry['platforms'].append(self.registry['platforms'][0])

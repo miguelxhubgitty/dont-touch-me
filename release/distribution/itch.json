@@ -12,7 +12,9 @@
   "required_visibility": "draft",
   "required_pricing": "No payments",
   "channels": {"windows":"windows-zip", "html5":"web-zip", "linux":"linux-zip", "mac":"macos-zip"},
-  "publication_status": "not_published",
-  "live_url": null,
-  "last_successfully_published_version": null
+  "publication_status": "published",
+  "live_url": "https://wandiel.itch.io/dont-touch-me",
+  "last_successfully_published_version": "0.1.0-alpha",
+  "publication_date": "2026-10-31",
+  "publication_report": "release/PUBLICATION_v0.1.0-alpha.md"
 }

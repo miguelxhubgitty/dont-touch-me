@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.1.0-alpha — itch.io public release — October 31, 2026
+
+- Publish the existing same-project HTML5 and Windows Alpha builds with explicit owner approval; retain In development and No payments. Verify anonymous access, browser startup and downloaded Windows file bytes without rebuilding or changing gameplay/artwork.
+- Record public URL, date, channel/upload/build IDs and privacy/support review. The hosted policy's older version label remains documented; the store page now explains itch.io browser hosting and links both policies/support.
+- Preserve draft-upload history and make the draft-only adapter refuse pushes to a published listing. Future game changes require subsequent versioned updates.
+
 ## Unreleased — itch.io draft automation
 
 - Verify the existing Windows upload without duplicating it; enable its missing Windows platform tag, preserve HTML5 browser play and record package checksum/download configuration on the same free draft listing.
