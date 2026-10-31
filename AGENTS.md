@@ -22,6 +22,9 @@
 
 ## Design-first implementation approval
 
+- Required sequence: **Proposal → Pseudocode → Owner approval → Implementation → Testing → Journal update → Release preparation**. Keep the approved behavioral specification synchronized with implementation; compare the two during testing and update the journal before release preparation.
+- The retroactive Alpha reference is [docs/ALPHA_BEHAVIOR_SPEC.md](docs/ALPHA_BEHAVIOR_SPEC.md), with immutable provenance in [docs/ALPHA_SOURCE_AUDIT.md](docs/ALPHA_SOURCE_AUDIT.md). Describing already-published Alpha behavior is not a new feature proposal or authorization to alter it. Distinguish Alpha, current development and future proposals; preserve the historical baseline when adding later specifications.
+
 - For every meaningful gameplay, animation, audio, or system change, first create/update a plan under `plans/` describing player-visible behavior, source-grounded current behavior, proposed pseudocode, edge cases, acceptance criteria, and relevant design choices. Add a Mermaid state/decision flowchart when helpful.
 - Present the proposed pseudocode and trade-offs to the owner and **obtain explicit approval before implementing**. Approval of the overall workflow is not approval of individual future changes.
 - After approval, implement on the gameplay development branch using the approved design. If the code requires a material deviation, document it and request approval rather than silently changing the intended behavior.
