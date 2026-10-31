@@ -16,6 +16,8 @@ The portrait canvas uses a 720 × 1280 reference with expanding canvas stretch, 
 
 Gameplay development stays on `main` with the engine's basic font. The approved release typography is preserved on `aesthetic/typography-v1`; integrate it into a fresh `release/<version>` only when gameplay is ready. See [BRANCH_WORKFLOW.md](BRANCH_WORKFLOW.md) for the exact procedure. Do not regenerate typography/store images during routine development.
 
+Current branch/integration results: [WORKFLOW_VALIDATION.md](WORKFLOW_VALIDATION.md).
+
 From this folder (substitute the path to your Godot executable):
 
 ```text

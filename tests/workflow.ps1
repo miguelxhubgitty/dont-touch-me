@@ -50,9 +50,9 @@ try {
         # receives these fixture commits; no source branch/ref is changed.
         [IO.File]::AppendAllText((Join-Path $fixture 'scripts/blob.gd'), "`nconst WORKFLOW_FUTURE_GAMEPLAY := 42`n")
         $project = Join-Path $fixture 'project.godot'
-        [IO.File]::WriteAllText($project, [IO.File]::ReadAllText($project).Replace('config/version="1.0.0"', 'config/version="1.0.1"'))
+        [IO.File]::WriteAllText($project, ([regex]::Replace([IO.File]::ReadAllText($project), '(?m)^config/version="[^"]+"', 'config/version="99.0.0-workflow-fixture"')))
         $presets = Join-Path $fixture 'export_presets.cfg'
-        [IO.File]::WriteAllText($presets, [IO.File]::ReadAllText($presets).Replace('version/code=1', 'version/code=2'))
+        [IO.File]::WriteAllText($presets, ([regex]::Replace([IO.File]::ReadAllText($presets), '(?m)^version/code=\d+', 'version/code=987654')))
         Invoke-Git -Arguments @('add', 'scripts/blob.gd', 'project.godot', 'export_presets.cfg')
         Invoke-Git -Arguments @('commit', '--quiet', '-m', 'Fixture: simulate future gameplay and version changes')
         $projectHash = (Get-FileHash -LiteralPath $project).Hash
@@ -65,7 +65,7 @@ try {
         Assert-Workflow ($blob.Contains('WORKFLOW_FUTURE_GAMEPLAY := 42')) 'New gameplay survives integration'
         Assert-Workflow ($blob.Contains('Typography.BODY_FONT')) 'Runtime typography is applied'
         Assert-Workflow ((Get-FileHash -LiteralPath $project).Hash -eq $projectHash) 'Project metadata is not overwritten'
-        Assert-Workflow ([IO.File]::ReadAllText($presets).Contains('version/code=2')) 'New export version survives'
+        Assert-Workflow ([IO.File]::ReadAllText($presets).Contains('version/code=987654')) 'New export version survives'
         Assert-Workflow ([IO.File]::ReadAllText($presets).Contains('assets/fonts/OFL-Space-Grotesk.txt')) 'Font license reaches exports'
         Assert-Workflow (-not (Invoke-Git -Arguments @('diff', '--name-only', 'HEAD', '--', 'release/assets', 'release/assets-inventory.json'))) 'No old captures/manifests copied or regenerated'
         Assert-Workflow (-not (Invoke-Git -Arguments @('diff', '--name-only', $aesthetic, '--', 'assets/fonts', 'assets/typography', 'scripts/typography.gd'))) 'Approved font, phrase and runtime resources preserved'

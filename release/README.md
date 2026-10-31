@@ -2,6 +2,8 @@
 
 This folder contains the publishing handoff, not additional gameplay. The project remains Godot 4.7.2, GDScript, offline, and exactly 16 reactions.
 
+**Development workflow:** these materials are saved snapshots, not automatically current release artifacts. Develop with basic fonts on `main`, then follow [BRANCH_WORKFLOW.md](../BRANCH_WORKFLOW.md) to integrate typography and finalize once on `release/<version>`. See [WORKFLOW_VALIDATION.md](../WORKFLOW_VALIDATION.md) for current branch/tooling checks. Historical build reports below do not certify new exports.
+
 | Material | Location |
 | --- | --- |
 | All icons, feature graphic, and 20 actual gameplay captures | `assets/` — see `assets/README.md` and `assets/manifest.json` |

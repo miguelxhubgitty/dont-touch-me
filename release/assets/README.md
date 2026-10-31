@@ -33,8 +33,10 @@ These are **actual renders of the current gameplay Node2D on Windows**, captured
 
 ## Reproduce and validate
 
+Run this only on a finalized `release/<version>` branch, after applying the aesthetic layer. Follow [BRANCH_WORKFLOW.md](../../BRANCH_WORKFLOW.md) for phrase generation/import, validation and inventory refresh. During gameplay development these images remain historical snapshots; do not regenerate them on each edit.
+
 ```text
-godot --path . --script release/tools/generate_assets.gd
+godot --path . --script release/tools/generate_assets.gd -- --finalize-release
 godot --headless --path . --script release/tools/validate_package.gd
 ```
 
