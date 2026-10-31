@@ -68,7 +68,7 @@ func run() -> void:
 						check(Rect2(Vector2.ZERO, Vector2(size)).has_point(world), "full body visible at mobile aspect")
 				if not game.bubble.is_empty():
 					var font_size := 43 if which == Blob.Reaction.STOP else 31
-					check(game.font.get_string_size(game.bubble, HORIZONTAL_ALIGNMENT_LEFT, -1, font_size).x + 90 < size.x, "dialogue fits")
+					check(Blob.Typography.width(game.bubble, font_size) + 90 < size.x, "rendered dialogue fits")
 			game.advance(0.1)
 			check(game.reaction == Blob.Reaction.NONE, "completes across aspects")
 	# Every possible short reaction can safely interrupt every current reaction.
