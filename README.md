@@ -14,16 +14,18 @@ The portrait canvas uses a 720 × 1280 reference with expanding canvas stretch, 
 
 ## Local checks
 
+Gameplay development stays on `main` with the engine's basic font. The approved release typography is preserved on `aesthetic/typography-v1`; integrate it into a fresh `release/<version>` only when gameplay is ready. See [BRANCH_WORKFLOW.md](BRANCH_WORKFLOW.md) for the exact procedure. Do not regenerate typography/store images during routine development.
+
 From this folder (substitute the path to your Godot executable):
 
 ```text
 godot --headless --path . --editor --import --quit
 godot --headless --path . --script tests/behavior.gd
 godot --headless --path . --script tests/release.gd
-godot --path . --script tests/render.gd
+godot --headless --path . --script tests/fingerprints.gd
 ```
 
-The behavior suite checks tier boundaries, random coverage, repetition avoidance, all animation lifecycles, transformed hitboxes, visible bounds, rapid taps, escape recovery, relaxation, sleep/wake, input paths, and resizing. The rendering check produces an ignored `test-output/reactions.png` contact sheet using a real rendering window. These checks are not a substitute for testing on physical phones.
+The behavior suite checks tier boundaries, random coverage, repetition avoidance, all animation lifecycles, transformed hitboxes, visible bounds, rapid taps, escape recovery, relaxation, sleep/wake, input paths, and resizing. Optional `godot --path . --script tests/render.gd` produces an ignored contact sheet when pose/layout changes need review; it is not a routine image-generation step. Package validation is a final release gate, since existing store captures intentionally remain historical while gameplay changes. These checks are not a substitute for testing on physical phones.
 
 ## Android / future iOS
 

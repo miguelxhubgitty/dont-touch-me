@@ -1,4 +1,5 @@
 extends SceneTree
+const Fingerprint = preload("res://release/tools/source_fingerprint.gd")
 var checks := 0
 var failures := 0
 
@@ -15,7 +16,10 @@ func _initialize() -> void:
 		check(listing[field].length() > 0 and listing[field].length() <= limits[field], "metadata character limit: " + field)
 	check(listing.apple_keywords.to_utf8_buffer().size() <= 100, "Apple keyword byte limit")
 	var manifest = JSON.parse_string(FileAccess.get_file_as_string("res://release/assets/manifest.json"))
-	check(manifest.source_script_sha256 == FileAccess.get_sha256("res://scripts/blob.gd"), "screenshots match current gameplay source")
+	var hash_mode: String = manifest.get("source_hash_mode", "")
+	check(Fingerprint.matches("res://scripts/blob.gd", manifest.source_script_sha256, hash_mode), "screenshots match current gameplay source (regenerate only during release finalization)")
+	for source in manifest.get("typography_sources_sha256", {}):
+		check(Fingerprint.matches("res://" + source, manifest.typography_sources_sha256[source], hash_mode), "captures match typography source: " + source)
 	check(manifest.assets.size() == 39, "complete 39-PNG graphics package")
 	var image_preview := Image.create(864, 2400, false, Image.FORMAT_RGB8)
 	image_preview.fill(Color("dfd8ca"))
@@ -50,6 +54,8 @@ func _initialize() -> void:
 		var section := "preset.%d" % index
 		check(str(presets.get_value(section, "exclude_filter")).contains("release/*"), "release material excluded from game")
 		check(str(presets.get_value(section, "include_filter")).contains("THIRD_PARTY_NOTICES.txt"), "license notices included")
+		if FileAccess.file_exists("res://assets/fonts/OFL-Space-Grotesk.txt"):
+			check(str(presets.get_value(section, "include_filter")).contains("assets/fonts/OFL-Space-Grotesk.txt"), "Space Grotesk license included")
 	check(not presets.get_value("preset.2.options", "package/signed"), "AAB preparation cannot claim a production signature")
 	check(presets.get_value("preset.2.options", "gradle_build/target_sdk") == "36", "AAB target SDK 36")
 	for file in ["PRIVACY_POLICY.md", "STORE_LISTING.md", "DATA_SAFETY.md", "APP_STORE_PRIVACY.md", "CONTENT_RATING.md", "IOS_EXPORT.md", "PUBLISH_PRIVACY.md", "RELEASE_CHECKLIST.md"]:

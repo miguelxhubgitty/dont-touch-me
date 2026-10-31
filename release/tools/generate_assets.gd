@@ -2,6 +2,7 @@ extends SceneTree
 ## Run with a real renderer: godot --path . --script release/tools/generate_assets.gd
 ## Screenshots come from the existing Blob renderer, with no image compositing.
 const Blob = preload("res://scripts/blob.gd")
+const Fingerprint = preload("res://release/tools/source_fingerprint.gd")
 const OUT := "res://release/assets/"
 const PAPER := Color("f6f2e9")
 var records: Array[Dictionary] = []
@@ -16,6 +17,10 @@ class FeatureGraphic extends Node2D:
 		draw_string(font, Vector2(75, 412), "A tiny interactive comedy.", HORIZONTAL_ALIGNMENT_LEFT, -1, 19, Color("7f786c"))
 
 func _initialize() -> void:
+	if not OS.get_cmdline_user_args().has("--finalize-release"):
+		printerr("Store captures are release-only. See BRANCH_WORKFLOW.md; pass -- --finalize-release after gameplay/text freeze.")
+		quit(1)
+		return
 	call_deferred("run")
 
 func save_image(image: Image, relative: String, kind: String, opaque := true) -> void:
@@ -74,7 +79,8 @@ func run() -> void:
 	write_text(OUT + "manifest.json", JSON.stringify({
 		"generated_by": "release/tools/generate_assets.gd",
 		"engine": Engine.get_version_info().string,
-		"source_script_sha256": FileAccess.get_sha256("res://scripts/blob.gd"),
+		"source_script_sha256": Fingerprint.digest("res://scripts/blob.gd"),
+		"source_hash_mode": Fingerprint.MODE,
 		"screenshot_provenance": "Actual Blob Node2D rendering in Godot SubViewports on Windows. Deterministic reachable reaction poses; no compositing, captions, fake OS frames, or post-capture resizing. Apple files are dimension-ready reference renders, not verified iOS device captures.",
 		"assets": records,
 	}, "\t"))
