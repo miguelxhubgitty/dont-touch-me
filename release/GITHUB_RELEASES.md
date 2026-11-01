@@ -36,7 +36,9 @@ After successful verification, update `release/distribution/platforms.json` → 
 - Windows: unsigned ZIP; retain recorded exported-executable smoke evidence.
 - Web: HTML5 ZIP, not a directly executable desktop game; host via HTTP(S). Existing itch.io browser play remains separate.
 - Linux: cross-exported ZIP, **not native-tested**.
-- macOS: **unsigned, not notarized, not native-tested** universal ZIP.
+- macOS: universal ZIP with a sealed ad-hoc (or explicitly configured stronger) signature. Strict native signature checks and runtime observations are separate from Developer ID/notarization trust. See [signing design](MACOS_SIGNING_DESIGN.md).
+
+The existing v0.1.0-alpha macOS ZIP and its ledger entry were corrected with explicit owner authorization on November 1, 2026. The tag and other platform packages are unchanged. The general publisher still refuses asset replacement; do not use a normal publish rerun to overwrite a corrected asset with historical local bytes.
 - Android: **debug-signed testing APK**, not a production/store-signed build; no new device testing claimed.
 - Android unsigned AAB: excluded, not an installable game. iOS: no existing distributable artifact.
 
