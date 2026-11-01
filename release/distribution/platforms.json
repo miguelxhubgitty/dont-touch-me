@@ -251,9 +251,9 @@
             "target": "macos",
             "path": "macos/DontTouchMe-v0.1.0-alpha-macos.zip",
             "name": "DontTouchMe-v0.1.0-alpha-macos.zip",
-            "label": "macOS ZIP \u2014 unsigned, not notarized; not native-tested",
-            "sha256": "111bffb1bbf431422a250a94dba919f1b16af7cef37614336ef956d7a325e7fa",
-            "size": 60329175,
+            "label": "macOS ZIP \u2014 ad-hoc signed, not Developer ID signed/notarized; Intel native-tested",
+            "sha256": "b7854c72f0a1389830acc5eae92db9e1c3e058a3ce5bb610333a6e2e4f4bca66",
+            "size": 59863757,
             "url": "https://github.com/miguelxhubgitty/dont-touch-me/releases/download/v0.1.0-alpha/DontTouchMe-v0.1.0-alpha-macos.zip"
           },
           {
@@ -278,12 +278,21 @@
             "target": "checksums",
             "path": "SHA256SUMS",
             "name": "SHA256SUMS",
-            "label": "Original local handoff SHA-256 ledger (paths relative to the build directory)",
-            "sha256": "1b450dcf9ac96ccb61d32d0199e2505382997e797e786db777654129395a16bf",
+            "label": "SHA-256 ledger with corrected macOS package entry; historical raw entries retained",
+            "sha256": "817eeb805dfe0625c751b335357e31453ba203f3ae0426a8d30f57fa2d65fd0b",
             "size": 14374,
             "url": "https://github.com/miguelxhubgitty/dont-touch-me/releases/download/v0.1.0-alpha/SHA256SUMS"
           }
-        ]
+        ],
+        "macos_packaging_correction": {
+          "date": "2026-11-01",
+          "tag_unchanged": true,
+          "game_content_unchanged": true,
+          "anonymous_downloads_verified": true,
+          "previous_macos_sha256": "111bffb1bbf431422a250a94dba919f1b16af7cef37614336ef956d7a325e7fa",
+          "signing": "ad-hoc signed; not Developer ID signed or notarized",
+          "native_testing": "Intel macOS startup, mouse reactions, sleep/wake and resizing passed"
+        }
       },
       "required_assets": [
         "assets.branding",

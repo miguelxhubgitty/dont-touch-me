@@ -88,6 +88,23 @@ class PackagingTests(unittest.TestCase):
         entry=self.release.receipts['artifacts']['linux']
         with zipfile.ZipFile(self.release.out/entry['package']) as z:
             self.assertTrue((z.getinfo('DontTouchMe.x86_64').external_attr>>16)&0o111)
+    def test_macos_packaging_preserves_signed_bundle_bytes_and_modes(self):
+        raw=self.add('macos',{})
+        with zipfile.ZipFile(raw/'DontTouchMe.zip','w') as z:
+            executable=zipfile.ZipInfo('Game.app/Contents/MacOS/Game')
+            executable.create_system=3
+            executable.external_attr=0o100755<<16
+            z.writestr(executable,b'signed executable fixture')
+            z.writestr('Game.app/Contents/_CodeSignature/CodeResources',b'resource seal fixture')
+        self.release.receipts['artifacts']['macos']['raw_files']={p.relative_to(self.release.out).as_posix():dist.sha(p) for p in raw.iterdir()}
+        with patch.object(dist.platform,'system',return_value='Linux'):
+            self.release.package()
+        entry=self.release.receipts['artifacts']['macos']
+        with zipfile.ZipFile(self.release.out/entry['package']) as z:
+            self.assertEqual(z.read(executable.filename),b'signed executable fixture')
+            self.assertEqual(z.getinfo(executable.filename).external_attr,executable.external_attr)
+            self.assertEqual(z.read('Game.app/Contents/_CodeSignature/CodeResources'),b'resource seal fixture')
+            self.assertIn('LICENSES/NOTICE.txt',z.namelist())
     def test_changed_notices_repackage_without_export(self):
         self.add('windows',{'DontTouchMe.exe':b'MZ fixture'})
         self.release.package()
@@ -111,5 +128,39 @@ class PackagingTests(unittest.TestCase):
         dist.save(self.release.out/'validation.json',{'runtime_fingerprint':'runtime','asset_input':{},'shared_fingerprints':{'screenshot.png':'original'}})
         with patch.object(dist,'asset_input',return_value={}):
             dist.Release.current_validation(self.release)
+
+class MacOSSigningTests(unittest.TestCase):
+    def test_sync_migrates_only_disabled_macos_signing(self):
+        text='[preset.0]\nplatform="Windows Desktop"\n[preset.0.options]\ncodesign/codesign=0\n[preset.1]\nplatform="macOS"\n[preset.1.options]\ncodesign/codesign=0\nnotarization/notarization=0\n'
+        result=dist.macos_signing_defaults(text)
+        self.assertIn('[preset.0.options]\ncodesign/codesign=0',result)
+        self.assertIn('[preset.1.options]\ncodesign/codesign=1',result)
+        self.assertEqual(result,dist.macos_signing_defaults(result))
+    def test_sync_preserves_configured_stronger_signer(self):
+        text='[preset.0]\nplatform="macOS"\n[preset.0.options]\ncodesign/codesign=3\ncodesign/identity="Developer ID configured locally"\nnotarization/notarization=2\n'
+        self.assertEqual(text,dist.macos_signing_defaults(text))
+    def test_unsealed_and_unsafe_archives_rejected(self):
+        with tempfile.TemporaryDirectory() as folder:
+            path=Path(folder)/'game.zip'
+            with zipfile.ZipFile(path,'w') as z:
+                executable=zipfile.ZipInfo('Game.app/Contents/MacOS/Game')
+                executable.external_attr=0o100755<<16
+                z.writestr(executable,b'template signature is insufficient')
+            with self.assertRaisesRegex(RuntimeError,'resource seal missing'):
+                dist.inspect_macos_zip(path)
+            with zipfile.ZipFile(path,'a') as z: z.writestr('../escape',b'outside')
+            with self.assertRaisesRegex(RuntimeError,'Unsafe'):
+                dist.inspect_macos_zip(path)
+    def test_native_invalid_signature_blocks_package(self):
+        with tempfile.TemporaryDirectory() as folder:
+            path=Path(folder)/'game.zip'
+            with zipfile.ZipFile(path,'w') as z:
+                executable=zipfile.ZipInfo('Game.app/Contents/MacOS/Game')
+                executable.external_attr=0o100755<<16
+                z.writestr(executable,b'tampered')
+                z.writestr('Game.app/Contents/_CodeSignature/CodeResources',b'outdated seal')
+            with patch.object(dist.platform,'system',return_value='Darwin'), patch.object(dist.subprocess,'run',side_effect=[dist.subprocess.CompletedProcess([],0),dist.subprocess.CompletedProcess([],1,'','resource mismatch')]):
+                with self.assertRaisesRegex(RuntimeError,'signature verification failed'):
+                    dist.inspect_macos_zip(path)
 
 if __name__=='__main__': unittest.main()
