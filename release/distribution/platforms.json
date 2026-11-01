@@ -233,7 +233,7 @@
             "target": "windows",
             "path": "windows/DontTouchMe-v0.1.0-alpha-windows.zip",
             "name": "DontTouchMe-v0.1.0-alpha-windows.zip",
-            "label": "Windows ZIP — unsigned",
+            "label": "Windows ZIP \u2014 unsigned",
             "sha256": "42a43d68e9c0dd2af46da6dfa6f74d32b4e4c2242a68771dc046900134bcbdc9",
             "size": 38715912,
             "url": "https://github.com/miguelxhubgitty/dont-touch-me/releases/download/v0.1.0-alpha/DontTouchMe-v0.1.0-alpha-windows.zip"
@@ -242,7 +242,7 @@
             "target": "linux",
             "path": "linux/DontTouchMe-v0.1.0-alpha-linux.zip",
             "name": "DontTouchMe-v0.1.0-alpha-linux.zip",
-            "label": "Linux ZIP — not native-tested",
+            "label": "Linux ZIP \u2014 not native-tested",
             "sha256": "1788065ce5019eb1594c86b8f784e88607b5d8459d32cdc20875bf0e78747427",
             "size": 29088537,
             "url": "https://github.com/miguelxhubgitty/dont-touch-me/releases/download/v0.1.0-alpha/DontTouchMe-v0.1.0-alpha-linux.zip"
@@ -251,7 +251,7 @@
             "target": "macos",
             "path": "macos/DontTouchMe-v0.1.0-alpha-macos.zip",
             "name": "DontTouchMe-v0.1.0-alpha-macos.zip",
-            "label": "macOS ZIP — ad-hoc signed, not Developer ID signed/notarized; Intel native-tested",
+            "label": "macOS ZIP \u2014 ad-hoc signed, not Developer ID signed/notarized; Intel native-tested",
             "sha256": "b7854c72f0a1389830acc5eae92db9e1c3e058a3ce5bb610333a6e2e4f4bca66",
             "size": 59863757,
             "url": "https://github.com/miguelxhubgitty/dont-touch-me/releases/download/v0.1.0-alpha/DontTouchMe-v0.1.0-alpha-macos.zip"
@@ -260,7 +260,7 @@
             "target": "web",
             "path": "web/DontTouchMe-v0.1.0-alpha-web.zip",
             "name": "DontTouchMe-v0.1.0-alpha-web.zip",
-            "label": "HTML5 Web ZIP — host over HTTP(S)",
+            "label": "HTML5 Web ZIP \u2014 host over HTTP(S)",
             "sha256": "a83c11065a9e0eb893aca487ebe8c7873a990de0acb00bc291f7d90c8cb6cb70",
             "size": 10903361,
             "url": "https://github.com/miguelxhubgitty/dont-touch-me/releases/download/v0.1.0-alpha/DontTouchMe-v0.1.0-alpha-web.zip"
@@ -269,7 +269,7 @@
             "target": "android-apk",
             "path": "android/raw-android-apk/dont-touch-me-debug.apk",
             "name": "dont-touch-me-debug.apk",
-            "label": "Android debug-signed APK — TESTING BUILD, not production signing",
+            "label": "Android debug-signed APK \u2014 TESTING BUILD, not production signing",
             "sha256": "159ecbab25ad21bf57f3b5aec2b27b5b6e283ce4b8c2c41a4cf02fb80ed08edd",
             "size": 28918307,
             "url": "https://github.com/miguelxhubgitty/dont-touch-me/releases/download/v0.1.0-alpha/dont-touch-me-debug.apk"
