@@ -1,5 +1,9 @@
 # Local multi-platform release system
 
+## Explicit GitHub release publication
+
+The optional [GitHub Releases adapter](GITHUB_RELEASES.md) publishes existing distributable packages after one explicit owner release approval, with immutable tag/asset checks, resumable uploads and anonymous checksum verification. `prepare`, tag pushes and exports still never publish. The original local preparation instructions and platform limitations below remain applicable; verified per-destination publication records supersede the initial unpublished baseline.
+
 The core system prepares free Public Alpha artifacts offline. The separately invoked [itch.io Butler adapter](ITCH_PUBLISHING.md) can upload verified packages to an operator-reviewed draft; it never publishes a page. Follow `../BRANCH_WORKFLOW.md` first: current gameplay from main, a fresh `release/v<version>` branch and the reviewed aesthetic patch. Never merge release presentation into main.
 
 ## Canonical editable information
