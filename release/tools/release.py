@@ -34,6 +34,59 @@ TARGETS = {
 }
 FORMATS = {'windows': ['windows-zip','windows-directory'], 'web': ['web-zip','web-directory'],
            'android-apk': ['android-debug-apk'], 'android-aab': [], 'linux': ['linux-zip','linux-directory'], 'macos': ['macos-zip','macos-app'], 'ios': []}
+MACOS_RECIPE = 'sealed-adhoc-v1'
+
+def macos_signing_defaults(text):
+    """Migrate disabled macOS signing without changing other targets or custom signers."""
+    for match in list(re.finditer(r'(?m)^\[preset\.(\d+)\]\s*$', text)):
+        index = match[1]
+        section = re.search(r'(?ms)^\[preset\.'+index+r'\]\n(.*?)(?=^\[|\Z)', text)
+        if not section or not re.search(r'(?m)^platform="macOS"$', section[1]):
+            continue
+        pattern = r'(?ms)(^\[preset\.'+index+r'\.options\]\n)(.*?)(?=^\[|\Z)'
+        def migrate(options):
+            body = options[2]
+            if not re.search(r'(?m)^codesign/codesign=', body):
+                body += '\ncodesign/codesign=1\n'
+            else:
+                body = re.sub(r'(?m)^codesign/codesign=0$', 'codesign/codesign=1', body)
+            return options[1] + body
+        text, count = re.subn(pattern, migrate, text)
+        if not count:
+            text += f'\n[preset.{index}.options]\ncodesign/codesign=1\n'
+    return text
+
+def inspect_macos_zip(path):
+    """Check bundle structure everywhere, and verify native signatures on macOS."""
+    with zipfile.ZipFile(path) as archive:
+        if archive.testzip():
+            raise RuntimeError('Corrupt macOS ZIP')
+        names = archive.namelist()
+        if any(n.startswith('/') or '..' in Path(n).parts or '\\' in n for n in names):
+            raise RuntimeError('Unsafe macOS ZIP path')
+        if len(names) != len(set(names)) or any((i.external_attr >> 16) & 0o170000 == 0o120000 for i in archive.infolist()):
+            raise RuntimeError('Duplicate or symlink macOS ZIP entry')
+        executables = [n for n in names if '.app/Contents/MacOS/' in n and not n.endswith('/')]
+        if len(executables) != 1:
+            raise RuntimeError('Expected one macOS app executable')
+        executable = executables[0]
+        if not ((archive.getinfo(executable).external_attr >> 16) & 0o111):
+            raise RuntimeError('macOS executable permission missing')
+        bundle = executable.split('.app/Contents/')[0] + '.app'
+        seal = bundle + '/Contents/_CodeSignature/CodeResources'
+        if seal not in names or not archive.read(seal):
+            raise RuntimeError('macOS app resource seal missing; enable ad-hoc or stronger signing')
+    result = {'signing':'resource seal present; native signature verification requires macOS',
+              'runtime':'not run: signature validation is not a native gameplay test',
+              'gatekeeper':'not established; ad-hoc signing is not Developer ID/notarization'}
+    if platform.system() == 'Darwin':
+        with tempfile.TemporaryDirectory(prefix='dont-touch-me-signature-') as folder:
+            subprocess.run(['/usr/bin/ditto','-x','-k',str(Path(path).resolve()),folder], check=True, capture_output=True)
+            checked = subprocess.run(['/usr/bin/codesign','--verify','--all-architectures','--deep','--strict',str(Path(folder)/bundle)], capture_output=True, text=True)
+            if checked.returncode:
+                raise RuntimeError('macOS app signature verification failed: '+checked.stderr.strip())
+        result['signing'] = 'codesign strict verification passed for all architectures; notarization not checked'
+    return result
 
 def load(path):
     return json.loads(Path(path).read_text(encoding='utf-8-sig'))
@@ -120,7 +173,7 @@ def sync():
     additions = [
         ('Web','Web','variant/extensions_support=false\nvariant/thread_support=false\nvram_texture_compression/for_desktop=true\nvram_texture_compression/for_mobile=true\nhtml/canvas_resize_policy=2\nhtml/focus_canvas_on_start=true\nprogressive_web_app/enabled=false\n'),
         ('Linux','Linux','binary_format/architecture="x86_64"\nbinary_format/embed_pck=true\ndebug/export_console_wrapper=0\n'),
-        ('macOS','macOS',f'application/bundle_identifier="{c["application_id"]}"\napplication/short_version="{c["native_version"]}"\napplication/version="{c["android_version_code"]}"\napplication/icon="res://assets/icon_ios.png"\nbinary_format/architecture="universal"\ncodesign/codesign=0\nnotarization/notarization=0\n'),
+        ('macOS','macOS',f'application/bundle_identifier="{c["application_id"]}"\napplication/short_version="{c["native_version"]}"\napplication/version="{c["android_version_code"]}"\napplication/icon="res://assets/icon_ios.png"\nbinary_format/architecture="universal"\ncodesign/codesign=1\nnotarization/notarization=0\n'),
     ]
     for name, target, options in additions:
         if f'name="{name}"' not in text:
@@ -129,7 +182,7 @@ def sync():
     # Ensure future syncs update existing macOS numeric versions too.
     text = re.sub(r'(?m)^application/short_version="[^"]+"', f'application/short_version="{c["native_version"]}"', text)
     text = re.sub(r'(?m)^application/version="[^"]+"', f'application/version="{c["android_version_code"]}"', text)
-    presets.write_text(text, encoding='utf-8')
+    presets.write_text(macos_signing_defaults(text), encoding='utf-8')
     print('Synchronized alpha metadata and six native/Web export presets; no images generated.')
 
 def inventory_refresh():
@@ -273,7 +326,7 @@ class Release:
             raw = self.out / folder / ('raw-' + key)
             raw.mkdir(parents=True, exist_ok=True)
             destination = raw / target[2]
-            fingerprint = hashlib.sha256((self.runtime_hash()+key+sha(self.godot)+sha(self.templates/target[1])).encode()).hexdigest()
+            fingerprint = hashlib.sha256((self.runtime_hash()+key+sha(self.godot)+sha(self.templates/target[1])+(MACOS_RECIPE if key=='macos' else '')).encode()).hexdigest()
             if old.get('export_fingerprint') == fingerprint and old.get('raw_files') and all((self.out/p).is_file() and sha(self.out/p)==h for p,h in old['raw_files'].items()):
                 print(key + ': reusing validated existing export')
                 continue
@@ -283,7 +336,7 @@ class Release:
                     command.insert(0, '--install-android-build-template')
                 self.engine(*command, label='export-' + key, timeout=1200)
                 validation = self.inspect(key, destination)
-                self.receipts['artifacts'][key] = {'status':'built','source_commit':git('rev-parse','HEAD'),'built_at':stamp(),'export_fingerprint':fingerprint,'raw_files':{p.relative_to(self.out).as_posix():sha(p) for p in raw.rglob('*') if p.is_file()},'validation':validation,'signing': 'debug key only' if key=='android-apk' else 'unsigned' if key in ['windows','macos','android-aab'] else 'not applicable','formats':FORMATS[key]}
+                self.receipts['artifacts'][key] = {'status':'built','source_commit':git('rev-parse','HEAD'),'built_at':stamp(),'export_fingerprint':fingerprint,'raw_files':{p.relative_to(self.out).as_posix():sha(p) for p in raw.rglob('*') if p.is_file()},'validation':validation,'signing': validation.get('signing','ad-hoc or stronger; verify on macOS') if key=='macos' else 'debug key only' if key=='android-apk' else 'unsigned' if key in ['windows','android-aab'] else 'not applicable','formats':FORMATS[key]}
                 print(key + ': exported and inspected')
             except (RuntimeError, subprocess.TimeoutExpired, OSError, zipfile.BadZipFile) as error:
                 self.receipts['artifacts'][key] = {'status':'failed','error':str(error),'formats':[]}
@@ -309,13 +362,7 @@ class Release:
             if (path.parent/'index.wasm').read_bytes()[:4] != b'\0asm': raise RuntimeError('Invalid Wasm header')
             checks['threading'] = 'single-thread export; no cross-origin-isolation requirement'
         elif key == 'macos':
-            with zipfile.ZipFile(path) as z:
-                if z.testzip(): raise RuntimeError('Corrupt macOS ZIP')
-                executables = [n for n in z.namelist() if '.app/Contents/MacOS/' in n and not n.endswith('/')]
-                if not executables: raise RuntimeError('No macOS app executable')
-                for name in executables:
-                    if not ((z.getinfo(name).external_attr>>16)&0o111): raise RuntimeError('macOS executable permission missing')
-                checks['runtime'] = 'not run: macOS host unavailable; unsigned/not notarized'
+            checks.update(inspect_macos_zip(path))
         else:
             with zipfile.ZipFile(path) as z:
                 if z.testzip(): raise RuntimeError('Corrupt Android archive')
@@ -356,7 +403,11 @@ class Release:
                 record['package_sha256'] = sha(file)
                 continue
             dest = self.out / key / f'DontTouchMe-v{self.catalog["version"]}-{key}.zip'
+            if key == 'macos':
+                inspect_macos_zip(raw/'DontTouchMe.zip')
             package_input=hashlib.sha256(json.dumps({'raw':record['raw_files'],'licenses':{p:sha(ROOT/p) for p in self.catalog['licenses']},'version':self.catalog['version'],'publisher':self.catalog['publisher'],'pricing':self.catalog['pricing'],'recipe':1},sort_keys=True).encode()).hexdigest()
+            if key == 'macos':
+                package_input = hashlib.sha256((package_input+MACOS_RECIPE).encode()).hexdigest()
             if record.get('package_input')==package_input and dest.exists() and sha(dest)==record.get('package_sha256'):
                 print(key+': reusing package')
                 continue
@@ -373,10 +424,12 @@ class Release:
                         info.compress_type=zipfile.ZIP_DEFLATED
                         z.writestr(info,file.read_bytes())
                 for file in self.catalog['licenses']: z.write(ROOT/file,'LICENSES/'+Path(file).name)
-                z.writestr('README.txt',f"Don't Touch Me — Public Alpha v{self.catalog['version']}\nFree: no payments, ads, accounts or in-app purchases.\nTap/click the blob. Leave it alone to relax and sleep.\nContact: {self.catalog['publisher']['email']}\n" + ('Serve this directory over HTTP(S); index.html is the entry point. WebGL2/Wasm required.\n' if key=='web' else 'Linux: run ./DontTouchMe.x86_64 (chmod +x if your extractor loses permissions).\n' if key=='linux' else 'macOS: unsigned/not notarized; native execution not verified.\n' if key=='macos' else 'Windows: unsigned executable; see release report for validation.\n'))
+                z.writestr('README.txt',f"Don't Touch Me — Public Alpha v{self.catalog['version']}\nFree: no payments, ads, accounts or in-app purchases.\nTap/click the blob. Leave it alone to relax and sleep.\nContact: {self.catalog['publisher']['email']}\n" + ('Serve this directory over HTTP(S); index.html is the entry point. WebGL2/Wasm required.\n' if key=='web' else 'Linux: run ./DontTouchMe.x86_64 (chmod +x if your extractor loses permissions).\n' if key=='linux' else 'macOS: sealed app signature required; default is ad-hoc, not Developer ID signed or notarized. Gatekeeper may report that Apple could not verify the app. Native gameplay testing is a separate gate.\n' if key=='macos' else 'Windows: unsigned executable; see release report for validation.\n'))
             with zipfile.ZipFile(dest) as z:
                 if z.testzip(): raise RuntimeError('Package CRC check failed')
                 if key=='web' and 'index.html' not in z.namelist(): raise RuntimeError('Web ZIP entry point is not at root')
+            if key == 'macos':
+                inspect_macos_zip(dest)
             record.update(package=dest.relative_to(self.out).as_posix(),package_sha256=sha(dest),package_input=package_input)
         self.write_manifest()
 
