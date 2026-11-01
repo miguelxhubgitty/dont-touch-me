@@ -100,4 +100,6 @@ git ls-remote origin "refs/heads/release/$version" "refs/tags/v$version" "refs/t
 
 Pushing a branch/tag is version control, not authorization to create a public GitHub Release, upload binaries, deploy a site, or submit to stores. Check any future CI automation before pushing tags. Keep signed artifacts/credentials outside Git.
 
+For separately approved GitHub distribution, follow [release/GITHUB_RELEASES.md](release/GITHUB_RELEASES.md). One explicit release approval covers all available distributable packages; the publisher reuses existing validated files and the existing tag, never moves tags or exports builds. Preserve signing/native-test caveats and verify anonymous download checksums before recording success.
+
 Backport genuine release bug fixes to `main` as focused basic-font changes, and rerun gameplay checks. Do not merge the release branch wholesale into `main`. Keep the aesthetic snapshot as a reusable reference. Use a new `aesthetic/typography-v2` for a materially changed treatment and explicitly review/update the integration allowlist/base; never move the old branch history or tags to hide changes.

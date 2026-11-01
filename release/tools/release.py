@@ -1,4 +1,4 @@
-"""Local release preparation only. Python 3.10+, standard library, no upload API."""
+"""Local release preparation; explicit owner-approved GitHub upload adapter. Standard library only."""
 from __future__ import annotations
 import argparse
 import configparser
@@ -445,11 +445,16 @@ class Release:
 
 def main():
     parser=argparse.ArgumentParser(description=__doc__)
-    parser.add_argument('command',choices=['sync','doctor','finalize-assets','validate','export','package','report','prepare','verify','web-test'])
+    parser.add_argument('command',choices=['sync','doctor','finalize-assets','validate','export','package','report','prepare','verify','web-test','github-release'])
+    parser.add_argument('--approval',default='')
+    parser.add_argument('--expected-tag-commit',default='')
     parser.add_argument('--godot',default=os.environ.get('GODOT'))
     parser.add_argument('--targets',nargs='+',choices=list(TARGETS),default=list(TARGETS))
     args=parser.parse_args()
     require_release()
+    if args.command=='github-release':
+        from github_release import main as publish_github
+        return publish_github(['publish','--approval',args.approval,'--expected-tag-commit',args.expected_tag_commit])
     if args.command=='sync': return sync()
     release=Release(args.godot)
     if args.command=='doctor': print(json.dumps(release.doctor(),indent=2))

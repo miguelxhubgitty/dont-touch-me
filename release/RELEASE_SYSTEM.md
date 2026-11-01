@@ -1,6 +1,10 @@
 # Local multi-platform release system
 
-This is a local, free Public Alpha preparation system, not a store uploader. No account, payment, signing identity or distribution publication is created. Follow `../BRANCH_WORKFLOW.md` first: current gameplay from main, a fresh `release/v<version>` branch and the reviewed aesthetic patch. Never merge release presentation into main.
+## Explicit GitHub release publication
+
+The optional [GitHub Releases adapter](GITHUB_RELEASES.md) publishes existing distributable packages after one explicit owner release approval, with immutable tag/asset checks, resumable uploads and anonymous checksum verification. Ordinary prepare/export/tag pushes do not publish. Verified publication records supersede the initial unpublished baseline.
+
+The core system prepares free Public Alpha artifacts locally; only the separately approved GitHub adapter publishes. It creates no account, payment or signing identity. Follow `../BRANCH_WORKFLOW.md` first: current gameplay from main, a fresh `release/v<version>` branch and the reviewed aesthetic patch. Never merge release presentation into main.
 
 ## Canonical editable information
 

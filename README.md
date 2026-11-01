@@ -43,6 +43,8 @@ See [TESTING.md](TESTING.md) for observed results and [RELEASE_CHECKLIST.md](REL
 
 ## Complete publishing package
 
+Public Alpha v0.1.0-alpha downloads are available at [GitHub Releases](https://github.com/miguelxhubgitty/dont-touch-me/releases/tag/v0.1.0-alpha), alongside existing [itch.io browser play and Windows download](https://wandiel.itch.io/dont-touch-me). See [release/GITHUB_RELEASES.md](release/GITHUB_RELEASES.md) for the explicit-approval publishing command and [publication evidence](release/GITHUB_PUBLICATION_v0.1.0-alpha.md). Linux is not native-tested; macOS is unsigned/not notarized/not native-tested; Android is a debug-signed testing APK. These are the existing Alpha packages, not rebuilt binaries.
+
 [release/README.md](release/README.md) indexes all store graphics, actual gameplay renders, copyable store listings, code-based privacy/rating drafts, policy-hosting pages, and the Mac/Xcode handoff. Release materials are excluded from game exports.
 
 The **Android AAB Unsigned** preset prepares a release-mode bundle with Gradle, target SDK 36, and no production signature. Install the Gradle template using Godot's Android build-template setup (or `--install-android-build-template` with the export command). An unsigned AAB is not ready to upload to Google Play: configure your own upload key, enable signing in a store-upload preset, and validate the signed result. No production key is included or generated.
