@@ -14,6 +14,7 @@
 - Each milestone should have observable player-facing acceptance criteria and practical playtesting, not only automated assertions.
 - Cross-platform behavior must account for mouse and touch; browser audio has user-gesture/autoplay restrictions.
 - Sound priority is **not** uniform: tactile effects and the blob's voice matter first; music and ambience are optional, much later decisions.
+- Preserve the blob's **cute/affectionate versus hostile/defensive dichotomy**. A cat is a useful temperament analogy, **not** a requirement for animal behavior or a single fixed player relationship.
 
 ## Operating contract for Codex
 
@@ -32,13 +33,15 @@
 **Purpose:** Make the blob feel alive through sound that reinforces its physical performance and comic personality.
 
 **High priority:**
-- A small, distinctive palette of **nonverbal vocalizations**: surprise, suspicion, annoyance, resistance, sleepy/wake sounds. Decide sonic personality and emotional intensity with the owner.
+- A small, distinctive **native/default blob voice**: nonverbal surprise, suspicion, contentment, annoyance, resistance, sleepy/wake sounds. Explore contrasting cute and defensive expressions; decide the actual sonic personality with the owner.
+- **Possible future personalization:** alternative audio-only suites, such as cat (purr/meow/hiss), dog (whine/bark/growl), or bird (chirp/squawk). The animal analogy applies to **sound**, not altered blob movement, behavior, relationship rules, or gameplay. Preserve the *same semantic cues* across packs so selecting a suite replaces voice clips, not mechanics. These suites are **proposals, not M1 deliverables**.
+- Keep the M1 audio event mapping simple enough to support voice-suite substitution later (for example, stable meaning-based cues such as content/surprise/protest/sleep), **without** constructing an extensive configurable audio-pack framework now.
 - **Tactile/action sound** synchronized to key existing animations (poke, squish, movement, sign, box, escape, sleep/wake) without constant noisy playback.
 - Intentional **silence and timing**: sounds support animation beats; repeated/rapid pokes must not cause an overwhelming pileup.
 - A **simple mute/volume solution** appropriate for an otherwise minimalist game. Start with minimal controls, not a five-slider mixer.
 - Original or clearly licensed audio, local/offline resources, efficient playback, cross-platform checks, browser first-interaction unlock and sensible focus behavior.
 
-**Explicitly out of scope:** background music, ambient beds, complex voice dialogue, additional reactions, progression, trust, customization, broad architecture rewrites, monetization.
+**Explicitly out of scope:** background music, ambient beds, complex voice dialogue, alternate cat/dog/bird sound packs, additional reactions, progression, trust mechanics, customization UI, broad architecture rewrites, monetization.
 
 **Before implementation:** agree on a reference sound palette, a small event-to-sound map with timing points, interruption/overlap rules, volume behavior, audio budgets, tests and a way to compare silent vs sound-on gameplay.
 
@@ -84,7 +87,7 @@
 - Start with session-only/simple state unless the owner approves persistence. Do not require hover (unavailable to touch-only players).
 - Define the actual player gesture and clear testable behaviors before implementation.
 
-**Status:** Concept is welcomed, **not** a signed-off mechanic.
+**Status:** Concept is welcomed, **not** a signed-off mechanic. Do **not** add an unused `trust` variable, save format, or scaffolding as part of M1. Define how trust is earned, lost and expressed, and whether it should persist, before authorizing even minimal state.
 
 ## Later idea backlog — not active milestones
 
@@ -92,7 +95,7 @@ Listed for retention, **not authorization**. Reorder or discard through discussi
 
 1. More persistent emotional continuity/personality between reactions, **only if** M2–M5 demonstrate a real need; avoid duplicating the existing annoyance/idle state.
 2. Other interaction types (holding, dragging, slow approaches, etc.), designed for both mouse and touch; no assumed new controls.
-3. Optional counters/statistics, if a measurable player benefit emerges; do not incentivize relentless poking by accident.
+3. Optional counters/statistics. **Assessment:** Lightweight per-session counters may later help discovery or testing, but define an actual use and what counts (touches, completed reactions, unique reactions) before adding them; don't build dormant counters or player-facing score incentives by default.
 4. Outfits, furniture, environmental customization and UI, if they add value without crowding the character.
 5. Expanded soundscape: **ambience, background music**, additional mixing/accessibility controls when a clear atmosphere is chosen. These are deliberately **not part of M1**.
 6. **Additional reactions and dialogue — very last.** Prioritize timing, animation quality, independence and existing content discovery first.
