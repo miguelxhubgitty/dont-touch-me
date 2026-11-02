@@ -4,6 +4,15 @@
 
 > This is an **owner-discussion history and continuity guide**, not an automatic authorization to code, modify public listings or advance a milestone. For facts that can change, re-check the current source, branches, plans, test outputs and distribution receipts. Some decisions below are newer than `main`'s older `GAME_ROADMAP.md` and were discussed in a draft roadmap PR; do not mistake an unmerged plan for current implementation.
 
+## Permanent branch isolation — NEVER merge into `main`
+
+- **This document and its documentation branch are permanently separate from `main`.** Do not open or merge a pull request targeting `main` for this foundation or its related context-only updates.
+- Maintain and revise this context **only on the dedicated documentation branch** (`docs/foundation-context-2026-11-02`), or a distinct documentation-only successor branch explicitly approved by the owner.
+- Never cherry-pick, squash, rebase, copy, or otherwise transfer these documentation-branch commits or files into `main` as a workaround. Never merge gameplay/release/website changes into this reference branch.
+- When a new ChatGPT/Codex session needs history, **read this branch explicitly**. Do not infer that these files exist on `main`.
+- Updating this reference does not authorize implementation, releases, deployments, or edits to `main`. Changes to production code or its own operational documents require separate explicit instructions.
+- This is a **project policy recorded in text**, not an automatic GitHub branch protection rule. Keeping the branches separate still depends on not merging them.
+
 ## Read order for a new session
 
 1. **This document** — concept, scope, owner intent, choices, proposed next steps.
