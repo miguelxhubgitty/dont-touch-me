@@ -1,5 +1,7 @@
 # Game development and release rules
 
+**Start with [the game foundational context](docs/PROJECT_FOUNDATION.md) for the premise, owner decisions, current-versus-proposed state and next audio milestone. Current code and approved specs remain authoritative.**
+
 - Read [BRANCH_WORKFLOW.md](BRANCH_WORKFLOW.md) before branching or preparing a release.
 - Develop/test gameplay on `main` with Godot's fallback font. Do not run typography or store-image generators during normal gameplay work.
 - `aesthetic/typography-v1` preserves the approved presentation; it is not a second gameplay branch. Never replace current gameplay with files from it.
