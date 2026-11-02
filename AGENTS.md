@@ -8,6 +8,8 @@
 - Do not merge the aesthetic/release branch wholesale into `main`. Backport only focused gameplay fixes, keeping basic-font development intact.
 - Preserve history; no resets, force pushes, moved tags or automatic publication. Store credentials stay out of Git. Changes in this repository do not authorize website/business repository changes.
 
+- **Publishing visuals:** follow `release/VISUAL_UPLOAD_POLICY.md`. Use the version-specific visual manifest pinned to the approved release, never fallback-font `main` artwork. Space Grotesk is primary; Alpha Ink Free whole-phrase graphics supply handwriting. Before any artwork file-picker/API upload, run `release/tools/visual_assets.py check --platform <destination>` on the exact selected set. Changed, unlisted, wrong-source/typography, wrong-size or unreviewed assets must stop the upload. Microsoft images require both technical validation and byte-specific owner review; automated inspection cannot approve on the owner's behalf. A visual pass never overrides destination deferral or authorizes submission.
+
 ## Planning and tracking
 
 - Before changing gameplay, check `GAME_ROADMAP.md` and the relevant files under `plans/` for proposed features and reported bugs.

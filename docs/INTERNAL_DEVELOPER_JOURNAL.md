@@ -286,3 +286,10 @@ Validate implementation against approved specification. Update plan status, Engl
 | Draft/uploaded/published/verified | Private prep; remote bytes accepted; public availability; evidence for a stated claim/time. Separate milestones. |
 
 Glossary descriptions grant no approval, original-game license, store guarantee or physical-device testing claim.
+
+
+## 2026-11-02 — Microsoft visual approval and bounded submission attempt
+
+The owner explicitly approved all nine Microsoft images in the versioned REVIEW.md, then separately confirmed name rights and authorized reservation in Partner Center. Existing hashes and the full manifest fingerprint matched; each Microsoft human-review entry now records owner approval for exact bytes, pinned to Alpha commit d61c865. No image regeneration/substitution, gameplay/font change or other-release publication occurred.
+
+A focused worktree/branch preserves unrelated uncommitted distribution work in the original checkout. The versioned visual guard/renderer/assets and meaningful negative tests are included without copying other platforms' publication/account changes. The new Microsoft attempt record/status tracks actual UI/package results; never infer certification from an approved picture. Partner Center is accessible; its name check reported “Don't Touch Me” unavailable. No product reservation, remote artwork/package upload or certification submission followed that rejection. A new Store name or a rights inquiry needs the owner. Local listing/payload preparation can continue without inventing product identity or changing approved artwork.

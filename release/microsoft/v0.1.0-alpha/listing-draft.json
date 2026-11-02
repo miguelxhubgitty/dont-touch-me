@@ -1,0 +1,78 @@
+{
+  "version": "0.1.0-alpha",
+  "release_commit": "d61c86568b40c23a291db7aa2757ffe82e1896e8",
+  "status": "local_draft_not_uploaded",
+  "product_name": "Don't Touch Me",
+  "short_description": "A tiny blob. A big need for personal space. Tap at your own risk.",
+  "description": "Meet a tiny black blob with two white eyes and one very reasonable request: don't touch it.\n\nNaturally, you can tap it.\n\nWatch it blink, squish, give you the side-eye, and question your manners. Keep poking and its patience wears thin. It might jump away, hold up a tiny NO sign, hide behind a cardboard box, or make a dramatic exit.\n\nLeave it alone and it gradually calms down. Wait a little longer and it falls asleep. Yes, you can wake it. No, it won't appreciate that.\n\nDiscover 15 regular reactions and a special wake-up reaction, brought to life with simple shapes and expressive animation. There are no levels, scores, or tasks to complete. The comedy is in the character.\n\nPlays offline. No ads, accounts, or in-app purchases. Just a small blob with a shrinking supply of patience.",
+  "release_notes": "Public Alpha v0.1.0-alpha. Meet the blob: 15 regular reactions, a special wake-up reaction, tap/click interaction, relaxation and sleep. Free, offline native gameplay with no ads, accounts, purchases or currency integration. Alpha builds may contain issues; platform compatibility is limited to the recorded validation.",
+  "publisher_brand": "WANDIEL",
+  "support_url": "https://miguelxhubgitty.github.io/dont-touch-me/",
+  "privacy_url": "https://miguelxhubgitty.github.io/dont-touch-me/privacy.html",
+  "pricing": {
+    "model": "free",
+    "payments": false,
+    "donations": false,
+    "in_app_purchases": false,
+    "currency_integration": false
+  },
+  "artwork": [
+    {
+      "file": "release/visuals/v0.1.0-alpha/assets/microsoft/01-calm-2160x3840.png",
+      "role": "desktop_screenshot",
+      "sha256": "5baaffae4d7455e7e55aa23a2aa1444ee2c9f15b70340926f97efb220def3568"
+    },
+    {
+      "file": "release/visuals/v0.1.0-alpha/assets/microsoft/02-annoyed-2160x3840.png",
+      "role": "desktop_screenshot",
+      "sha256": "affc647bf272dc1268631c9c515e5dae3ba5e4da50cd3a8d0461fec8d28b9d2f"
+    },
+    {
+      "file": "release/visuals/v0.1.0-alpha/assets/microsoft/03-angry-2160x3840.png",
+      "role": "desktop_screenshot",
+      "sha256": "2f18d6e09fb83ed8d99457210b97ad6ec90681ced80e3c48ab9514492d657bc3"
+    },
+    {
+      "file": "release/visuals/v0.1.0-alpha/assets/microsoft/04-hiding-2160x3840.png",
+      "role": "desktop_screenshot",
+      "sha256": "589fe64bbc9dd4f488552c7856bc7864d6164925016943f57eb88dee1021ff0f"
+    },
+    {
+      "file": "release/visuals/v0.1.0-alpha/assets/microsoft/05-sleeping-2160x3840.png",
+      "role": "desktop_screenshot",
+      "sha256": "3e2b1894364b44b0c0584c7c8b9fed0c586f17c58289bb8e0823fed371504cfa"
+    },
+    {
+      "file": "release/visuals/v0.1.0-alpha/assets/microsoft/poster-1440x2160.png",
+      "role": "poster",
+      "sha256": "4f5f4417e972c7f62796c626eb438a8d8c884e1c638c7a27b7fbfb4d08592eb3"
+    },
+    {
+      "file": "release/visuals/v0.1.0-alpha/assets/microsoft/box-2160x2160.png",
+      "role": "box_art",
+      "sha256": "6afad2017e3fcd8370d1d54667eaebde8c555b3ba842a75a16c4d1748b7b354a"
+    },
+    {
+      "file": "release/visuals/v0.1.0-alpha/assets/microsoft/hero-3840x2160.png",
+      "role": "text_free_hero",
+      "sha256": "158977ba927c881c246982ec9ee5ae5906e432f4a9cc21e26a22c03e0ca55b10"
+    },
+    {
+      "file": "release/visuals/v0.1.0-alpha/assets/microsoft/tile-300x300.png",
+      "role": "tile",
+      "sha256": "929551a98f1c138b2de2ffdbc10a6066dd369ef972b76a8161aec075bfb75223"
+    }
+  ],
+  "unconfirmed_fields": [
+    "Actual Store product name and package identity",
+    "Publisher/account/legal declaration fields",
+    "IARC age rating questionnaire",
+    "Markets, pricing availability and certification/release choices"
+  ],
+  "limitations": [
+    "Silent Alpha game, unsigned original Windows EXE",
+    "No Xbox services or console-support claim",
+    "Hosted policy version/hosting disclosure needs final pre-submission review"
+  ],
+  "source": "Immutable Alpha catalog; no marketing promises or new gameplay invented"
+}

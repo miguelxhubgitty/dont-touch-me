@@ -1,0 +1,46 @@
+{
+  "schema_version": 1,
+  "version": "0.1.0-alpha",
+  "release_commit": "d61c86568b40c23a291db7aa2757ffe82e1896e8",
+  "authorization": {
+    "owner_authorized": true,
+    "date": "2026-11-02",
+    "scope": "Microsoft packaging, listing creation and submission attempt for existing approved Alpha only; stop on changed images or legal/account decisions",
+    "reference": "release/visuals/v0.1.0-alpha/APPROVAL.md",
+    "supersedes_prior_microsoft_deferral_for_this_attempt_only": true
+  },
+  "visual_approval": "release/visuals/v0.1.0-alpha/manifest.json",
+  "partner_center_url": "https://partner.microsoft.com/en-US/dashboard/apps-and-games/overview",
+  "account_access_observed": true,
+  "existing_products_observed": 0,
+  "route_inspected": "GDK game (Win32 PC)",
+  "name_check": {
+    "requested_name": "Don't Touch Me",
+    "available": false,
+    "observed_date": "2026-11-02",
+    "message": "The name is not available. If you reserved this name for another product, update it to not use this name. Contact reportapp@microsoft.com to get assistance.",
+    "owner_confirmed_name_rights_and_reservation": true,
+    "reservation_performed": false
+  },
+  "product_id": null,
+  "product_url": null,
+  "public_product_url": null,
+  "status": "blocked_name_unavailable",
+  "package_identity_verified": false,
+  "package_validation_passed": false,
+  "legal_and_account_decisions_approved": false,
+  "package_uploaded": false,
+  "artwork_uploaded": false,
+  "certification_status": "not_submitted",
+  "tooling": {
+    "makepkg_on_path": false,
+    "standard_microsoft_gdk_install_found": false
+  },
+  "remaining_blockers": [
+    "Owner must select an available Store name or pursue the unavailable-name issue with Microsoft; no substitute was chosen.",
+    "Partner Center product/package identity is not available until a product can be reserved.",
+    "Microsoft GDK MakePkg was not found on PATH or standard GDK installation directories.",
+    "MSIXVC packaging/validation and final listing, legal/account declarations, ratings, pricing/markets and certification remain incomplete."
+  ],
+  "preservation": "No approved image, gameplay source, original release tag or published release changed."
+}

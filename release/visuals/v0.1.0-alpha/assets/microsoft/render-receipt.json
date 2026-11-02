@@ -1,0 +1,97 @@
+{
+  "assets": [
+    {
+      "dimensions": [
+        2160,
+        3840
+      ],
+      "filename": "01-calm-2160x3840.png",
+      "kind": "screenshot",
+      "post_capture_resize": false,
+      "sha256": "5baaffae4d7455e7e55aa23a2aa1444ee2c9f15b70340926f97efb220def3568"
+    },
+    {
+      "dimensions": [
+        2160,
+        3840
+      ],
+      "filename": "02-annoyed-2160x3840.png",
+      "kind": "screenshot",
+      "post_capture_resize": false,
+      "sha256": "affc647bf272dc1268631c9c515e5dae3ba5e4da50cd3a8d0461fec8d28b9d2f"
+    },
+    {
+      "dimensions": [
+        2160,
+        3840
+      ],
+      "filename": "03-angry-2160x3840.png",
+      "kind": "screenshot",
+      "post_capture_resize": false,
+      "sha256": "2f18d6e09fb83ed8d99457210b97ad6ec90681ced80e3c48ab9514492d657bc3"
+    },
+    {
+      "dimensions": [
+        2160,
+        3840
+      ],
+      "filename": "04-hiding-2160x3840.png",
+      "kind": "screenshot",
+      "post_capture_resize": false,
+      "sha256": "589fe64bbc9dd4f488552c7856bc7864d6164925016943f57eb88dee1021ff0f"
+    },
+    {
+      "dimensions": [
+        2160,
+        3840
+      ],
+      "filename": "05-sleeping-2160x3840.png",
+      "kind": "screenshot",
+      "post_capture_resize": false,
+      "sha256": "3e2b1894364b44b0c0584c7c8b9fed0c586f17c58289bb8e0823fed371504cfa"
+    },
+    {
+      "dimensions": [
+        1440,
+        2160
+      ],
+      "filename": "poster-1440x2160.png",
+      "kind": "key_art",
+      "post_capture_resize": false,
+      "sha256": "4f5f4417e972c7f62796c626eb438a8d8c884e1c638c7a27b7fbfb4d08592eb3"
+    },
+    {
+      "dimensions": [
+        2160,
+        2160
+      ],
+      "filename": "box-2160x2160.png",
+      "kind": "key_art",
+      "post_capture_resize": false,
+      "sha256": "6afad2017e3fcd8370d1d54667eaebde8c555b3ba842a75a16c4d1748b7b354a"
+    },
+    {
+      "dimensions": [
+        3840,
+        2160
+      ],
+      "filename": "hero-3840x2160.png",
+      "kind": "key_art",
+      "post_capture_resize": false,
+      "sha256": "158977ba927c881c246982ec9ee5ae5906e432f4a9cc21e26a22c03e0ca55b10"
+    },
+    {
+      "dimensions": [
+        300,
+        300
+      ],
+      "filename": "tile-300x300.png",
+      "kind": "vector_icon",
+      "post_capture_resize": false,
+      "sha256": "929551a98f1c138b2de2ffdbc10a6066dd369ef972b76a8161aec075bfb75223"
+    }
+  ],
+  "engine": "4.7.2-stable (official)",
+  "human_approval": false,
+  "recipe_sha256": "28d3022451464254d9ee39ecff3f774f2ee55301683d7c2578b936abd609f70f"
+}

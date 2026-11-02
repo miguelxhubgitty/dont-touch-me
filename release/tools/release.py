@@ -469,7 +469,15 @@ class Release:
             dest=self.out/'shared'/file
             dest.parent.mkdir(parents=True,exist_ok=True)
             shutil.copyfile(ROOT/file,dest)
+        # Historical release/assets can contain basic-font development images.
+        # Keep them for provenance; never label the generic handoff upload-approved.
         shutil.copytree(ROOT/'release/assets',self.out/'shared/release/assets',dirs_exist_ok=True)
+        (self.out/'shared/VISUALS_NOT_UPLOAD_APPROVED.md').write_text(
+            '# Not an artwork upload directory\n\n'
+            'These are historical/generated assets, not a human-approved visual allowlist. '
+            'Use release/tools/visual_assets.py check --platform <destination> and only its exact '
+            'versioned paths. Never upload main fallback-font artwork. Microsoft requires technical '
+            'validation, per-image owner review and separate publication authorization.\n', encoding='utf-8')
         available={fmt:key for key,entry in self.receipts['artifacts'].items() if entry['status']=='built' and entry.get('package') for fmt in entry.get('formats',[])}
         for p in self.registry['platforms']:
             body=f'# {p["name"]} — v{self.catalog["version"]}\n\nSubmission: {p["submission_url"]}\n\nPublication: {p["publication"]["status"]}; live URL: {p["publication"]["live_url"]}; last published: {p["publication"]["last_successfully_published_version"]}.\n\nShared canonical material: ../shared/release/catalog/game.json (all referenced descriptions, identity, assets, ratings, notices and notes).\n\n## Reusable local artifacts\n\n'
@@ -482,6 +490,7 @@ class Release:
                     body+=f'- [ ] {fmt}: ../{location} — {entry["signing"]}; runtime: {entry["validation"]["runtime"]}\n'
                 else: body+=f'- [ ] {fmt}: MISSING / requires a platform adapter or authorized release signing.\n'
             body+='\n## Before any upload\n\n- [ ] Owner explicitly authorizes this destination; this tool never uploads.\n- [ ] Confirm free/no payments/no donations/no currency integration.\n'
+            body+='- [ ] Run visual_assets.py check --platform '+p['id']+'; use only its exact hashed/reviewed image paths. Generic shared assets are NOT upload-approved.\n'
             body+=''.join('- [ ] '+x+'\n' for x in p['prerequisites'])
             body+='\nOverrides: '+json.dumps(p['overrides'],ensure_ascii=False)+'\n\nRequirements source: '+p['requirements_source']+'\n'
             (self.out/'checklists'/f'{p["id"]}.md').write_text(body,encoding='utf-8')

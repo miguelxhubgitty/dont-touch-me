@@ -1,5 +1,7 @@
 # Local multi-platform release system
 
+**Artwork upload gate:** [VISUAL_UPLOAD_POLICY.md](VISUAL_UPLOAD_POLICY.md) and the version-specific `release/visuals/v0.1.0-alpha/manifest.json` supersede generic `release/assets` as upload authority. Main's historical/fallback-font captures must never be uploaded. `visual_assets.py inspect` is preview-only; `check --platform <destination>` must pass both technical validation and exact-byte owner review before any file-picker/API artwork upload. The nine Microsoft images now have recorded owner approval; the new Microsoft status record governs this exact authorized attempt. Other platform deferrals remain unchanged. A package/report or a passing image-size check is not visual approval.
+
 ## Explicit GitHub release publication
 
 The optional [GitHub Releases adapter](GITHUB_RELEASES.md) publishes existing distributable packages after one explicit owner release approval, with immutable tag/asset checks, resumable uploads and anonymous checksum verification. Ordinary prepare/export/tag pushes do not publish. Verified publication records supersede the initial unpublished baseline.

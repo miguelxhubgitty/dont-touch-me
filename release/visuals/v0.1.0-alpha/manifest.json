@@ -1,0 +1,684 @@
+{
+  "schema_version": 1,
+  "version": "0.1.0-alpha",
+  "release_tag": "v0.1.0-alpha",
+  "release_commit": "d61c86568b40c23a291db7aa2757ffe82e1896e8",
+  "typography": {
+    "primary": "Space Grotesk",
+    "handwritten": "Ink Free",
+    "implementation": "Alpha whole-phrase PNGs; Space Grotesk title weight 600",
+    "fallback_fonts_permitted": false
+  },
+  "source_inputs": {
+    "scripts/blob.gd": "1d6abd344ce9c2834785bbdb17ecf408627414a3a10ab88bbbf82525cf3e31c9",
+    "scripts/typography.gd": "b7256876d0f9dce876f7fa5f83994dacdcde7e5097c9e98be8a474b52e46fbc8",
+    "assets/typography/phrases.gd": "ab16684961add94adfa9140ce3b053d6c9ff783b35756bdda6aa1ff2ef4b1be9",
+    "assets/fonts/title.tres": "e14dadf32ec77b912da3c0b2d5658a84de01801993e8c9f1d1cd81433b190f7e",
+    "assets/fonts/SpaceGrotesk.ttf": "acad6de1fc93436f5c0f1f4137751ef04f1aea3063e7036535970ffcfbd79f72",
+    "project.godot": "e5d5458a043e546b25a7eef3659c1e44617ddda1402694e497b30ba3182b6477",
+    "main.tscn": "151be40b7c4c7d8bb0c9dd5aac7712f5aacbc6c1ae789753cb48249e1aa130bf",
+    "icon.svg": "e82c150bdd191bc4d0b58289adbfe3675f5f04adb30c96b264516aba5f584490",
+    "assets/typography/phrase-00.png": "99eea3f67425674e0a44d779cecfdd2327f2e4acb9046b0100772c9e67859ee3",
+    "assets/typography/phrase-01.png": "9993072da5d1ac6fbf17f794cf12973bbbbed5fbf1fa30ac84a2f2908cd6d3e6",
+    "assets/typography/phrase-02.png": "a434797795616d06e9edeb29886da3c0497d1cfb81106959b8bb73cc8b468b64",
+    "assets/typography/phrase-03.png": "4483f031d4fd7da2289bb36c02340cc796c06c61acb0b95d865a30f0d8cf8a63",
+    "assets/typography/phrase-04.png": "2261f7f958c03ffd703efe62a70b54772b05a174035e63e14fcfa9e91f8f3e1f",
+    "assets/typography/phrase-05.png": "35c9778f285321fc091111c5e4ad43aebad847a7d9a145d017bdb5919fa48e13",
+    "assets/typography/phrase-06.png": "711fa2cf4834f1ff668f02b9c1c5da284f49e0d372752ad0b62e6511308b3606",
+    "assets/typography/phrase-07.png": "bb9ebaf23b2a9cda91707a9dcd86981200e0b2032e88f045cc03ee3501ab0c82",
+    "assets/typography/phrase-08.png": "d080da34cb431ca14dfb3bb903c59dd056dfb7a062eec90ddd3daa817d69cf79",
+    "assets/typography/phrase-09.png": "e8c1b934cf214e9130e2dbdfb18187201e3f15bfd125225a3539515a1a1f7f6d"
+  },
+  "render_recipe": {
+    "source_commit": "d61c86568b40c23a291db7aa2757ffe82e1896e8",
+    "source_inputs": {
+      "scripts/blob.gd": "1d6abd344ce9c2834785bbdb17ecf408627414a3a10ab88bbbf82525cf3e31c9",
+      "scripts/typography.gd": "b7256876d0f9dce876f7fa5f83994dacdcde7e5097c9e98be8a474b52e46fbc8",
+      "assets/typography/phrases.gd": "ab16684961add94adfa9140ce3b053d6c9ff783b35756bdda6aa1ff2ef4b1be9",
+      "assets/fonts/title.tres": "e14dadf32ec77b912da3c0b2d5658a84de01801993e8c9f1d1cd81433b190f7e",
+      "assets/fonts/SpaceGrotesk.ttf": "acad6de1fc93436f5c0f1f4137751ef04f1aea3063e7036535970ffcfbd79f72",
+      "project.godot": "e5d5458a043e546b25a7eef3659c1e44617ddda1402694e497b30ba3182b6477",
+      "main.tscn": "151be40b7c4c7d8bb0c9dd5aac7712f5aacbc6c1ae789753cb48249e1aa130bf",
+      "icon.svg": "e82c150bdd191bc4d0b58289adbfe3675f5f04adb30c96b264516aba5f584490",
+      "assets/typography/phrase-00.png": "99eea3f67425674e0a44d779cecfdd2327f2e4acb9046b0100772c9e67859ee3",
+      "assets/typography/phrase-01.png": "9993072da5d1ac6fbf17f794cf12973bbbbed5fbf1fa30ac84a2f2908cd6d3e6",
+      "assets/typography/phrase-02.png": "a434797795616d06e9edeb29886da3c0497d1cfb81106959b8bb73cc8b468b64",
+      "assets/typography/phrase-03.png": "4483f031d4fd7da2289bb36c02340cc796c06c61acb0b95d865a30f0d8cf8a63",
+      "assets/typography/phrase-04.png": "2261f7f958c03ffd703efe62a70b54772b05a174035e63e14fcfa9e91f8f3e1f",
+      "assets/typography/phrase-05.png": "35c9778f285321fc091111c5e4ad43aebad847a7d9a145d017bdb5919fa48e13",
+      "assets/typography/phrase-06.png": "711fa2cf4834f1ff668f02b9c1c5da284f49e0d372752ad0b62e6511308b3606",
+      "assets/typography/phrase-07.png": "bb9ebaf23b2a9cda91707a9dcd86981200e0b2032e88f045cc03ee3501ab0c82",
+      "assets/typography/phrase-08.png": "d080da34cb431ca14dfb3bb903c59dd056dfb7a062eec90ddd3daa817d69cf79",
+      "assets/typography/phrase-09.png": "e8c1b934cf214e9130e2dbdfb18187201e3f15bfd125225a3539515a1a1f7f6d"
+    },
+    "renderer": "release/tools/generate_microsoft_assets.gd",
+    "renderer_sha256": "4a805189dab6f01705099ee36fcc8a257bb2173596e7b384c907dcd0ca0a3de4",
+    "target_pixels": {
+      "01-calm-2160x3840.png": [
+        2160,
+        3840
+      ],
+      "02-annoyed-2160x3840.png": [
+        2160,
+        3840
+      ],
+      "03-angry-2160x3840.png": [
+        2160,
+        3840
+      ],
+      "04-hiding-2160x3840.png": [
+        2160,
+        3840
+      ],
+      "05-sleeping-2160x3840.png": [
+        2160,
+        3840
+      ],
+      "poster-1440x2160.png": [
+        1440,
+        2160
+      ],
+      "box-2160x2160.png": [
+        2160,
+        2160
+      ],
+      "hero-3840x2160.png": [
+        3840,
+        2160
+      ],
+      "tile-300x300.png": [
+        300,
+        300
+      ]
+    },
+    "post_capture_resize": false,
+    "maximum_handwriting_scale": 0.80625,
+    "engine_required": "4.7.2.stable"
+  },
+  "render_receipt_sha256": "573fec4a40b512b0245fc400a33331ab782723ccd01a149b71bb3cd41c1ea122",
+  "assets": [
+    {
+      "filename": "release/visuals/v0.1.0-alpha/assets/alpha/01-calm.png",
+      "destinations": [
+        "itch",
+        "gamejolt",
+        "google-play"
+      ],
+      "role": "alpha_reference",
+      "dimensions": [
+        1080,
+        1920
+      ],
+      "sha256": "5bf14e724c02013cc125d7212f83a15fd25e1197e76b63bce659a7619e3b73c6",
+      "approved_release": "0.1.0-alpha",
+      "provenance": {
+        "kind": "exact_git_blob",
+        "source_path": "release/assets/screenshots/google-play/01-calm.png",
+        "source_commit": "d61c86568b40c23a291db7aa2757ffe82e1896e8"
+      },
+      "human_review": {
+        "itch": {
+          "status": "pending",
+          "reviewer_role": null,
+          "reviewer": null,
+          "reviewed_at": null,
+          "approved_sha256": null,
+          "manifest_fingerprint": null,
+          "approval_reference": null
+        },
+        "gamejolt": {
+          "status": "pending",
+          "reviewer_role": null,
+          "reviewer": null,
+          "reviewed_at": null,
+          "approved_sha256": null,
+          "manifest_fingerprint": null,
+          "approval_reference": null
+        },
+        "google-play": {
+          "status": "pending",
+          "reviewer_role": null,
+          "reviewer": null,
+          "reviewed_at": null,
+          "approved_sha256": null,
+          "manifest_fingerprint": null,
+          "approval_reference": null
+        }
+      }
+    },
+    {
+      "filename": "release/visuals/v0.1.0-alpha/assets/alpha/02-annoyed.png",
+      "destinations": [
+        "itch",
+        "gamejolt",
+        "google-play"
+      ],
+      "role": "alpha_reference",
+      "dimensions": [
+        1080,
+        1920
+      ],
+      "sha256": "eaf8835bf8aceb7facd1a5518cece87236bc944df339f336545c7cde89bbae45",
+      "approved_release": "0.1.0-alpha",
+      "provenance": {
+        "kind": "exact_git_blob",
+        "source_path": "release/assets/screenshots/google-play/02-annoyed.png",
+        "source_commit": "d61c86568b40c23a291db7aa2757ffe82e1896e8"
+      },
+      "human_review": {
+        "itch": {
+          "status": "pending",
+          "reviewer_role": null,
+          "reviewer": null,
+          "reviewed_at": null,
+          "approved_sha256": null,
+          "manifest_fingerprint": null,
+          "approval_reference": null
+        },
+        "gamejolt": {
+          "status": "pending",
+          "reviewer_role": null,
+          "reviewer": null,
+          "reviewed_at": null,
+          "approved_sha256": null,
+          "manifest_fingerprint": null,
+          "approval_reference": null
+        },
+        "google-play": {
+          "status": "pending",
+          "reviewer_role": null,
+          "reviewer": null,
+          "reviewed_at": null,
+          "approved_sha256": null,
+          "manifest_fingerprint": null,
+          "approval_reference": null
+        }
+      }
+    },
+    {
+      "filename": "release/visuals/v0.1.0-alpha/assets/alpha/03-angry.png",
+      "destinations": [
+        "itch",
+        "gamejolt",
+        "google-play"
+      ],
+      "role": "alpha_reference",
+      "dimensions": [
+        1080,
+        1920
+      ],
+      "sha256": "8461694227b6bd2ab399aa9f12a98cbf82535db00fc8a6b8ccb3f507e5395454",
+      "approved_release": "0.1.0-alpha",
+      "provenance": {
+        "kind": "exact_git_blob",
+        "source_path": "release/assets/screenshots/google-play/03-angry.png",
+        "source_commit": "d61c86568b40c23a291db7aa2757ffe82e1896e8"
+      },
+      "human_review": {
+        "itch": {
+          "status": "pending",
+          "reviewer_role": null,
+          "reviewer": null,
+          "reviewed_at": null,
+          "approved_sha256": null,
+          "manifest_fingerprint": null,
+          "approval_reference": null
+        },
+        "gamejolt": {
+          "status": "pending",
+          "reviewer_role": null,
+          "reviewer": null,
+          "reviewed_at": null,
+          "approved_sha256": null,
+          "manifest_fingerprint": null,
+          "approval_reference": null
+        },
+        "google-play": {
+          "status": "pending",
+          "reviewer_role": null,
+          "reviewer": null,
+          "reviewed_at": null,
+          "approved_sha256": null,
+          "manifest_fingerprint": null,
+          "approval_reference": null
+        }
+      }
+    },
+    {
+      "filename": "release/visuals/v0.1.0-alpha/assets/alpha/04-hiding.png",
+      "destinations": [
+        "itch",
+        "gamejolt",
+        "google-play"
+      ],
+      "role": "alpha_reference",
+      "dimensions": [
+        1080,
+        1920
+      ],
+      "sha256": "a18d5890f75c9e0604f2f302cec29f76c8c22550fde54c7899256a705c541b82",
+      "approved_release": "0.1.0-alpha",
+      "provenance": {
+        "kind": "exact_git_blob",
+        "source_path": "release/assets/screenshots/google-play/04-hiding.png",
+        "source_commit": "d61c86568b40c23a291db7aa2757ffe82e1896e8"
+      },
+      "human_review": {
+        "itch": {
+          "status": "pending",
+          "reviewer_role": null,
+          "reviewer": null,
+          "reviewed_at": null,
+          "approved_sha256": null,
+          "manifest_fingerprint": null,
+          "approval_reference": null
+        },
+        "gamejolt": {
+          "status": "pending",
+          "reviewer_role": null,
+          "reviewer": null,
+          "reviewed_at": null,
+          "approved_sha256": null,
+          "manifest_fingerprint": null,
+          "approval_reference": null
+        },
+        "google-play": {
+          "status": "pending",
+          "reviewer_role": null,
+          "reviewer": null,
+          "reviewed_at": null,
+          "approved_sha256": null,
+          "manifest_fingerprint": null,
+          "approval_reference": null
+        }
+      }
+    },
+    {
+      "filename": "release/visuals/v0.1.0-alpha/assets/alpha/05-sleeping.png",
+      "destinations": [
+        "itch",
+        "gamejolt",
+        "google-play"
+      ],
+      "role": "alpha_reference",
+      "dimensions": [
+        1080,
+        1920
+      ],
+      "sha256": "22e315786bae1f2c29e68a58c0ba4910408af7e069373be7265944c503762d94",
+      "approved_release": "0.1.0-alpha",
+      "provenance": {
+        "kind": "exact_git_blob",
+        "source_path": "release/assets/screenshots/google-play/05-sleeping.png",
+        "source_commit": "d61c86568b40c23a291db7aa2757ffe82e1896e8"
+      },
+      "human_review": {
+        "itch": {
+          "status": "pending",
+          "reviewer_role": null,
+          "reviewer": null,
+          "reviewed_at": null,
+          "approved_sha256": null,
+          "manifest_fingerprint": null,
+          "approval_reference": null
+        },
+        "gamejolt": {
+          "status": "pending",
+          "reviewer_role": null,
+          "reviewer": null,
+          "reviewed_at": null,
+          "approved_sha256": null,
+          "manifest_fingerprint": null,
+          "approval_reference": null
+        },
+        "google-play": {
+          "status": "pending",
+          "reviewer_role": null,
+          "reviewer": null,
+          "reviewed_at": null,
+          "approved_sha256": null,
+          "manifest_fingerprint": null,
+          "approval_reference": null
+        }
+      }
+    },
+    {
+      "filename": "release/visuals/v0.1.0-alpha/assets/alpha/google-play-feature-1024x500.png",
+      "destinations": [
+        "google-play",
+        "gamejolt"
+      ],
+      "role": "alpha_reference",
+      "dimensions": [
+        1024,
+        500
+      ],
+      "sha256": "b9e2953643c285f8ba0a2d0e797bbd01341ce8a26d5b75c5b0596cfee54f0520",
+      "approved_release": "0.1.0-alpha",
+      "provenance": {
+        "kind": "exact_git_blob",
+        "source_path": "release/assets/google-play-feature-1024x500.png",
+        "source_commit": "d61c86568b40c23a291db7aa2757ffe82e1896e8"
+      },
+      "human_review": {
+        "google-play": {
+          "status": "pending",
+          "reviewer_role": null,
+          "reviewer": null,
+          "reviewed_at": null,
+          "approved_sha256": null,
+          "manifest_fingerprint": null,
+          "approval_reference": null
+        },
+        "gamejolt": {
+          "status": "pending",
+          "reviewer_role": null,
+          "reviewer": null,
+          "reviewed_at": null,
+          "approved_sha256": null,
+          "manifest_fingerprint": null,
+          "approval_reference": null
+        }
+      }
+    },
+    {
+      "filename": "release/visuals/v0.1.0-alpha/assets/alpha/itch-cover-630x500.png",
+      "destinations": [
+        "itch"
+      ],
+      "role": "alpha_reference",
+      "dimensions": [
+        630,
+        500
+      ],
+      "sha256": "c2a47e2d2f775c72151d3d2389d25060e1e368bc054e3f437886a93bdd3eddb6",
+      "approved_release": "0.1.0-alpha",
+      "provenance": {
+        "kind": "exact_git_blob",
+        "source_path": "release/catalog/branding/itch-cover-630x500.png",
+        "source_commit": "d61c86568b40c23a291db7aa2757ffe82e1896e8"
+      },
+      "human_review": {
+        "itch": {
+          "status": "pending",
+          "reviewer_role": null,
+          "reviewer": null,
+          "reviewed_at": null,
+          "approved_sha256": null,
+          "manifest_fingerprint": null,
+          "approval_reference": null
+        }
+      }
+    },
+    {
+      "filename": "release/visuals/v0.1.0-alpha/assets/microsoft/01-calm-2160x3840.png",
+      "destinations": [
+        "microsoft"
+      ],
+      "role": "desktop_screenshot",
+      "dimensions": [
+        2160,
+        3840
+      ],
+      "sha256": "5baaffae4d7455e7e55aa23a2aa1444ee2c9f15b70340926f97efb220def3568",
+      "approved_release": "0.1.0-alpha",
+      "provenance": {
+        "kind": "direct_alpha_render",
+        "source_path": "scripts/blob.gd",
+        "source_commit": "d61c86568b40c23a291db7aa2757ffe82e1896e8",
+        "recipe_sha256": "28d3022451464254d9ee39ecff3f774f2ee55301683d7c2578b936abd609f70f"
+      },
+      "human_review": {
+        "microsoft": {
+          "status": "approved",
+          "reviewer_role": "owner",
+          "reviewer": "Repository owner (explicit project conversation instruction)",
+          "reviewed_at": "2026-11-02",
+          "approved_sha256": "5baaffae4d7455e7e55aa23a2aa1444ee2c9f15b70340926f97efb220def3568",
+          "manifest_fingerprint": "7335e14553bc98e39e440e430acbcb98e8a6e062a605a09ccc6a054ed6ef41f2",
+          "approval_reference": "release/visuals/v0.1.0-alpha/APPROVAL.md#owner-approval-2026-11-02"
+        }
+      }
+    },
+    {
+      "filename": "release/visuals/v0.1.0-alpha/assets/microsoft/02-annoyed-2160x3840.png",
+      "destinations": [
+        "microsoft"
+      ],
+      "role": "desktop_screenshot",
+      "dimensions": [
+        2160,
+        3840
+      ],
+      "sha256": "affc647bf272dc1268631c9c515e5dae3ba5e4da50cd3a8d0461fec8d28b9d2f",
+      "approved_release": "0.1.0-alpha",
+      "provenance": {
+        "kind": "direct_alpha_render",
+        "source_path": "scripts/blob.gd",
+        "source_commit": "d61c86568b40c23a291db7aa2757ffe82e1896e8",
+        "recipe_sha256": "28d3022451464254d9ee39ecff3f774f2ee55301683d7c2578b936abd609f70f"
+      },
+      "human_review": {
+        "microsoft": {
+          "status": "approved",
+          "reviewer_role": "owner",
+          "reviewer": "Repository owner (explicit project conversation instruction)",
+          "reviewed_at": "2026-11-02",
+          "approved_sha256": "affc647bf272dc1268631c9c515e5dae3ba5e4da50cd3a8d0461fec8d28b9d2f",
+          "manifest_fingerprint": "7335e14553bc98e39e440e430acbcb98e8a6e062a605a09ccc6a054ed6ef41f2",
+          "approval_reference": "release/visuals/v0.1.0-alpha/APPROVAL.md#owner-approval-2026-11-02"
+        }
+      }
+    },
+    {
+      "filename": "release/visuals/v0.1.0-alpha/assets/microsoft/03-angry-2160x3840.png",
+      "destinations": [
+        "microsoft"
+      ],
+      "role": "desktop_screenshot",
+      "dimensions": [
+        2160,
+        3840
+      ],
+      "sha256": "2f18d6e09fb83ed8d99457210b97ad6ec90681ced80e3c48ab9514492d657bc3",
+      "approved_release": "0.1.0-alpha",
+      "provenance": {
+        "kind": "direct_alpha_render",
+        "source_path": "scripts/blob.gd",
+        "source_commit": "d61c86568b40c23a291db7aa2757ffe82e1896e8",
+        "recipe_sha256": "28d3022451464254d9ee39ecff3f774f2ee55301683d7c2578b936abd609f70f"
+      },
+      "human_review": {
+        "microsoft": {
+          "status": "approved",
+          "reviewer_role": "owner",
+          "reviewer": "Repository owner (explicit project conversation instruction)",
+          "reviewed_at": "2026-11-02",
+          "approved_sha256": "2f18d6e09fb83ed8d99457210b97ad6ec90681ced80e3c48ab9514492d657bc3",
+          "manifest_fingerprint": "7335e14553bc98e39e440e430acbcb98e8a6e062a605a09ccc6a054ed6ef41f2",
+          "approval_reference": "release/visuals/v0.1.0-alpha/APPROVAL.md#owner-approval-2026-11-02"
+        }
+      }
+    },
+    {
+      "filename": "release/visuals/v0.1.0-alpha/assets/microsoft/04-hiding-2160x3840.png",
+      "destinations": [
+        "microsoft"
+      ],
+      "role": "desktop_screenshot",
+      "dimensions": [
+        2160,
+        3840
+      ],
+      "sha256": "589fe64bbc9dd4f488552c7856bc7864d6164925016943f57eb88dee1021ff0f",
+      "approved_release": "0.1.0-alpha",
+      "provenance": {
+        "kind": "direct_alpha_render",
+        "source_path": "scripts/blob.gd",
+        "source_commit": "d61c86568b40c23a291db7aa2757ffe82e1896e8",
+        "recipe_sha256": "28d3022451464254d9ee39ecff3f774f2ee55301683d7c2578b936abd609f70f"
+      },
+      "human_review": {
+        "microsoft": {
+          "status": "approved",
+          "reviewer_role": "owner",
+          "reviewer": "Repository owner (explicit project conversation instruction)",
+          "reviewed_at": "2026-11-02",
+          "approved_sha256": "589fe64bbc9dd4f488552c7856bc7864d6164925016943f57eb88dee1021ff0f",
+          "manifest_fingerprint": "7335e14553bc98e39e440e430acbcb98e8a6e062a605a09ccc6a054ed6ef41f2",
+          "approval_reference": "release/visuals/v0.1.0-alpha/APPROVAL.md#owner-approval-2026-11-02"
+        }
+      }
+    },
+    {
+      "filename": "release/visuals/v0.1.0-alpha/assets/microsoft/05-sleeping-2160x3840.png",
+      "destinations": [
+        "microsoft"
+      ],
+      "role": "desktop_screenshot",
+      "dimensions": [
+        2160,
+        3840
+      ],
+      "sha256": "3e2b1894364b44b0c0584c7c8b9fed0c586f17c58289bb8e0823fed371504cfa",
+      "approved_release": "0.1.0-alpha",
+      "provenance": {
+        "kind": "direct_alpha_render",
+        "source_path": "scripts/blob.gd",
+        "source_commit": "d61c86568b40c23a291db7aa2757ffe82e1896e8",
+        "recipe_sha256": "28d3022451464254d9ee39ecff3f774f2ee55301683d7c2578b936abd609f70f"
+      },
+      "human_review": {
+        "microsoft": {
+          "status": "approved",
+          "reviewer_role": "owner",
+          "reviewer": "Repository owner (explicit project conversation instruction)",
+          "reviewed_at": "2026-11-02",
+          "approved_sha256": "3e2b1894364b44b0c0584c7c8b9fed0c586f17c58289bb8e0823fed371504cfa",
+          "manifest_fingerprint": "7335e14553bc98e39e440e430acbcb98e8a6e062a605a09ccc6a054ed6ef41f2",
+          "approval_reference": "release/visuals/v0.1.0-alpha/APPROVAL.md#owner-approval-2026-11-02"
+        }
+      }
+    },
+    {
+      "filename": "release/visuals/v0.1.0-alpha/assets/microsoft/poster-1440x2160.png",
+      "destinations": [
+        "microsoft"
+      ],
+      "role": "poster",
+      "dimensions": [
+        1440,
+        2160
+      ],
+      "sha256": "4f5f4417e972c7f62796c626eb438a8d8c884e1c638c7a27b7fbfb4d08592eb3",
+      "approved_release": "0.1.0-alpha",
+      "provenance": {
+        "kind": "direct_alpha_render",
+        "source_path": "scripts/blob.gd",
+        "source_commit": "d61c86568b40c23a291db7aa2757ffe82e1896e8",
+        "recipe_sha256": "28d3022451464254d9ee39ecff3f774f2ee55301683d7c2578b936abd609f70f"
+      },
+      "human_review": {
+        "microsoft": {
+          "status": "approved",
+          "reviewer_role": "owner",
+          "reviewer": "Repository owner (explicit project conversation instruction)",
+          "reviewed_at": "2026-11-02",
+          "approved_sha256": "4f5f4417e972c7f62796c626eb438a8d8c884e1c638c7a27b7fbfb4d08592eb3",
+          "manifest_fingerprint": "7335e14553bc98e39e440e430acbcb98e8a6e062a605a09ccc6a054ed6ef41f2",
+          "approval_reference": "release/visuals/v0.1.0-alpha/APPROVAL.md#owner-approval-2026-11-02"
+        }
+      }
+    },
+    {
+      "filename": "release/visuals/v0.1.0-alpha/assets/microsoft/box-2160x2160.png",
+      "destinations": [
+        "microsoft"
+      ],
+      "role": "box_art",
+      "dimensions": [
+        2160,
+        2160
+      ],
+      "sha256": "6afad2017e3fcd8370d1d54667eaebde8c555b3ba842a75a16c4d1748b7b354a",
+      "approved_release": "0.1.0-alpha",
+      "provenance": {
+        "kind": "direct_alpha_render",
+        "source_path": "scripts/blob.gd",
+        "source_commit": "d61c86568b40c23a291db7aa2757ffe82e1896e8",
+        "recipe_sha256": "28d3022451464254d9ee39ecff3f774f2ee55301683d7c2578b936abd609f70f"
+      },
+      "human_review": {
+        "microsoft": {
+          "status": "approved",
+          "reviewer_role": "owner",
+          "reviewer": "Repository owner (explicit project conversation instruction)",
+          "reviewed_at": "2026-11-02",
+          "approved_sha256": "6afad2017e3fcd8370d1d54667eaebde8c555b3ba842a75a16c4d1748b7b354a",
+          "manifest_fingerprint": "7335e14553bc98e39e440e430acbcb98e8a6e062a605a09ccc6a054ed6ef41f2",
+          "approval_reference": "release/visuals/v0.1.0-alpha/APPROVAL.md#owner-approval-2026-11-02"
+        }
+      }
+    },
+    {
+      "filename": "release/visuals/v0.1.0-alpha/assets/microsoft/hero-3840x2160.png",
+      "destinations": [
+        "microsoft"
+      ],
+      "role": "text_free_hero",
+      "dimensions": [
+        3840,
+        2160
+      ],
+      "sha256": "158977ba927c881c246982ec9ee5ae5906e432f4a9cc21e26a22c03e0ca55b10",
+      "approved_release": "0.1.0-alpha",
+      "provenance": {
+        "kind": "direct_alpha_render",
+        "source_path": "scripts/blob.gd",
+        "source_commit": "d61c86568b40c23a291db7aa2757ffe82e1896e8",
+        "recipe_sha256": "28d3022451464254d9ee39ecff3f774f2ee55301683d7c2578b936abd609f70f"
+      },
+      "human_review": {
+        "microsoft": {
+          "status": "approved",
+          "reviewer_role": "owner",
+          "reviewer": "Repository owner (explicit project conversation instruction)",
+          "reviewed_at": "2026-11-02",
+          "approved_sha256": "158977ba927c881c246982ec9ee5ae5906e432f4a9cc21e26a22c03e0ca55b10",
+          "manifest_fingerprint": "7335e14553bc98e39e440e430acbcb98e8a6e062a605a09ccc6a054ed6ef41f2",
+          "approval_reference": "release/visuals/v0.1.0-alpha/APPROVAL.md#owner-approval-2026-11-02"
+        }
+      }
+    },
+    {
+      "filename": "release/visuals/v0.1.0-alpha/assets/microsoft/tile-300x300.png",
+      "destinations": [
+        "microsoft"
+      ],
+      "role": "tile",
+      "dimensions": [
+        300,
+        300
+      ],
+      "sha256": "929551a98f1c138b2de2ffdbc10a6066dd369ef972b76a8161aec075bfb75223",
+      "approved_release": "0.1.0-alpha",
+      "provenance": {
+        "kind": "direct_alpha_render",
+        "source_path": "icon.svg",
+        "source_commit": "d61c86568b40c23a291db7aa2757ffe82e1896e8",
+        "recipe_sha256": "28d3022451464254d9ee39ecff3f774f2ee55301683d7c2578b936abd609f70f"
+      },
+      "human_review": {
+        "microsoft": {
+          "status": "approved",
+          "reviewer_role": "owner",
+          "reviewer": "Repository owner (explicit project conversation instruction)",
+          "reviewed_at": "2026-11-02",
+          "approved_sha256": "929551a98f1c138b2de2ffdbc10a6066dd369ef972b76a8161aec075bfb75223",
+          "manifest_fingerprint": "7335e14553bc98e39e440e430acbcb98e8a6e062a605a09ccc6a054ed6ef41f2",
+          "approval_reference": "release/visuals/v0.1.0-alpha/APPROVAL.md#owner-approval-2026-11-02"
+        }
+      }
+    }
+  ]
+}
