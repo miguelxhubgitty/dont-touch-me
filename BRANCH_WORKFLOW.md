@@ -15,7 +15,7 @@
 
 For a new task with a clean working tree, create a fresh topic branch from approved `main`:
 
-Use Godot 4.7.2 and substitute the executable path for `godot` below.
+Replace `feature/example-task` with a new, descriptive branch name. Use Godot 4.7.2 and substitute the executable path for `godot` below.
 
 ```powershell
 git status --short
@@ -23,7 +23,7 @@ git branch --show-current
 git fetch origin main aesthetic/typography-v1
 git switch main
 git merge --ff-only origin/main
-git switch -c feature/<task-name>
+git switch -c feature/example-task
 godot --headless --path . --editor --import --quit
 godot --headless --path . --script tests/behavior.gd
 godot --headless --path . --script tests/release.gd
