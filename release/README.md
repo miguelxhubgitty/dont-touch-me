@@ -1,6 +1,6 @@
 # Don't Touch Me — complete version 1.0 release materials
 
-This folder contains the publishing handoff, not additional gameplay. The project remains Godot 4.7.2, GDScript, offline, and exactly 16 reactions.
+This folder contains the publishing handoff, not additional gameplay. For Windows Microsoft Store packages, use the [MSIX adapter](MSIX.md) on the **same validated Windows release ZIP**, only after the approved release has been finalized. The project remains Godot 4.7.2, GDScript, offline, and exactly 16 reactions.
 
 **Development workflow:** these materials are saved snapshots, not automatically current release artifacts. Develop with basic fonts on `main`, then follow [BRANCH_WORKFLOW.md](../BRANCH_WORKFLOW.md) to integrate typography and finalize once on `release/<version>`. See [WORKFLOW_VALIDATION.md](../WORKFLOW_VALIDATION.md) for current branch/tooling checks. Historical build reports below do not certify new exports.
 
