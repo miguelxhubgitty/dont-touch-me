@@ -4,6 +4,15 @@
 
 > This is an **owner-discussion history and continuity guide**, not an automatic authorization to code, modify public listings or advance a milestone. For facts that can change, re-check the current source, branches, plans, test outputs and distribution receipts. Some decisions below are newer than `main`'s older `GAME_ROADMAP.md` and were discussed in a draft roadmap PR; do not mistake an unmerged plan for current implementation.
 
+## New owner direction — 2026-11-02: cuteness first
+
+- **Cuteness is the central design priority for the entire game**, not just the idle state or sound milestone. Everything should feel cute, including annoyed, defensive, furious and hostile behavior; the comedy comes from a tiny lovable creature overreacting.
+- Use this principle to **evaluate** sound, animation, timing, visual feedback, potential future trust/petting and interaction ideas. This does not automatically authorize revising shipped Alpha gameplay, artwork or the code.
+- Immediate focus remains **M1.2: design the sound-event map for all 16 existing reactions**, with reaction-dependent contact sound and expressive, endearing blob vocalization. Preserve silence where it improves humor. Ask for owner approval before implementation.
+- Avoid frightening, harsh, excessively loud or abrasive effects that defeat the cuteness objective. Contrast between adorable and dramatic/defensive behavior remains fundamental.
+- **Microsoft Store status**: As of this handoff, nine Alpha-themed Microsoft images were owner-approved historically, but no Partner Center certification/publication receipt has been verified. **Do not mark Microsoft published.** The owner reports that the game title appears unavailable; name unavailability is not proof this developer submitted or owns it. Verify the signed-in Partner Center Apps & games list, reserved product names, submission/certification status and product identity before proposing a different store name. Do not rename the core game merely because a Microsoft listing name may be reserved.
+- These are context-only updates on this **permanently isolated documentation branch**, never to be merged into `main`.
+
 ## Permanent branch isolation — NEVER merge into `main`
 
 - **This document and its documentation branch are permanently separate from `main`.** Do not open or merge a pull request targeting `main` for this foundation or its related context-only updates.
