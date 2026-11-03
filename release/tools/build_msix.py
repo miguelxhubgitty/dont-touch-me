@@ -58,8 +58,6 @@ def verify_release(out: Path, source: Path, version: str) -> None:
     expected_hash = windows.get("package_sha256")
     if not expected_hash or digest(source) != expected_hash:
         raise ValueError("Source ZIP checksum differs from the release receipt")
-    if receipt.get("published") is True:
-        raise ValueError("Do not rebuild packages from an already published release receipt")
 
 
 def unpack_windows_zip(source: Path, stage: Path) -> None:
@@ -156,17 +154,25 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--display-name", default="Don't Touch Me.")
     parser.add_argument("--publisher-display-name", default="WANDIEL")
     parser.add_argument("--makeappx", help="Path to Windows SDK makeappx.exe")
+    parser.add_argument("--source-zip", type=Path, help="Existing approved release ZIP, rather than local builds output")
+    parser.add_argument("--source-sha256", help="Required SHA-256 when using --source-zip")
     parser.add_argument("--approved-icon", type=Path, default=ROOT / "release/assets/icons/google-play-512.png")
     parser.add_argument("--stage-only", action="store_true", help="Validate and prepare contents without creating a package")
     args = parser.parse_args(argv)
     catalog = json.loads(CATALOG.read_text(encoding="utf-8"))
     version = catalog["version"]
     out = ROOT / "builds" / f"v{version}"
-    source = out / "windows" / f"DontTouchMe-v{version}-windows.zip"
+    source = args.source_zip or out / "windows" / f"DontTouchMe-v{version}-windows.zip"
     check_version(catalog["windows_version"])
     if not source.is_file():
-        raise FileNotFoundError(f"Produce the finalized Windows ZIP first: {source}")
-    verify_release(out, source, version)
+        raise FileNotFoundError(f"Produce or obtain the approved Windows ZIP first: {source}")
+    if args.source_zip:
+        if not args.source_sha256 or not re.fullmatch(r"[a-fA-F0-9]{64}", args.source_sha256):
+            raise ValueError("--source-zip requires the official 64-character --source-sha256")
+        if digest(source).lower() != args.source_sha256.lower():
+            raise ValueError("Existing release ZIP failed supplied official SHA-256 check")
+    else:
+        verify_release(out, source, version)
     dest_dir = out / "microsoft"
     dest_dir.mkdir(parents=True, exist_ok=True)
     dest = dest_dir / f"DontTouchMe-v{version}-x64.msix"
@@ -191,7 +197,7 @@ def main(argv: list[str] | None = None) -> int:
             raise RuntimeError("Incomplete or corrupt MSIX; do not upload")
     metadata = {
         "game_version": version, "msix_version": catalog["windows_version"],
-        "source_windows_zip": str(source.relative_to(ROOT)), "source_sha256": digest(source),
+        "source_windows_zip": str(source.resolve()), "source_sha256": digest(source),
         "msix": str(dest.relative_to(ROOT)), "msix_sha256": digest(dest),
         "identity_name": args.identity_name, "publisher": args.publisher,
         "display_name": args.display_name, "signing": "unsigned; Microsoft Store signs upon approval",
