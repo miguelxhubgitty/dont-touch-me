@@ -4,6 +4,15 @@
 
 > This is an **owner-discussion history and continuity guide**, not an automatic authorization to code, modify public listings or advance a milestone. For facts that can change, re-check the current source, branches, plans, test outputs and distribution receipts. Some decisions below are newer than `main`'s older `GAME_ROADMAP.md` and were discussed in a draft roadmap PR; do not mistake an unmerged plan for current implementation.
 
+## New packaging handoff — 2026-11-03 (not a gameplay milestone)
+
+- The owner reserved **“Don't Touch Me.”** in Microsoft Partner Center through an **EXE/MSI listing flow**. A reserved listing/name is not an uploaded game, Microsoft certification, or a usable packaged-MSIX product identity.
+- The owner chose **Windows desktop MSIX** over an EXE setup installer for Microsoft Store updates; retain the portable Windows ZIP for other destinations. This does not authorize a name change in all store metadata or a new Microsoft product without checking whether the reservation can be moved/preserved.
+- A separate **release tooling** draft PR exists: [game PR #6](https://github.com/miguelxhubgitty/dont-touch-me/pull/6), branch `tooling/msix-release-packaging` against normal `main`. It includes `release/tools/build_msix.py`, tests, `release/MSIX.md`, and registry/workflow references. This is **not** the isolated foundation branch. As of this handoff the PR is **unmerged and no actual MSIX binary has been built**.
+- The MSIX adapter reuses the **same approved Windows ZIP**, checks release SHA-256 and approved icon inventory, creates only needed scaled Windows tile logos, and requires the exact MSIX `Identity Name` and `Publisher` from Partner Center plus Windows SDK MakeAppx. No new game export, gameplay changes, visual authoring, production signing, submission, or deployment is part of this tool.
+- The existing `BRANCH_WORKFLOW.md` and `release/RELEASE_SYSTEM.md` already explicitly require **one basic-font gameplay/testing source on `main`** and **approved fonts/visuals only during a fresh `release/<version>` finalization**, then platform packages from that single approved release. Never merge visual/release branch back to `main`. The tooling PR documents MSIX as one additional output of that process.
+- The owner explicitly asked to **return to cute-first M1 audio work after MSIX packaging preparation**. The next design review is still the 16-reaction M1.2 event map; no audio or reaction code is authorized by this note.
+
 ## New owner direction — 2026-11-02: cuteness first
 
 - **Cuteness is the central design priority for the entire game**, not just the idle state or sound milestone. Everything should feel cute, including annoyed, defensive, furious and hostile behavior; the comedy comes from a tiny lovable creature overreacting.
