@@ -77,6 +77,22 @@ def unpack_windows_zip(source: Path, stage: Path) -> None:
         raise ValueError("Release ZIP must contain DontTouchMe.exe at the root")
 
 
+def verify_approved_icon(approved_icon: Path) -> None:
+    """Use only a release-inventory-approved icon, not an arbitrary artwork file."""
+    inventory_path = ROOT / "release/assets-inventory.json"
+    if not inventory_path.is_file():
+        raise FileNotFoundError("Release artwork inventory is missing")
+    inventory = json.loads(inventory_path.read_text(encoding="utf-8"))
+    try:
+        relative = approved_icon.resolve().relative_to((ROOT / "release").resolve()).as_posix()
+    except ValueError as exc:
+        raise ValueError("MSIX icon must be in the release inventory") from exc
+    match = next((item for item in inventory.get("files", [])
+                  if item.get("file") == relative and item.get("hash_mode") == "binary"), None)
+    if not match or digest(approved_icon) != match.get("sha256"):
+        raise ValueError("MSIX icon does not match the owner-reviewed release inventory")
+
+
 def create_icons(approved_icon: Path, stage: Path) -> None:
     try:
         from PIL import Image
@@ -97,7 +113,7 @@ def create_icons(approved_icon: Path, stage: Path) -> None:
 def create_manifest(stage: Path, *, name: str, publisher: str, version: str,
                     display_name: str, publisher_display: str) -> None:
     check_version(version)
-    if not re.fullmatch(r"[A-Za-z0-9][A-Za-z0-9.\-]{0,49}", name):
+    if not re.fullmatch(r"[A-Za-z0-9][A-Za-z0-9._\-]{0,49}", name):
         raise ValueError("Use the exact, valid Package/Identity/Name from MSIX Partner Center")
     if not publisher.startswith("CN=") or not publisher.strip():
         raise ValueError("Use the exact Package/Identity/Publisher (CN=...) from Partner Center")
@@ -181,6 +197,7 @@ def main(argv: list[str] | None = None) -> int:
     with tempfile.TemporaryDirectory(prefix="msix-", dir=dest_dir) as staging:
         stage = Path(staging)
         unpack_windows_zip(source, stage)
+        verify_approved_icon(args.approved_icon)
         create_icons(args.approved_icon, stage)
         create_manifest(stage, name=args.identity_name, publisher=args.publisher,
                         version=catalog["windows_version"], display_name=args.display_name,
