@@ -30,3 +30,11 @@
 - After approval, implement on the gameplay development branch using the approved design. If the code requires a material deviation, document it and request approval rather than silently changing the intended behavior.
 - Validate against the approved pseudocode, update the plan with implementation/test/commit status, and synchronize the detailed internal journal's English explanations, pseudocode, flowcharts, and code references.
 - Trivial typo, formatting, and nonbehavioral documentation corrections may skip full pseudocode review; record meaningful changes as usual.
+
+## Local storage rule — owner instruction, 2026-11-03
+
+- Never use OneDrive for this user's work: no project clones, edits, builds, exports, test artifacts, or active workspaces under any OneDrive directory, including OneDrive - SUNY Old Westbury.
+- The preferred Windows workspace is C:\Users\nascimentom\Documents\Codex. This local Documents directory is distinct from the Documents directory inside OneDrive. Both may be on C:, so drive letter alone does not distinguish them.
+- Check the full resolved path and any junction/symlink target before writing. Do not rely on the display name Documents, a redirected Documents shortcut, the current working directory, or an app's default workspace.
+- If the current chat starts in OneDrive, explicitly select the local workspace for commands. If local access is unavailable, request the required access or report the blocker; never fall back to OneDrive.
+- Existing OneDrive copies are not the active source of truth. Do not delete or synchronize them automatically. Preserve remote/branch identity when creating a local copy.

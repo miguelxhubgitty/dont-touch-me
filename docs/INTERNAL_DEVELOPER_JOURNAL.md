@@ -304,3 +304,6 @@ Limits: initial editor import saw sandbox user-directory warnings, resolved for 
 ### Dedicated review branch
 
 Owner authorized isolating this implementation onto feature/audio-playback-placeholder and opening a draft PR against main. Only the audio implementation, central map, alligator placeholder/import metadata/attribution, tests, plan and this audio-specific journal section were copied. Unrelated local visual/distribution/release changes and other prototypes remain in the original checkout. No foundation/aesthetic/release/MSIX branch merge and no game release publication. Clean-checkout validation results are recorded in audio/README.md and the draft PR.
+
+## 2026-11-03 — Local-only workspace policy
+Owner prohibited OneDrive for all project work. AGENTS.md and BRANCH_WORKFLOW.md now require resolved local paths, with C:\Users\nascimentom\Documents\Codex as the preferred root and no OneDrive fallback. The audio branch was cloned to dont-touch-me-audio under that root; gameplay and audio behavior were not changed. Documentation-only validation: policy text and local paths checked.

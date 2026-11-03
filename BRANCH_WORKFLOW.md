@@ -103,3 +103,11 @@ Pushing a branch/tag is version control, not authorization to create a public Gi
 For separately approved GitHub distribution, follow [release/GITHUB_RELEASES.md](release/GITHUB_RELEASES.md). One explicit release approval covers all available distributable packages; the publisher reuses existing validated files and the existing tag, never moves tags or exports builds. Preserve signing/native-test caveats and verify anonymous download checksums before recording success.
 
 Backport genuine release bug fixes to `main` as focused basic-font changes, and rerun gameplay checks. Do not merge the release branch wholesale into `main`. Keep the aesthetic snapshot as a reusable reference. Use a new `aesthetic/typography-v2` for a materially changed treatment and explicitly review/update the integration allowlist/base; never move the old branch history or tags to hide changes.
+
+## Local storage rule — owner instruction, 2026-11-03
+
+- Never use OneDrive for this user's work: no project clones, edits, builds, exports, test artifacts, or active workspaces under any OneDrive directory, including OneDrive - SUNY Old Westbury.
+- The preferred Windows workspace is C:\Users\nascimentom\Documents\Codex. This local Documents directory is distinct from the Documents directory inside OneDrive. Both may be on C:, so drive letter alone does not distinguish them.
+- Check the full resolved path and any junction/symlink target before writing. Do not rely on the display name Documents, a redirected Documents shortcut, the current working directory, or an app's default workspace.
+- If the current chat starts in OneDrive, explicitly select the local workspace for commands. If local access is unavailable, request the required access or report the blocker; never fall back to OneDrive.
+- Existing OneDrive copies are not the active source of truth. Do not delete or synchronize them automatically. Preserve remote/branch identity when creating a local copy.
