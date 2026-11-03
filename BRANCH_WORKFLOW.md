@@ -84,6 +84,10 @@ godot --headless --path . --export-release "Windows" builds/windows/DontTouchMe.
 
 Verify the actual preset name in `export_presets.cfg` before running. Run the Windows executable's automated 120-frame smoke check (`DontTouchMe.exe --headless --quit-after 120`), package it with current play instructions and `THIRD_PARTY_NOTICES.txt`, and also include the Space Grotesk OFL notice. Record artifact SHA-256, engine version, source commit and signing status in ignored build metadata. Android release builds need authorized upload signing and platform validation; the unsigned preparation preset is not a production upload. Do not present historical APK/AAB/EXE files as current.
 
+### Microsoft Store MSIX (Windows PC only, after the same approved export)
+
+Once the approved Windows ZIP and release receipt exist, use [release/MSIX.md](release/MSIX.md) and `python release/tools/build_msix.py` to package **that same verified export** for Microsoft as a desktop MSIX. The adapter uses the already approved icon, does not change gameplay, regenerate typography/captures, or export Godot again, and produces only ignored local `builds/v<version>/microsoft/` artifacts. The exact MSIX Partner Center Name/Publisher must be supplied; an EXE/MSI Store reservation is not proof that MSIX identity exists. Never submit without owner approval and Windows certification checks. No generated MSIX belongs in `main`.
+
 Commit the finalized source/assets, changelog and validation report first. Set `$version` to the approved game version and check the tag locally and remotely before creating it:
 
 ```powershell
