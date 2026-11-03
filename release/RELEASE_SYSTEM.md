@@ -51,6 +51,8 @@ REPORT.md               human-readable local readiness
 SHA256SUMS              checksums for the complete local handoff
 ```
 
+**Microsoft Store MSIX adapter (Windows PC only):** After finishing the Windows ZIP with `prepare`, run `python release/tools/build_msix.py` on Windows (SDK MakeAppx + Pillow, plus exact MSIX Partner Center identity). It verifies and reuses the **same Windows ZIP and SHA-256**, creates Store tile sizes from the **approved** release icon, and emits `builds/v<version>/microsoft/*.msix` and an unsigned-build receipt. See [MSIX.md](MSIX.md). No game export, visual authoring, package signing, automatic submission or branch merge occurs. Windows Store packaged desktop MSIX is not Xbox/GDK MSIXVC.
+
 Each format directory has `raw-<target>/` and, where needed, one portable ZIP. The Web ZIP contains `index.html` at its root. Linux ZIP preserves executable bits; macOS ZIP preserves the `.app` structure/modes and adds license notices. Android APK/AAB are already upload-container formats and are not wrapped again. Every destination references the same compatible artifact; a Steam depot or Microsoft Store adapter is not a reason to export the game again.
 
 ## Honest target boundaries
