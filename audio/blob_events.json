@@ -1,0 +1,356 @@
+{
+  "schema_version": 1,
+  "development_placeholder_only": true,
+  "license": "CC BY-NC 3.0; MattesHaus; see prototypes/M1.3R_ALLIGATOR_NONCOMMERCIAL_SOURCE.md",
+  "events": {
+    "blink.contact": {
+      "stream": "res://audio/prototypes/M1.3R_baby_alligator_call_study_NONCOMMERCIAL_CC-BY-NC-3.0.wav",
+      "role": "contact",
+      "marker": "contact",
+      "enabled": true,
+      "volume_db": -16,
+      "max_seconds": 0.3
+    },
+    "side_eye.contact": {
+      "stream": "res://audio/prototypes/M1.3R_baby_alligator_call_study_NONCOMMERCIAL_CC-BY-NC-3.0.wav",
+      "role": "contact",
+      "marker": "contact",
+      "enabled": true,
+      "volume_db": -16,
+      "max_seconds": 0.3
+    },
+    "squish.contact": {
+      "stream": "res://audio/prototypes/M1.3R_baby_alligator_call_study_NONCOMMERCIAL_CC-BY-NC-3.0.wav",
+      "role": "contact",
+      "marker": "contact",
+      "enabled": true,
+      "volume_db": -16,
+      "max_seconds": 0.3
+    },
+    "irritated.contact": {
+      "stream": "res://audio/prototypes/M1.3R_baby_alligator_call_study_NONCOMMERCIAL_CC-BY-NC-3.0.wav",
+      "role": "contact",
+      "marker": "contact",
+      "enabled": true,
+      "volume_db": -16,
+      "max_seconds": 0.3
+    },
+    "dont.contact": {
+      "stream": "res://audio/prototypes/M1.3R_baby_alligator_call_study_NONCOMMERCIAL_CC-BY-NC-3.0.wav",
+      "role": "contact",
+      "marker": "contact",
+      "enabled": true,
+      "volume_db": -16,
+      "max_seconds": 0.3
+    },
+    "seriously.contact": {
+      "stream": "res://audio/prototypes/M1.3R_baby_alligator_call_study_NONCOMMERCIAL_CC-BY-NC-3.0.wav",
+      "role": "contact",
+      "marker": "contact",
+      "enabled": true,
+      "volume_db": -16,
+      "max_seconds": 0.3
+    },
+    "slide.contact": {
+      "stream": "res://audio/prototypes/M1.3R_baby_alligator_call_study_NONCOMMERCIAL_CC-BY-NC-3.0.wav",
+      "role": "contact",
+      "marker": "contact",
+      "enabled": true,
+      "volume_db": -16,
+      "max_seconds": 0.3
+    },
+    "jump.contact": {
+      "stream": "res://audio/prototypes/M1.3R_baby_alligator_call_study_NONCOMMERCIAL_CC-BY-NC-3.0.wav",
+      "role": "contact",
+      "marker": "contact",
+      "enabled": true,
+      "volume_db": -16,
+      "max_seconds": 0.3
+    },
+    "shake.contact": {
+      "stream": "res://audio/prototypes/M1.3R_baby_alligator_call_study_NONCOMMERCIAL_CC-BY-NC-3.0.wav",
+      "role": "contact",
+      "marker": "contact",
+      "enabled": true,
+      "volume_db": -16,
+      "max_seconds": 0.3
+    },
+    "flatten.contact": {
+      "stream": "res://audio/prototypes/M1.3R_baby_alligator_call_study_NONCOMMERCIAL_CC-BY-NC-3.0.wav",
+      "role": "contact",
+      "marker": "contact",
+      "enabled": true,
+      "volume_db": -16,
+      "max_seconds": 0.3
+    },
+    "turn.contact": {
+      "stream": "res://audio/prototypes/M1.3R_baby_alligator_call_study_NONCOMMERCIAL_CC-BY-NC-3.0.wav",
+      "role": "contact",
+      "marker": "contact",
+      "enabled": true,
+      "volume_db": -16,
+      "max_seconds": 0.3
+    },
+    "stop.contact": {
+      "stream": "res://audio/prototypes/M1.3R_baby_alligator_call_study_NONCOMMERCIAL_CC-BY-NC-3.0.wav",
+      "role": "contact",
+      "marker": "contact",
+      "enabled": true,
+      "volume_db": -16,
+      "max_seconds": 0.3
+    },
+    "sign.contact": {
+      "stream": "res://audio/prototypes/M1.3R_baby_alligator_call_study_NONCOMMERCIAL_CC-BY-NC-3.0.wav",
+      "role": "contact",
+      "marker": "contact",
+      "enabled": true,
+      "volume_db": -16,
+      "max_seconds": 0.3
+    },
+    "box.contact": {
+      "stream": "res://audio/prototypes/M1.3R_baby_alligator_call_study_NONCOMMERCIAL_CC-BY-NC-3.0.wav",
+      "role": "contact",
+      "marker": "contact",
+      "enabled": true,
+      "volume_db": -16,
+      "max_seconds": 0.3
+    },
+    "run.contact": {
+      "stream": "res://audio/prototypes/M1.3R_baby_alligator_call_study_NONCOMMERCIAL_CC-BY-NC-3.0.wav",
+      "role": "contact",
+      "marker": "contact",
+      "enabled": true,
+      "volume_db": -16,
+      "max_seconds": 0.3
+    },
+    "wake.contact": {
+      "stream": "res://audio/prototypes/M1.3R_baby_alligator_call_study_NONCOMMERCIAL_CC-BY-NC-3.0.wav",
+      "role": "contact",
+      "marker": "contact",
+      "enabled": true,
+      "volume_db": -16,
+      "max_seconds": 0.3
+    },
+    "irritated.voice": {
+      "stream": "res://audio/prototypes/M1.3R_baby_alligator_call_study_NONCOMMERCIAL_CC-BY-NC-3.0.wav",
+      "role": "voice",
+      "marker": "expression",
+      "enabled": true,
+      "volume_db": -12,
+      "max_seconds": 0.45
+    },
+    "dont.voice": {
+      "stream": "res://audio/prototypes/M1.3R_baby_alligator_call_study_NONCOMMERCIAL_CC-BY-NC-3.0.wav",
+      "role": "voice",
+      "marker": "expression",
+      "enabled": true,
+      "volume_db": -12,
+      "max_seconds": 0.45
+    },
+    "shake.voice": {
+      "stream": "res://audio/prototypes/M1.3R_baby_alligator_call_study_NONCOMMERCIAL_CC-BY-NC-3.0.wav",
+      "role": "voice",
+      "marker": "motion",
+      "enabled": true,
+      "volume_db": -12,
+      "max_seconds": 0.45
+    },
+    "stop.voice": {
+      "stream": "res://audio/prototypes/M1.3R_baby_alligator_call_study_NONCOMMERCIAL_CC-BY-NC-3.0.wav",
+      "role": "voice",
+      "marker": "expression",
+      "enabled": true,
+      "volume_db": -12,
+      "max_seconds": 0.45
+    },
+    "wake.voice": {
+      "stream": "res://audio/prototypes/M1.3R_baby_alligator_call_study_NONCOMMERCIAL_CC-BY-NC-3.0.wav",
+      "role": "voice",
+      "marker": "start",
+      "enabled": true,
+      "volume_db": -12,
+      "max_seconds": 0.45
+    },
+    "side_eye.voice": {
+      "stream": "res://audio/prototypes/M1.3R_baby_alligator_call_study_NONCOMMERCIAL_CC-BY-NC-3.0.wav",
+      "role": "voice",
+      "marker": "expression",
+      "enabled": false,
+      "volume_db": -12,
+      "max_seconds": 0.45
+    },
+    "squish.voice": {
+      "stream": "res://audio/prototypes/M1.3R_baby_alligator_call_study_NONCOMMERCIAL_CC-BY-NC-3.0.wav",
+      "role": "voice",
+      "marker": "motion",
+      "enabled": false,
+      "volume_db": -12,
+      "max_seconds": 0.45
+    },
+    "squish.rebound": {
+      "stream": "res://audio/prototypes/M1.3R_baby_alligator_call_study_NONCOMMERCIAL_CC-BY-NC-3.0.wav",
+      "role": "action",
+      "marker": "squish_rebound",
+      "enabled": false,
+      "volume_db": -16,
+      "max_seconds": 0.3
+    },
+    "seriously.voice": {
+      "stream": "res://audio/prototypes/M1.3R_baby_alligator_call_study_NONCOMMERCIAL_CC-BY-NC-3.0.wav",
+      "role": "voice",
+      "marker": "expression",
+      "enabled": false,
+      "volume_db": -12,
+      "max_seconds": 0.45
+    },
+    "slide.move": {
+      "stream": "res://audio/prototypes/M1.3R_baby_alligator_call_study_NONCOMMERCIAL_CC-BY-NC-3.0.wav",
+      "role": "action",
+      "marker": "motion",
+      "enabled": true,
+      "volume_db": -16,
+      "max_seconds": 0.3,
+      "stop_marker": "slide_stop"
+    },
+    "jump.voice": {
+      "stream": "res://audio/prototypes/M1.3R_baby_alligator_call_study_NONCOMMERCIAL_CC-BY-NC-3.0.wav",
+      "role": "voice",
+      "marker": "motion",
+      "enabled": false,
+      "volume_db": -12,
+      "max_seconds": 0.45
+    },
+    "jump.land": {
+      "stream": "res://audio/prototypes/M1.3R_baby_alligator_call_study_NONCOMMERCIAL_CC-BY-NC-3.0.wav",
+      "role": "action",
+      "marker": "end",
+      "enabled": true,
+      "volume_db": -16,
+      "max_seconds": 0.3
+    },
+    "flatten.compress": {
+      "stream": "res://audio/prototypes/M1.3R_baby_alligator_call_study_NONCOMMERCIAL_CC-BY-NC-3.0.wav",
+      "role": "action",
+      "marker": "motion",
+      "enabled": false,
+      "volume_db": -16,
+      "max_seconds": 0.3,
+      "stop_marker": "held"
+    },
+    "flatten.release": {
+      "stream": "res://audio/prototypes/M1.3R_baby_alligator_call_study_NONCOMMERCIAL_CC-BY-NC-3.0.wav",
+      "role": "action",
+      "marker": "release",
+      "enabled": false,
+      "volume_db": -16,
+      "max_seconds": 0.3
+    },
+    "turn.voice": {
+      "stream": "res://audio/prototypes/M1.3R_baby_alligator_call_study_NONCOMMERCIAL_CC-BY-NC-3.0.wav",
+      "role": "voice",
+      "marker": "expression",
+      "enabled": false,
+      "volume_db": -12,
+      "max_seconds": 0.45
+    },
+    "sign.raise": {
+      "stream": "res://audio/prototypes/M1.3R_baby_alligator_call_study_NONCOMMERCIAL_CC-BY-NC-3.0.wav",
+      "role": "action",
+      "marker": "motion",
+      "enabled": true,
+      "volume_db": -16,
+      "max_seconds": 0.3,
+      "stop_marker": "held"
+    },
+    "sign.settle": {
+      "stream": "res://audio/prototypes/M1.3R_baby_alligator_call_study_NONCOMMERCIAL_CC-BY-NC-3.0.wav",
+      "role": "action",
+      "marker": "held",
+      "enabled": false,
+      "volume_db": -16,
+      "max_seconds": 0.3
+    },
+    "sign.lower": {
+      "stream": "res://audio/prototypes/M1.3R_baby_alligator_call_study_NONCOMMERCIAL_CC-BY-NC-3.0.wav",
+      "role": "action",
+      "marker": "release",
+      "enabled": false,
+      "volume_db": -16,
+      "max_seconds": 0.3
+    },
+    "box.raise": {
+      "stream": "res://audio/prototypes/M1.3R_baby_alligator_call_study_NONCOMMERCIAL_CC-BY-NC-3.0.wav",
+      "role": "action",
+      "marker": "motion",
+      "enabled": true,
+      "volume_db": -16,
+      "max_seconds": 0.3,
+      "stop_marker": "held"
+    },
+    "box.lower": {
+      "stream": "res://audio/prototypes/M1.3R_baby_alligator_call_study_NONCOMMERCIAL_CC-BY-NC-3.0.wav",
+      "role": "action",
+      "marker": "release",
+      "enabled": true,
+      "volume_db": -16,
+      "max_seconds": 0.3
+    },
+    "box.voice": {
+      "stream": "res://audio/prototypes/M1.3R_baby_alligator_call_study_NONCOMMERCIAL_CC-BY-NC-3.0.wav",
+      "role": "voice",
+      "marker": "expression",
+      "enabled": false,
+      "volume_db": -12,
+      "max_seconds": 0.45
+    },
+    "run.depart": {
+      "stream": "res://audio/prototypes/M1.3R_baby_alligator_call_study_NONCOMMERCIAL_CC-BY-NC-3.0.wav",
+      "role": "action",
+      "marker": "motion",
+      "enabled": true,
+      "volume_db": -16,
+      "max_seconds": 0.3,
+      "stop_marker": "offscreen"
+    },
+    "run.voice": {
+      "stream": "res://audio/prototypes/M1.3R_baby_alligator_call_study_NONCOMMERCIAL_CC-BY-NC-3.0.wav",
+      "role": "voice",
+      "marker": "motion",
+      "enabled": false,
+      "volume_db": -12,
+      "max_seconds": 0.45
+    },
+    "run.return": {
+      "stream": "res://audio/prototypes/M1.3R_baby_alligator_call_study_NONCOMMERCIAL_CC-BY-NC-3.0.wav",
+      "role": "action",
+      "marker": "return",
+      "enabled": false,
+      "volume_db": -16,
+      "max_seconds": 0.3
+    },
+    "wake.land": {
+      "stream": "res://audio/prototypes/M1.3R_baby_alligator_call_study_NONCOMMERCIAL_CC-BY-NC-3.0.wav",
+      "role": "action",
+      "marker": "wake_land",
+      "enabled": false,
+      "volume_db": -16,
+      "max_seconds": 0.3
+    },
+    "wake.grumble": {
+      "stream": "res://audio/prototypes/M1.3R_baby_alligator_call_study_NONCOMMERCIAL_CC-BY-NC-3.0.wav",
+      "role": "voice",
+      "marker": "wake_narrow",
+      "enabled": false,
+      "volume_db": -12,
+      "max_seconds": 0.45
+    },
+    "sleep.enter": {
+      "stream": "res://audio/prototypes/M1.3R_baby_alligator_call_study_NONCOMMERCIAL_CC-BY-NC-3.0.wav",
+      "role": "voice",
+      "marker": "sleep",
+      "enabled": true,
+      "volume_db": -12,
+      "max_seconds": 0.45
+    }
+  }
+}
