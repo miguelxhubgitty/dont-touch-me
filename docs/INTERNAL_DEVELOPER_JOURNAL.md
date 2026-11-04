@@ -286,3 +286,7 @@ Validate implementation against approved specification. Update plan status, Engl
 | Draft/uploaded/published/verified | Private prep; remote bytes accepted; public availability; evidence for a stated claim/time. Separate milestones. |
 
 Glossary descriptions grant no approval, original-game license, store guarantee or physical-device testing claim.
+
+## Public Alpha historical MSIX gate
+
+On the owner-approved PR #6 tooling branch, historical packaging now reads the pinned PR #11 release manifest and resolves the version and approved icon from the immutable Alpha tag. The exact ZIP and executable hashes prevent development audio from being packaged under the Alpha version. The normal build-receipt path rejects this version. The adapter validates the output archive's identity, staged payload and logos before retaining an MSIX. Ten MSIX and nineteen distribution tests passed on Windows, including staging the original ZIP. Real packaging and install checks await the SDK and exact Partner Center identity.

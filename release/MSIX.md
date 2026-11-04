@@ -15,7 +15,7 @@
 
 - Windows, Python 3.10+, `python -m pip install Pillow` (only needed for MSIX icon sizes) and the **Windows SDK** with `makeappx.exe`. There is no extra Godot export.
 - An approved `builds/v<version>/windows/DontTouchMe-v<version>-windows.zip` **plus its release receipt**, **or** the exact previously published Windows release ZIP with its independently verified official SHA-256.
-- **Exact MSIX package identity** (`Identity Name` and `Publisher`, including the `CN=` portion) obtained from the correct **packaged MSIX** product in Microsoft Partner Center. Do not invent these, substitute a company display name, or copy fields from an unrelated EXE/MSI listing.
+- **Exact MSIX package identity** (`Identity Name` and `Publisher`, including the `CN=` portion, plus `PublisherDisplayName`) obtained from the correct **packaged MSIX** product in Microsoft Partner Center. Do not invent these, substitute a company display name, or copy fields from an unrelated EXE/MSI listing.
 - The user's reserved **“Don't Touch Me.”** name currently appears to belong to an **EXE/MSI product flow**. Before submission, verify with Microsoft whether that name/product can be converted or transferred to the packaged MSIX submission flow. **Do not delete/release the reserved name or create a conflicting product without review.**
 
 ## Build from the current finalized Windows release
@@ -30,20 +30,23 @@ python -m unittest discover -s tests -p test_msix.py
 python release/tools/release.py prepare --godot <path-to-godot>
 
 # Then package the SAME verified Windows ZIP, with exact MSIX product identity:
-python release/tools/build_msix.py --identity-name "<Partner Center Identity Name>" --publisher "CN=<exact Partner Center publisher>" --display-name "Don't Touch Me."
+python release/tools/build_msix.py --identity-name "<Partner Center Identity Name>" --publisher "CN=<exact Partner Center publisher>" --publisher-display-name "<exact Partner Center publisher display name>" --display-name "Don't Touch Me."
 ```
 
 The script reads the current `release/catalog/game.json` version, checks the Windows release receipt and SHA-256, locates `makeappx.exe`, creates a full-trust desktop `AppxManifest.xml`, uses the approved icon, and produces a versioned **unsigned** MSIX plus JSON receipt in ignored `builds/`. It rejects missing identities, stale/mismatched source hashes, missing executables, unsafe ZIP paths, unsupported version patterns and overwriting a previously generated MSIX.
 
 ## Reusing an already approved published Alpha binary (no re-export)
 
-If you want to publish an existing immutable Windows release, obtain the actual Windows ZIP and the SHA-256 from the project's verified publication receipt. Use both explicitly:
+Use historical mode for Public Alpha v0.1.0-alpha. The normal local-build receipt path rejects this version. It requires the exact versioned manifest from [PR #11](https://github.com/miguelxhubgitty/dont-touch-me/pull/11). Keep that commit reachable. Fetch its branch and the existing Alpha tag to review this draft.
 
 ```powershell
-python release/tools/build_msix.py --source-zip "C:\path\to\verified\DontTouchMe-v0.1.0-alpha-windows.zip" --source-sha256 "<64-character official SHA-256>" --identity-name "<MSIX Identity Name>" --publisher "CN=<MSIX Publisher>" --display-name "Don't Touch Me."
+git fetch origin docs/public-alpha-release-manifest tag v0.1.0-alpha
+python release/tools/build_msix.py --release v0.1.0-alpha --source-zip "C:/path/to/DontTouchMe-v0.1.0-alpha-windows.zip" --identity-name "<MSIX Identity Name>" --publisher "CN=<exact MSIX Publisher>" --publisher-display-name "<exact Partner Center publisher display name>"
 ```
 
-This path still uses the current catalog's Windows version and requires the operator to verify that the downloaded release and catalog match. Do **not** present the original portable ZIP as an installer; the new MSIX is the installable Store package. Keep the original released ZIP immutable.
+The tool checks the historical export and tag runtime fingerprints, verifies the original ZIP against the pinned release manifest, and reads the Windows version and inventory-verified icon from the pinned Alpha tag. A supplied checksum is an optional cross-check. A mismatched ZIP, moved tag, missing Git object or changed artwork fails preflight.
+
+MakeAppx runs with semantic validation. The tool reads back the archive and compares the file set, payload and logo bytes, x64 manifest identity, publisher display name and executable target. It retains the result and provenance receipt after those checks. Use `--stage-only` to test inputs without the SDK. Set `DTM_ALPHA_WINDOWS_ZIP` before running the offline test suite to exercise the original ZIP.
 
 ## Signing and testing
 
