@@ -1,6 +1,6 @@
 # Don't Touch Me
 
-Local multi-platform release preparation is documented in [release/RELEASE_SYSTEM.md](release/RELEASE_SYSTEM.md). Shared store data lives in `release/catalog/game.json`; the 25-platform registry is `release/distribution/platforms.json`. Nothing is uploaded by these tools.
+Local multi-platform release preparation is documented in [release/RELEASE_SYSTEM.md](release/RELEASE_SYSTEM.md). The approved Windows export can also be packaged into Microsoft Store desktop MSIX using [release/MSIX.md](release/MSIX.md), only at final release time. Shared store data lives in `release/catalog/game.json`; the 25-platform registry is `release/distribution/platforms.json`. Nothing is uploaded by these tools.
 
 A tiny, offline comedy about a blob and its personal space. Built with **Godot 4.7.2 stable**, GDScript, procedural shapes, and the engine's bundled font. No dependencies or downloaded assets.
 
