@@ -37,10 +37,10 @@ The script reads the current `release/catalog/game.json` version, checks the Win
 
 ## Reusing an already approved published Alpha binary (no re-export)
 
-Use historical mode for Public Alpha v0.1.0-alpha. The normal local-build receipt path rejects this version. It requires the exact versioned manifest from [PR #11](https://github.com/miguelxhubgitty/dont-touch-me/pull/11). Keep that commit reachable. Fetch its branch and the existing Alpha tag to review this draft.
+Use historical mode for Public Alpha v0.1.0-alpha. The normal local-build receipt path rejects this version. It requires the exact versioned manifest from [PR #11](https://github.com/miguelxhubgitty/dont-touch-me/pull/11). The manifest commit is reachable from protected main. Fetch main and the existing Alpha tag before packaging.
 
 ```powershell
-git fetch origin docs/public-alpha-release-manifest tag v0.1.0-alpha
+git fetch origin main tag v0.1.0-alpha
 python release/tools/build_msix.py --release v0.1.0-alpha --source-zip "C:/path/to/DontTouchMe-v0.1.0-alpha-windows.zip" --identity-name "<MSIX Identity Name>" --publisher "CN=<exact MSIX Publisher>" --publisher-display-name "<exact Partner Center publisher display name>"
 ```
 

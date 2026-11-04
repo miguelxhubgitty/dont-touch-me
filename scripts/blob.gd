@@ -1,5 +1,6 @@
 extends Node2D
 ## One clock owns every pose. No asynchronous reactions or overlapping tweens.
+const AudioManager = preload("res://scripts/audio_manager.gd")
 
 enum Reaction { NONE, BLINK, SIDE_EYE, SQUISH, IRRITATED, DONT, SERIOUSLY,
 	SLIDE, JUMP, SHAKE, FLATTEN, TURN, STOP, SIGN, BOX, RUN, WAKE }
@@ -53,17 +54,26 @@ var touch_flash := 0.0
 var intro_alpha := 1.0
 var last_size := Vector2.ZERO
 var font: Font
+var audio_manager: Node
 
 func _ready() -> void:
 	rng.randomize()
 	font = ThemeDB.fallback_font
 	_resize()
+	audio_manager = AudioManager.new()
+	audio_manager.name = "BlobAudio"
+	add_child(audio_manager)
+	var sound_button := get_node_or_null("SoundHUD/SoundButton")
+	if sound_button != null:
+		sound_button.initialize(audio_manager)
 
 func _resize() -> void:
 	var size := get_viewport_rect().size
 	if size == last_size:
 		return
 	last_size = size
+	if audio_manager != null:
+		audio_manager.cancel_reaction()
 	# A resize cancels the current motion cleanly, including offscreen escape.
 	anchor = Vector2(size.x * 0.5, size.y * 0.58)
 	origin = anchor
@@ -74,8 +84,12 @@ func _resize() -> void:
 func _notification(what: int) -> void:
 	if what == NOTIFICATION_APPLICATION_FOCUS_OUT:
 		set_process(false)
+		if audio_manager != null:
+			audio_manager.set_focused(false)
 	elif what == NOTIFICATION_APPLICATION_FOCUS_IN:
 		set_process(true)
+		if audio_manager != null:
+			audio_manager.set_focused(true)
 
 func _unhandled_input(event: InputEvent) -> void:
 	if event is InputEventMouseButton:
@@ -89,6 +103,8 @@ func _process(delta: float) -> void:
 	advance(minf(delta, 0.1))
 
 func advance(delta: float) -> void:
+	if audio_manager != null:
+		audio_manager.tick(delta)
 	clock += delta
 	idle_time += delta
 	intro_alpha = move_toward(intro_alpha, 0.0, delta * 0.1 if idle_time > 5.0 else 0.0)
@@ -97,11 +113,15 @@ func advance(delta: float) -> void:
 		annoyance = maxf(0.0, annoyance - delta * 4.0)
 	if reaction != Reaction.NONE:
 		elapsed += delta
+		if audio_manager != null:
+			audio_manager.advance_reaction(elapsed / float(DURATIONS[reaction]), absf(destination.x - origin.x) > 0.001)
 		if elapsed >= float(DURATIONS[reaction]):
 			anchor = destination
 			reaction = Reaction.NONE
 			elapsed = 0.0
 	if idle_time >= SLEEP_AFTER and reaction == Reaction.NONE:
+		if not asleep and audio_manager != null:
+			audio_manager.play_event("sleep.enter")
 		asleep = true
 	blink_timer -= delta
 	blink_remaining = maxf(0.0, blink_remaining - delta)
@@ -157,6 +177,8 @@ func touch_at(point: Vector2) -> bool:
 	elif reaction != Reaction.RUN and reaction != Reaction.BOX:
 		# Escapes finish on schedule even under frantic tapping.
 		begin_reaction(choose_reaction(), point)
+	if audio_manager != null:
+		audio_manager.contact(reaction)
 	return true
 
 func begin_reaction(which: int, touch: Vector2) -> void:
@@ -176,6 +198,8 @@ func begin_reaction(which: int, touch: Vector2) -> void:
 		direction = -1.0 if origin.x < last_size.x * 0.5 else 1.0
 		destination = Vector2(last_size.x * 0.5, anchor.y)
 	_update_pose()
+	if audio_manager != null:
+		audio_manager.begin_reaction(which)
 
 func _ease(value: float) -> float:
 	var t := clampf(value, 0.0, 1.0)

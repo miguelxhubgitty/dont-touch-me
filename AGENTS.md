@@ -1,7 +1,15 @@
 # Game development and release rules
 
+## Mandatory topic branches and separate merge approval
+
+- **Never develop, edit, commit, or push routine changes directly on `main`.** `main` is the last owner-approved integrated gameplay baseline, using Godot's fallback font; it is not the working branch. Start a separate named topic branch based on updated `main` **before any change** (including game code, tests, audio/assets, documentation, plans, tooling and config).
+- Before changing anything, inspect current branch, working-tree status, and local/remote divergence. If uncommitted work or unpushed commits already exist on `main`, **preserve them in a new topic branch** and avoid resets, cleans, force pushes, automatic stashes or discarding unrelated work. If changes span unrelated tasks, keep them separate and report what could not be safely separated.
+- Approval of a proposal/pseudocode **authorizes implementation only**. After implementation and tests, present a focused PR from the topic branch to `main` with a change list, test evidence, and any limitations; **obtain separate explicit owner approval before merging**. Never self-merge/auto-merge just because implementation was approved. Do not bypass this via cherry-picks, direct commits, or releases.
+- After owner-authorized PR merge, update the local `main` non-destructively; start the next task from fresh approved `main` on a **new** topic branch. Continue using dedicated `release/<version>` branches for finalization, and never merge release aesthetics back to `main`.
+- The permanently isolated `docs/foundation-context-2026-11-02` and approved `aesthetic/typography-v1` branches follow their existing **never-merge** rules. Written instructions are not GitHub repository branch protection; use a GitHub ruleset to technically require approved PRs if desired.
+
 - Read [BRANCH_WORKFLOW.md](BRANCH_WORKFLOW.md) before branching or preparing a release.
-- Develop/test gameplay on `main` with Godot's fallback font. Do not run typography or store-image generators during normal gameplay work.
+- Develop/test gameplay on a dedicated topic branch derived from approved `main`, with Godot's fallback font. Do not run typography or store-image generators during normal gameplay work.
 - `aesthetic/typography-v1` preserves the approved presentation; it is not a second gameplay branch. Never replace current gameplay with files from it.
 - Create `release/<version>` from current `main`; use `release/tools/apply_aesthetics.ps1` for a reviewed three-way integration. Resolve conflicts in favor of current gameplay while adding only presentation changes.
 - Regenerate typography-dependent assets once after gameplay/text freeze, using the explicit `--finalize-release` authoring flag. Validate before exporting fresh binaries.
@@ -27,6 +35,6 @@
 
 - For every meaningful gameplay, animation, audio, or system change, first create/update a plan under `plans/` describing player-visible behavior, source-grounded current behavior, proposed pseudocode, edge cases, acceptance criteria, and relevant design choices. Add a Mermaid state/decision flowchart when helpful.
 - Present the proposed pseudocode and trade-offs to the owner and **obtain explicit approval before implementing**. Approval of the overall workflow is not approval of individual future changes.
-- After approval, implement on the gameplay development branch using the approved design. If the code requires a material deviation, document it and request approval rather than silently changing the intended behavior.
+- After design approval, implement only on the dedicated topic branch using the approved design; require separate owner approval of its reviewed PR before merging to `main`. If the code requires a material deviation, document it and request approval rather than silently changing the intended behavior.
 - Validate against the approved pseudocode, update the plan with implementation/test/commit status, and synchronize the detailed internal journal's English explanations, pseudocode, flowcharts, and code references.
 - Trivial typo, formatting, and nonbehavioral documentation corrections may skip full pseudocode review; record meaningful changes as usual.
