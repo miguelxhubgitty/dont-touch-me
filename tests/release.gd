@@ -1,4 +1,6 @@
 extends SceneTree
+
+var audio_cleanup = preload("res://tests/audio_test_cleanup.gd").new()
 ## Additional release regressions: actual viewport input, interruption matrix,
 ## logical mobile aspect ratios, focus lifecycle, and long mixed-input sessions.
 const Blob = preload("res://scripts/blob.gd")
@@ -24,6 +26,7 @@ func run() -> void:
 	root.add_child(viewport)
 	var game := Blob.new()
 	viewport.add_child(game)
+	audio_cleanup.watch(game.audio_manager)
 	game.set_process(false)
 	game.rng.seed = 10042
 	# Dispatch events through Godot's viewport, not just the input handler.
@@ -131,6 +134,9 @@ func run() -> void:
 		game.idle_time = 0
 		for frame in range(400): game.advance(0.1)
 		check(game.reaction == Blob.Reaction.NONE and game.asleep, "session recovers to peaceful sleep")
+	game.audio_manager.stop_all()
+	viewport.free()
+	if not await audio_cleanup.wait_for_retirement(self):
+		failures += 1
 	print("Release checks: %d; failures: %d" % [checks, failures])
-	viewport.queue_free()
 	quit(1 if failures else 0)

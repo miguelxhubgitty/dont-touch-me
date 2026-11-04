@@ -1,5 +1,7 @@
 extends SceneTree
 
+var audio_cleanup = preload("res://tests/audio_test_cleanup.gd").new()
+
 const Game := preload("res://main.tscn")
 var failures := 0
 var settings_path := "user://mute-test-%d.cfg" % OS.get_process_id()
@@ -16,6 +18,7 @@ func add_game(viewport: SubViewport) -> Node:
 	var game := Game.instantiate()
 	game.get_node("SoundHUD/SoundButton").settings_path = settings_path
 	viewport.add_child(game)
+	audio_cleanup.watch(game.audio_manager)
 	game.set_process(false)
 	return game
 
@@ -87,6 +90,7 @@ func run() -> void:
 	check(not game.audio_manager.muted, "failed save preserves current choice")
 	viewport.free()
 	DirAccess.remove_absolute(settings_path)
-	await create_timer(0.3).timeout
+	if not await audio_cleanup.wait_for_retirement(self):
+		failures += 1
 	print("Mute tests: %d failures" % failures)
 	quit(1 if failures else 0)
