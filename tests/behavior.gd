@@ -1,5 +1,7 @@
 extends SceneTree
 
+var audio_cleanup = preload("res://tests/audio_test_cleanup.gd").new()
+
 const Blob = preload("res://scripts/blob.gd")
 var failures := 0
 var checks := 0
@@ -16,6 +18,7 @@ func check(value: bool, message: String) -> void:
 func run() -> void:
 	var game := Blob.new()
 	root.add_child(game)
+	audio_cleanup.watch(game.audio_manager)
 	game.set_process(false)
 	game.rng.seed = 48291
 	check(game.reaction == Blob.Reaction.NONE, "starts idle")
@@ -133,6 +136,9 @@ func run() -> void:
 		game._resize()
 		check(game.reaction == Blob.Reaction.NONE, "resize clears escape")
 		check(game.contains_touch(game.body_position + Vector2(0, -60)), "resize restores hitbox")
+	game.audio_manager.stop_all()
+	game.free()
+	if not await audio_cleanup.wait_for_retirement(self):
+		failures += 1
 	print("Behavior checks: %d; failures: %d" % [checks, failures])
-	game.queue_free()
 	quit(1 if failures else 0)

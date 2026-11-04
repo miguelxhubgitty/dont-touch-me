@@ -1,4 +1,6 @@
 extends SceneTree
+
+var audio_cleanup = preload("res://tests/audio_test_cleanup.gd").new()
 const Blob = preload("res://scripts/blob.gd")
 var checks := 0
 var failures := 0
@@ -28,6 +30,7 @@ func run() -> void:
 	root.size = Vector2i(720, 1280)
 	var game = Blob.new()
 	root.add_child(game)
+	audio_cleanup.watch(game.audio_manager)
 	game.set_process(false)
 	var audio = game.audio_manager
 	audio.trace_enabled = true
@@ -162,6 +165,7 @@ func run() -> void:
 		baseline.set_process(false)
 		var revised = Blob.new()
 		root.add_child(revised)
+		audio_cleanup.watch(revised.audio_manager)
 		revised.set_process(false)
 		baseline.rng.seed = 8712
 		revised.rng.seed = 8712
@@ -174,13 +178,14 @@ func run() -> void:
 			for property in ["annoyance", "reaction", "asleep", "idle_time", "elapsed", "body_position", "body_scale", "eye_open", "gaze", "rng"]:
 				if property == "rng": check(baseline.rng.state == revised.rng.state, "identical RNG")
 				else: check(baseline.get(property) == revised.get(property), "identical gameplay: " + property)
-		baseline.queue_free()
-		revised.queue_free()
+		baseline.free()
+		revised.audio_manager.stop_all()
+		revised.free()
 	else:
 		print("Baseline comparison skipped: optional local pre-change snapshot is absent")
-	game.queue_free()
-	await process_frame
-	await process_frame
-	await create_timer(0.3).timeout # Let the mixer retire stopped playback handles.
+	game.audio_manager.stop_all()
+	game.free()
+	if not await audio_cleanup.wait_for_retirement(self):
+		failures += 1
 	print("Audio checks: %d; failures: %d; mapped events exercised: %d" % [checks, failures, covered.size()])
 	quit(1 if failures else 0)
