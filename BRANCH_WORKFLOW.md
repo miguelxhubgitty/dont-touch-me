@@ -2,33 +2,41 @@
 
 ## Branch responsibilities
 
-- `main`: the latest gameplay, Godot's bundled fallback font, fast behavior/layout checks. No Space Grotesk/Ink Free runtime resources or automatic image generation.
+- `main`: the latest **approved and merged** gameplay baseline, Godot's bundled fallback font, fast behavior/layout checks. No Space Grotesk/Ink Free runtime resources or automatic image generation.
+- `feature/*`, `fix/*`, `docs/*`, `tooling/*`: scoped work branches for all changes. Propose a PR and obtain separate owner approval before merging into `main`.
 - `aesthetic/typography-v1`: the approved presentation snapshot originally committed at `c0bfa4e`. Tooling-only portability fixes may follow it. Preserve the original commit and artwork; do not merge future gameplay into this branch or develop gameplay here.
 - `release/<version>`: fork current `main`, apply the presentation patch, finalize assets/builds, then tag this branch's finished commit. Future releases always start from `main`, not a previous release/aesthetic branch.
 
 `c0bfa4e` is already an ancestor of `main`; `c7397822` restored the basic presentation without deleting that history. A normal merge of the aesthetic branch therefore does not reapply the fonts. Do not undo `c7397822`, copy its entire old gameplay tree, or depend on a wholesale branch merge.
 
-## 1. Normal gameplay development
+## 1. Normal gameplay development — branch-first, no direct edits to main
 
-Use Godot 4.7.2 and substitute the executable path for `godot` below.
+**Every change, including plans/docs, needs a purpose-specific branch before editing.** First inspect `git branch --show-current`, `git status --short`, and local-vs-remote commits. If your working tree is dirty, preserve it; do not reset, clean, force-push, auto-stash, or discard any work. Separate unrelated local changes before committing. Approving a pseudocode/plan is **not** approval to merge the implementation.
+
+For a new task with a clean working tree, create a fresh topic branch from approved `main`:
+
+Replace `feature/example-task` with a new, descriptive branch name. Use Godot 4.7.2 and substitute the executable path for `godot` below.
 
 ```powershell
-git switch main
+git status --short
+git branch --show-current
 git fetch origin main aesthetic/typography-v1
+git switch main
 git merge --ff-only origin/main
+git switch -c feature/example-task
 godot --headless --path . --editor --import --quit
 godot --headless --path . --script tests/behavior.gd
 godot --headless --path . --script tests/release.gd
 godot --headless --path . --script tests/fingerprints.gd
 ```
 
-Check every command's exit code. Commit/push focused gameplay changes normally. A rendering contact sheet (`tests/render.gd`, real renderer) is optional when poses/layout change; it is not part of the routine text/gameplay loop. Do not run either authoring generator, package screenshots or rebuild marketing assets on every edit.
+Check every command's exit code. Commit/push **only the scoped topic branch** and open a PR targeting `main`. Present the diff, tests, and limitations; obtain **separate explicit owner approval** before a PR merge. Never self-merge, auto-merge, or directly push changes to `main`. A rendering contact sheet (`tests/render.gd`, real renderer) is optional when poses/layout change; it is not part of the routine text/gameplay loop. Do not run either authoring generator, package screenshots or rebuild marketing assets on every edit.
 
 Existing store images and manifests are historical snapshots. `validate_package.gd` is a release gate, not a daily gameplay test: a source-fingerprint mismatch after gameplay edits is expected until finalization. Never update a capture fingerprint by hand just to silence the gate.
 
 ## 2. Start a release from current gameplay
 
-Finish and commit gameplay first; ensure the working tree is clean. Replace `1.0.0-beta.1` with the selected game version; use a new branch/tag name if it already exists.
+Finish and obtain owner approval to merge the tested gameplay PR into `main` first; ensure the working tree is clean. Replace `1.0.0-beta.1` with the selected game version; use a new branch/tag name if it already exists.
 
 ```powershell
 git fetch origin main aesthetic/typography-v1
@@ -102,4 +110,4 @@ Pushing a branch/tag is version control, not authorization to create a public Gi
 
 For separately approved GitHub distribution, follow [release/GITHUB_RELEASES.md](release/GITHUB_RELEASES.md). One explicit release approval covers all available distributable packages; the publisher reuses existing validated files and the existing tag, never moves tags or exports builds. Preserve signing/native-test caveats and verify anonymous download checksums before recording success.
 
-Backport genuine release bug fixes to `main` as focused basic-font changes, and rerun gameplay checks. Do not merge the release branch wholesale into `main`. Keep the aesthetic snapshot as a reusable reference. Use a new `aesthetic/typography-v2` for a materially changed treatment and explicitly review/update the integration allowlist/base; never move the old branch history or tags to hide changes.
+Backport genuine release bug fixes through a **new focused topic branch and separately approved PR** into `main` as basic-font changes, and rerun gameplay checks. Do not merge the release branch wholesale into `main`. Keep the aesthetic snapshot as a reusable reference. Use a new `aesthetic/typography-v2` for a materially changed treatment and explicitly review/update the integration allowlist/base; never move the old branch history or tags to hide changes.
