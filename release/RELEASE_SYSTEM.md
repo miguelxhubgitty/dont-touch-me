@@ -8,6 +8,8 @@ The core system prepares free Public Alpha artifacts locally; only the separatel
 
 ## Canonical editable information
 
+For the immutable runtime source and per-version build, submission and publication outcomes, use the [versioned release manifests](distribution/RELEASE_MANIFESTS.md).
+
 - `catalog/game.json`: version/build numbers, publisher, free/no-payments policy, descriptions, asset references, content/rating information, privacy/support, notices and branding. Keep the current legal name until an approved rename. Ratings and developer-account verification are not claimed complete.
 - `catalog/RELEASE_NOTES.md`: player-facing notes.
 - `distribution/platforms.json`: 25 destinations, official submission/portal URLs, accepted formats, references to shared material, platform-only overrides, prerequisites, publication status/live URL and last successfully published version. Unknown console details remain explicitly unverified.

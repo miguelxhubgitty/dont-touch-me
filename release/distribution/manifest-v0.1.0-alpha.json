@@ -1,0 +1,292 @@
+{
+  "schema_version": 1,
+  "release_version": "v0.1.0-alpha",
+  "release_status": "published",
+  "catalog": "release/catalog/game.json",
+  "destination_registry": "release/distribution/platforms.json",
+  "historical_build_report": "v0.1.0-alpha:release/ALPHA_REPORT.md",
+  "source": {
+    "commit": "9788e0343cb888a31ea9092f7409e2455a961261",
+    "tag": "v0.1.0-alpha",
+    "tag_commit": "d61c86568b40c23a291db7aa2757ffe82e1896e8",
+    "engine": "4.7.2.stable.official.ed1daf0bf",
+    "audio_included": false,
+    "runtime_fingerprint": {
+      "method": "git-ls-tree-object-ids-v1",
+      "objects": {
+        "assets": "e0f21499f358a980d9ed6663820d53fdb3dd341e",
+        "scripts": "d3102054903ba7eb40802f4272e3e2e282f9852e",
+        "main.tscn": "8bb5786ec807c0a08b63d5dd0f87effb65bdd0ba",
+        "project.godot": "5f62a545637e5ee11a0699d6d20ca4db9ff4a774",
+        "export_presets.cfg": "eb66e23cd77341e77797758f89b5cc70cb206985",
+        "icon.svg": "64768e3703db60bf63838dd791f05ebf97143ea3"
+      }
+    }
+  },
+  "artifacts": [
+    {
+      "id": "windows",
+      "platform": "windows",
+      "format": "zip",
+      "architecture": "x64",
+      "build_version": "0.1.0.0",
+      "build_code": null,
+      "filename": "DontTouchMe-v0.1.0-alpha-windows.zip",
+      "sha256": "42a43d68e9c0dd2af46da6dfa6f74d32b4e4c2242a68771dc046900134bcbdc9",
+      "build_status": "tested",
+      "validation": "Local ZIP SHA-256 matched the recorded release, all four entries read, PE machine 0x8664 (x64), and extracted executable passed a 120-frame headless smoke (exit 0).",
+      "executable_sha256": "5fdf87a71cc5a05dbc18925948753e1927e0c09631c44e65d4edd40edb1e7d88"
+    },
+    {
+      "id": "web",
+      "platform": "web",
+      "format": "zip",
+      "architecture": "wasm32",
+      "build_version": "0.1.0-alpha",
+      "build_code": null,
+      "filename": "DontTouchMe-v0.1.0-alpha-web.zip",
+      "sha256": "a83c11065a9e0eb893aca487ebe8c7873a990de0acb00bc291f7d90c8cb6cb70",
+      "build_status": "tested",
+      "validation": "Historical Chromium render, click and mobile-sized touch. Local ZIP SHA-256 matches."
+    },
+    {
+      "id": "android-debug",
+      "platform": "android",
+      "format": "apk",
+      "architecture": "arm64",
+      "build_version": "0.1.0-alpha",
+      "build_code": 2,
+      "filename": "dont-touch-me-debug.apk",
+      "sha256": "159ecbab25ad21bf57f3b5aec2b27b5b6e283ce4b8c2c41a4cf02fb80ed08edd",
+      "build_status": "built",
+      "validation": "Experimental debug build. Historical signature, version and alignment checks. Local APK SHA-256 matches. Physical-device validation unknown."
+    },
+    {
+      "id": "android-aab",
+      "platform": "android",
+      "format": "aab",
+      "architecture": "arm64",
+      "build_version": "0.1.0-alpha",
+      "build_code": 2,
+      "filename": "dont-touch-me-unsigned.aab",
+      "sha256": null,
+      "build_status": "built",
+      "validation": "Historical unsigned AAB. The checksum of that exact Alpha artifact has not been verified here."
+    },
+    {
+      "id": "linux",
+      "platform": "linux",
+      "format": "zip",
+      "architecture": "x64",
+      "build_version": "0.1.0-alpha",
+      "build_code": null,
+      "filename": "DontTouchMe-v0.1.0-alpha-linux.zip",
+      "sha256": "1788065ce5019eb1594c86b8f784e88607b5d8459d32cdc20875bf0e78747427",
+      "build_status": "built",
+      "validation": "Historical ELF, ZIP and executable-mode checks. Local ZIP SHA-256 matches. Native gameplay test unknown."
+    },
+    {
+      "id": "macos",
+      "platform": "macos",
+      "format": "zip",
+      "architecture": "universal",
+      "build_version": "0.1.0",
+      "build_code": null,
+      "filename": "DontTouchMe-v0.1.0-alpha-macos.zip",
+      "sha256": "b7854c72f0a1389830acc5eae92db9e1c3e058a3ce5bb610333a6e2e4f4bca66",
+      "build_status": "tested",
+      "validation": "Local SHA-256 matches corrected receipt. PR #6 registry records Intel native testing for this exact hash. No fresh macOS test, Developer ID signature or notarization."
+    },
+    {
+      "id": "ios",
+      "platform": "ios",
+      "format": "ipa",
+      "architecture": null,
+      "build_version": null,
+      "build_code": null,
+      "filename": null,
+      "sha256": null,
+      "build_status": "not_started",
+      "validation": "No Alpha IPA recorded. Native macOS/Xcode, provisioning and signing required."
+    },
+    {
+      "id": "microsoft-msix",
+      "platform": "windows",
+      "format": "msix",
+      "architecture": "x64",
+      "build_version": null,
+      "build_code": null,
+      "filename": null,
+      "sha256": null,
+      "build_status": "prepared",
+      "validation": "Input ZIP verified. No MSIX built. SDK MakeAppx.exe and packaged-product Identity Name and Publisher are unavailable or unverified.",
+      "source_artifact": "windows",
+      "planned_build_version": "0.1.0.0",
+      "identity_name": null,
+      "publisher": null,
+      "install_validation": null
+    }
+  ],
+  "publications": [
+    {
+      "artifact": "windows",
+      "destination": "itch.io",
+      "url": "https://wandiel.itch.io/dont-touch-me",
+      "submission_status": null,
+      "publication_status": "published",
+      "published_at": "2026-10-31",
+      "evidence": "6bf3a467bdc994f5a29ebf47975bb10b0c499fc1:release/PUBLICATION_v0.1.0-alpha.md"
+    },
+    {
+      "artifact": "web",
+      "destination": "itch.io",
+      "url": "https://wandiel.itch.io/dont-touch-me",
+      "submission_status": null,
+      "publication_status": "published",
+      "published_at": "2026-10-31",
+      "evidence": "6bf3a467bdc994f5a29ebf47975bb10b0c499fc1:release/PUBLICATION_v0.1.0-alpha.md"
+    },
+    {
+      "artifact": "linux",
+      "destination": "itch.io",
+      "url": "https://wandiel.itch.io/dont-touch-me",
+      "submission_status": null,
+      "publication_status": "published",
+      "published_at": null,
+      "evidence": "Existing local release/distribution/itch-v0.1.0-alpha.json records anonymous verification on 2026-11-01. Exact channel publication date unknown."
+    },
+    {
+      "artifact": "macos",
+      "destination": "itch.io",
+      "url": "https://wandiel.itch.io/dont-touch-me",
+      "submission_status": null,
+      "publication_status": "published",
+      "published_at": null,
+      "evidence": "Existing local release/distribution/itch-v0.1.0-alpha.json records anonymous verification on 2026-11-01. Exact channel publication date unknown."
+    },
+    {
+      "artifact": "android-debug",
+      "destination": "itch.io",
+      "url": "https://wandiel.itch.io/dont-touch-me",
+      "submission_status": null,
+      "publication_status": "published",
+      "published_at": null,
+      "evidence": "Existing local release/distribution/itch-v0.1.0-alpha.json records anonymous verification on 2026-11-01. Exact channel publication date unknown."
+    },
+    {
+      "artifact": "windows",
+      "destination": "GitHub Releases",
+      "url": "https://github.com/miguelxhubgitty/dont-touch-me/releases/tag/v0.1.0-alpha",
+      "submission_status": null,
+      "publication_status": "published",
+      "published_at": "2026-11-01T01:32:15Z",
+      "evidence": "release/distribution/github-v0.1.0-alpha.json"
+    },
+    {
+      "artifact": "web",
+      "destination": "GitHub Releases",
+      "url": "https://github.com/miguelxhubgitty/dont-touch-me/releases/tag/v0.1.0-alpha",
+      "submission_status": null,
+      "publication_status": "published",
+      "published_at": "2026-11-01T01:32:15Z",
+      "evidence": "release/distribution/github-v0.1.0-alpha.json"
+    },
+    {
+      "artifact": "linux",
+      "destination": "GitHub Releases",
+      "url": "https://github.com/miguelxhubgitty/dont-touch-me/releases/tag/v0.1.0-alpha",
+      "submission_status": null,
+      "publication_status": "published",
+      "published_at": "2026-11-01T01:32:15Z",
+      "evidence": "release/distribution/github-v0.1.0-alpha.json"
+    },
+    {
+      "artifact": "android-debug",
+      "destination": "GitHub Releases",
+      "url": "https://github.com/miguelxhubgitty/dont-touch-me/releases/tag/v0.1.0-alpha",
+      "submission_status": null,
+      "publication_status": "published",
+      "published_at": "2026-11-01T01:32:15Z",
+      "evidence": "release/distribution/github-v0.1.0-alpha.json"
+    },
+    {
+      "artifact": "macos",
+      "destination": "GitHub Releases",
+      "url": "https://github.com/miguelxhubgitty/dont-touch-me/releases/tag/v0.1.0-alpha",
+      "submission_status": null,
+      "publication_status": "published",
+      "published_at": null,
+      "evidence": "Draft PR #6 release/distribution/platforms.json records the corrected GitHub asset and checksum. Original upload receipt retains older bytes. Replacement date unknown; server bytes were not downloaded again."
+    },
+    {
+      "artifact": "windows",
+      "destination": "Game Jolt",
+      "url": "https://gamejolt.com/games/dont-touch-me/1114418",
+      "submission_status": null,
+      "publication_status": "published",
+      "published_at": null,
+      "evidence": "Existing local release/distribution/gamejolt-v0.1.0-alpha.json confirms published listing; per-build verification is partial."
+    },
+    {
+      "artifact": "web",
+      "destination": "Game Jolt",
+      "url": "https://gamejolt.com/games/dont-touch-me/1114418",
+      "submission_status": null,
+      "publication_status": "published",
+      "published_at": null,
+      "evidence": "Existing local release/distribution/gamejolt-v0.1.0-alpha.json confirms published listing; per-build verification is partial."
+    },
+    {
+      "artifact": "linux",
+      "destination": "Game Jolt",
+      "url": "https://gamejolt.com/games/dont-touch-me/1114418",
+      "submission_status": null,
+      "publication_status": "published",
+      "published_at": null,
+      "evidence": "Existing local release/distribution/gamejolt-v0.1.0-alpha.json confirms published listing; per-build verification is partial."
+    },
+    {
+      "artifact": "macos",
+      "destination": "Game Jolt",
+      "url": "https://gamejolt.com/games/dont-touch-me/1114418",
+      "submission_status": null,
+      "publication_status": "published",
+      "published_at": null,
+      "evidence": "Existing local release/distribution/gamejolt-v0.1.0-alpha.json confirms published listing; per-build verification is partial."
+    },
+    {
+      "artifact": "android-aab",
+      "destination": "Google Play",
+      "url": null,
+      "submission_status": "not_submitted",
+      "publication_status": "not_published",
+      "published_at": null,
+      "evidence": "v0.1.0-alpha:release/ALPHA_REPORT.md"
+    },
+    {
+      "artifact": "ios",
+      "destination": "Apple App Store",
+      "url": null,
+      "submission_status": "not_submitted",
+      "publication_status": "not_published",
+      "published_at": null,
+      "evidence": "v0.1.0-alpha:release/ALPHA_REPORT.md"
+    },
+    {
+      "artifact": "microsoft-msix",
+      "destination": "Microsoft Store",
+      "url": null,
+      "submission_status": "not_submitted",
+      "publication_status": "not_published",
+      "published_at": null,
+      "evidence": "Local MSIX preflight"
+    }
+  ],
+  "related_distribution_records": [
+    {
+      "destination": "Playgama public sandbox",
+      "url": "https://playgama.ai/play/ro3s7maajobule",
+      "note": "Separate Bridge adapter build. See existing local release/distribution/playgama-v0.1.0-alpha.json. It is not the generic Web ZIP."
+    }
+  ]
+}
