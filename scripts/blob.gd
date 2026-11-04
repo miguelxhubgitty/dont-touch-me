@@ -63,6 +63,9 @@ func _ready() -> void:
 	audio_manager = AudioManager.new()
 	audio_manager.name = "BlobAudio"
 	add_child(audio_manager)
+	var sound_button := get_node_or_null("SoundHUD/SoundButton")
+	if sound_button != null:
+		sound_button.initialize(audio_manager)
 
 func _resize() -> void:
 	var size := get_viewport_rect().size

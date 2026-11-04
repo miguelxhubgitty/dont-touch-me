@@ -304,3 +304,9 @@ Limits: initial editor import saw sandbox user-directory warnings, resolved for 
 ### Dedicated review branch
 
 Owner authorized isolating this implementation onto feature/audio-playback-placeholder and opening a draft PR against main. Only the audio implementation, central map, alligator placeholder/import metadata/attribution, tests, plan and this audio-specific journal section were copied. Unrelated local visual/distribution/release changes and other prototypes remain in the original checkout. No foundation/aesthetic/release/MSIX branch merge and no game release publication. Clean-checkout validation results are recorded in audio/README.md and the draft PR.
+
+## Audio mute toggle — November 4, 2026
+
+The owner approved the proposal on feature/audio-mute-toggle. The main scene now has a small Sound Off / Sound On button. After BlobAudio is created, the button loads the boolean preference from user://audio_settings.cfg, defaults to muted and applies the preference through the existing manager. Native touch is consumed by the button. Releasing outside cancels, and changing the setting never enters the blob poke handler. The existing mute setter stops playback immediately and consumed cues stay consumed. A failed save keeps the current session choice.
+
+Godot 4.7.2 mute tests passed with zero failures, including viewport mouse and touch input, startup fallback, persistence, failed save, stopping active sound and no replay. The audio, behavior and release suites passed 557,727 assertions. The behavior suite emitted a playback cleanup warning at exit. The button was visually checked at 432×768 and 960×540. Touch was tested through Godot viewport events. Separate owner merge approval remains required.
