@@ -32,7 +32,7 @@ try {
         throw 'Run this only in the miguelxhubgitty/dont-touch-me repository.'
     }
     $branch = Invoke-CheckedGit -Arguments @('branch', '--show-current')
-    if ($branch -notmatch '^release/.+') { throw 'Create and switch to release/<version> from main first.' }
+    if (-not $branch -or $branch -notmatch '^release/.+') { throw 'Create and switch to release/<version> from main first.' }
     $dirty = Invoke-CheckedGit -Arguments @('status', '--porcelain', '--untracked-files=normal')
     if ($dirty) { throw 'Commit or preserve existing work first; a clean index and working tree are required.' }
     if (Test-Path -LiteralPath 'scripts/typography.gd') { throw 'Typography is already present; review it instead of applying twice.' }
