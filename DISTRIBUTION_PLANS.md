@@ -45,7 +45,11 @@ Updated: 2026-10-29
 
 ## Publisher identity
 
-Your Northwest screenshot identifies the business as **One Tru Thing Only LLC**. Its legal active status, good standing, and use as publisher are **not verified by this screenshot**. Working studio-name idea: **One Pass** (name availability not verified).
+**Identity update (November 11, 2026):** D&B iResearch resolved an inquiry on November 10 by matching an **existing D-U-N-S number** for **ONE TRU THING ONLY LLC**. D&B cited the company's July 15, 2024 registration as a New York limited liability company, and stated that updated identity data would propagate within 24–48 hours. The reported D&B legal-form field needs reconciliation with the NY LLC classification.
+
+**Publisher distinction:** **WANDIEL** is the studio brand; **ONE TRU THING ONLY LLC** remains the existing legal entity pending any separately completed legal rename. A D&B match does **not** establish Apple Developer or Google Play organization approval, nor the identity used by an existing store account. Recheck those portals individually.
+
+Full D-U-N-S, case numbers, address, and supporting correspondence are retained in the separate **private** `wandiel-otto-llc` records repository. Do not publish them in this public game repository.
 
 ## Notes
 
