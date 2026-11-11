@@ -1,5 +1,9 @@
 # Only the owner's remaining tasks — version 1.0
 
+## Organization identity (November 11, 2026)
+
+D&B confirmed an existing D-U-N-S match for **ONE TRU THING ONLY LLC** in a resolved November 10, 2026 inquiry. Its revised data was expected to propagate within 24–48 hours; actual downstream visibility and the reported legal-form classification still need checking. **WANDIEL** is the brand; the LLC remains the legal entity until a formal rename is completed. Neither Apple nor Google organization enrollment is confirmed by the D&B response. The detailed resolution record is private and must not be copied to this public repository.
+
 ## Google Play
 
 - [ ] Sign in to or create and verify the appropriate Play Console developer account; complete identity/organization verification and any registration payment yourself. Confirm ownership of `com.littlebutterflyproductions.donttouchme` and whether version code 1 has already been uploaded.
