@@ -1,6 +1,6 @@
 [gd_scene load_steps=4 format=3]
 
-[ext_resource type="Script" path="res://scripts/blob.gd" id="1"]
+[ext_resource type="Script" path="res://scripts/blob_animationplayer.gd" id="1"]
 
 [ext_resource type="Script" path="res://scripts/audio_mute_button.gd" id="2"]
 
@@ -13,6 +13,7 @@ corner_radius_bottom_right = 18
 
 [node name="DontTouchMe" type="Node2D"]
 script = ExtResource("1")
+free_jump_enabled = true
 
 
 [node name="SoundHUD" type="CanvasLayer" parent="."]

@@ -32,7 +32,7 @@ try {
         throw 'Run this only in the miguelxhubgitty/dont-touch-me repository.'
     }
     $branch = Invoke-CheckedGit -Arguments @('branch', '--show-current')
-    if ($branch -notmatch '^release/.+') { throw 'Create and switch to release/<version> from main first.' }
+    if (-not $branch -or $branch -notmatch '^release/.+') { throw 'Create and switch to release/<version> from main first.' }
     $dirty = Invoke-CheckedGit -Arguments @('status', '--porcelain', '--untracked-files=normal')
     if ($dirty) { throw 'Commit or preserve existing work first; a clean index and working tree are required.' }
     if (Test-Path -LiteralPath 'scripts/typography.gd') { throw 'Typography is already present; review it instead of applying twice.' }
@@ -53,8 +53,20 @@ try {
         'tests/release.gd', 'tests/typography.gd', 'tests/typography.gd.uid',
         'release/tools/generate_assets.gd', 'release/tools/generate_typography.gd'
     )
+    $native = Test-Path -LiteralPath 'scripts/blob_animationplayer.gd'
+    if ($native) {
+        $sourceBlob = Invoke-CheckedGit -Arguments @('rev-parse', "$($tip):scripts/blob.gd")
+        if ($sourceBlob -ne '149adda3939ffb76f1df2ae730b2019584b59ec7') {
+            throw 'The aesthetic controller changed. Review and update the Adobe typography patch before applying it.'
+        }
+        $paths = @($paths | Where-Object { $_ -ne 'scripts/blob.gd' })
+    }
     $patchPath = [IO.Path]::GetTempFileName()
     $null = Invoke-CheckedGit -Arguments (@('diff', '--no-ext-diff', '--binary', '--full-index', "--output=$patchPath", $base, $tip, '--') + $paths)
+    if ($native) {
+        $controllerPatch = Join-Path $PSScriptRoot 'typography-adobe-controller.patch'
+        [IO.File]::AppendAllText($patchPath, [IO.File]::ReadAllText($controllerPatch))
+    }
     if ((Get-Item -LiteralPath $patchPath).Length -eq 0) { throw 'No aesthetic changes found.' }
     # git apply --3way --check can return 0 even when the merge would conflict.
     # Actually merge into a temporary index instead, leaving the real index and

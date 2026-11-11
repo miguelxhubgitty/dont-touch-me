@@ -23,6 +23,12 @@ const POOLS := [
 	[Reaction.STOP, Reaction.SIGN, Reaction.BOX, Reaction.RUN],
 ]
 const SLEEP_AFTER := 24.0
+const FREE_JUMP_FLIGHT := .85
+const FREE_JUMP_TRAVEL := 230.0
+const JUMP_RETURN_SPEED := FREE_JUMP_TRAVEL / FREE_JUMP_FLIGHT
+@export var free_jump_enabled := false
+var jump_returning := false
+var jump_return_target := Vector2.ZERO
 
 var rng := RandomNumberGenerator.new()
 var annoyance := 0.0
@@ -57,6 +63,7 @@ var font: Font
 var audio_manager: Node
 
 func _ready() -> void:
+	free_jump_enabled = free_jump_enabled or "--free-jump" in OS.get_cmdline_user_args()
 	rng.randomize()
 	font = ThemeDB.fallback_font
 	_resize()
@@ -75,6 +82,7 @@ func _resize() -> void:
 	if audio_manager != null:
 		audio_manager.cancel_reaction()
 	# A resize cancels the current motion cleanly, including offscreen escape.
+	jump_returning = false
 	anchor = Vector2(size.x * 0.5, size.y * 0.58)
 	origin = anchor
 	destination = anchor
@@ -103,6 +111,10 @@ func _process(delta: float) -> void:
 	advance(minf(delta, 0.1))
 
 func advance(delta: float) -> void:
+	var free_contact := reaction == Reaction.JUMP and _free_jump_enabled() and elapsed < FREE_JUMP_FLIGHT and elapsed+delta >= FREE_JUMP_FLIGHT
+	if free_contact and audio_manager != null:
+		audio_manager.fired["jump.land"] = true
+	var return_delta := delta if jump_returning else 0.0
 	if audio_manager != null:
 		audio_manager.tick(delta)
 	clock += delta
@@ -116,10 +128,18 @@ func advance(delta: float) -> void:
 		if audio_manager != null:
 			audio_manager.advance_reaction(elapsed / float(DURATIONS[reaction]), absf(destination.x - origin.x) > 0.001)
 		if elapsed >= float(DURATIONS[reaction]):
+			if reaction == Reaction.JUMP and _free_jump_enabled() and (destination.x < 0 or destination.x > last_size.x):
+				jump_returning = true
+				jump_return_target = Vector2(last_size.x*.5,destination.y)
+				return_delta = maxf(0,elapsed-float(DURATIONS[reaction]))
 			anchor = destination
 			reaction = Reaction.NONE
 			elapsed = 0.0
-	if idle_time >= SLEEP_AFTER and reaction == Reaction.NONE:
+	if jump_returning:
+		anchor.x = move_toward(anchor.x,jump_return_target.x,JUMP_RETURN_SPEED*return_delta)
+		destination = anchor
+		if anchor.x == jump_return_target.x: jump_returning = false
+	if idle_time >= SLEEP_AFTER and reaction == Reaction.NONE and not jump_returning:
 		if not asleep and audio_manager != null:
 			audio_manager.play_event("sleep.enter")
 		asleep = true
@@ -133,7 +153,12 @@ func advance(delta: float) -> void:
 		idle_gaze = Vector2(rng.randf_range(-8, 8), rng.randf_range(-3, 3))
 		gaze_timer = rng.randf_range(1.8, 4.0)
 	_update_pose()
+	if free_contact and audio_manager != null:
+		audio_manager.play_event("jump.land")
 	queue_redraw()
+
+func _free_jump_enabled() -> bool:
+	return free_jump_enabled
 
 func tier() -> int:
 	if annoyance <= 20.0: return 0
@@ -146,20 +171,31 @@ func choose_reaction() -> int:
 	choices.erase(last_reaction)
 	return int(choices[rng.randi_range(0, choices.size() - 1)])
 
+enum BoxHit { EXPOSED, BLOCKED, PEEK }
+
+func _box_position() -> Vector2:
+	return body_position + Vector2(0, 190 * (1.0 - box_amount))
+
+func _box_hit(point: Vector2) -> BoxHit:
+	if box_amount <= 0:
+		return BoxHit.EXPOSED
+	var box_pos := _box_position()
+	if box_amount > 0.85:
+		for side in [-1.0, 1.0]:
+			var eye_local := (point - box_pos - Vector2(side * 28, -148)) / Vector2(10, 8)
+			if eye_local.length_squared() <= 1.0:
+				return BoxHit.PEEK
+	if Rect2(box_pos + Vector2(-143, -128), Vector2(286, 139)).has_point(point):
+		return BoxHit.BLOCKED
+	for flap in _box_flaps(box_pos):
+		if Geometry2D.is_point_in_polygon(point, flap):
+			return BoxHit.BLOCKED
+	return BoxHit.EXPOSED
+
 func contains_touch(point: Vector2) -> bool:
-	# Test the actual transformed silhouette, never an invisible resting hitbox.
-	if box_amount > 0.0:
-		var box_pos := body_position + Vector2(0, 190 * (1.0 - box_amount))
-		if box_amount > 0.85:
-			for side in [-1.0, 1.0]:
-				var eye_local := (point - box_pos - Vector2(side * 28, -148)) / Vector2(10, 8)
-				if eye_local.length_squared() <= 1.0:
-					return true
-		if Rect2(box_pos + Vector2(-143, -128), Vector2(286, 139)).has_point(point):
-			return false
-		for flap in _box_flaps(box_pos):
-			if Geometry2D.is_point_in_polygon(point, flap):
-				return false
+	var prop_hit := _box_hit(point)
+	if prop_hit != BoxHit.EXPOSED:
+		return prop_hit == BoxHit.PEEK
 	var local := (point - body_position).rotated(-body_angle) / body_scale
 	var polygon := _silhouette()
 	return Geometry2D.is_point_in_polygon(local, polygon)
@@ -182,14 +218,17 @@ func touch_at(point: Vector2) -> bool:
 	return true
 
 func begin_reaction(which: int, touch: Vector2) -> void:
-	origin = Vector2(clampf(body_position.x, 190.0, last_size.x - 190.0), anchor.y)
+	jump_returning = false
+	origin = Vector2(body_position.x if which == Reaction.JUMP and _free_jump_enabled() else clampf(body_position.x, 190.0, last_size.x - 190.0), anchor.y)
 	anchor = origin
 	destination = origin
 	elapsed = 0.0
 	reaction = which
 	last_reaction = which
 	direction = 1.0 if touch.x <= origin.x else -1.0
-	if which == Reaction.SLIDE or which == Reaction.JUMP:
+	if which == Reaction.JUMP and _free_jump_enabled():
+		destination.x = origin.x+direction*FREE_JUMP_TRAVEL
+	elif which == Reaction.SLIDE or which == Reaction.JUMP:
 		destination.x = clampf(origin.x + direction * 155.0, 190.0, last_size.x - 190.0)
 		if absf(destination.x - origin.x) < 35.0:
 			direction *= -1.0
@@ -251,8 +290,12 @@ func _update_pose() -> void:
 			body_scale += Vector2(0.2, -0.12) * envelope
 			gaze.x = -direction * 15.0
 		Reaction.JUMP:
-			body_position = origin.lerp(destination, _ease(t))
-			body_position.y -= sin(PI * t) * 175.0
+			if _free_jump_enabled():
+				var flight := clampf(elapsed/FREE_JUMP_FLIGHT,0,1)
+				body_position = Vector2(lerpf(origin.x,destination.x,flight),origin.y-700*flight*(1-flight))
+			else:
+				body_position = origin.lerp(destination, _ease(t))
+				body_position.y -= sin(PI * t) * 175.0
 			body_scale += Vector2(-0.14, 0.22) * envelope
 			body_angle = direction * 0.18 * envelope
 		Reaction.SHAKE:
@@ -313,16 +356,20 @@ func _silhouette() -> PackedVector2Array:
 		points.append(Vector2(x, y - 73.0))
 	return points
 
-func _ellipse(center: Vector2, radius: Vector2, color: Color) -> void:
+func _ellipse(center: Vector2, radius: Vector2, color: Color, canvas: CanvasItem = null) -> void:
+	if canvas == null:
+		canvas = self
 	var points := PackedVector2Array()
 	for i in range(48):
 		var a := TAU * float(i) / 48.0
 		points.append(center + Vector2(cos(a), sin(a)) * radius)
-	draw_colored_polygon(points, color)
+	canvas.draw_colored_polygon(points, color)
 
-func _text_center(text: String, center: Vector2, size: int, color: Color) -> void:
+func _text_center(text: String, center: Vector2, size: int, color: Color, canvas: CanvasItem = null) -> void:
+	if canvas == null:
+		canvas = self
 	var width := font.get_string_size(text, HORIZONTAL_ALIGNMENT_LEFT, -1, size).x
-	draw_string(font, center - Vector2(width * 0.5, 0), text, HORIZONTAL_ALIGNMENT_LEFT, -1, size, color)
+	canvas.draw_string(font, center - Vector2(width * 0.5, 0), text, HORIZONTAL_ALIGNMENT_LEFT, -1, size, color)
 
 func _draw() -> void:
 	if font == null:
@@ -362,13 +409,15 @@ func _draw() -> void:
 			var pos := body_position + Vector2(76.0 + phase * 38.0, -198.0 - phase * 85.0)
 			_text_center("z" if i < 2 else "Z", pos, 19 + i * 5, Color(MUTED, sin(phase * PI) * 0.7))
 
-func _draw_sign() -> void:
+func _draw_sign(canvas: CanvasItem = null) -> void:
+	if canvas == null:
+		canvas = self
 	var base := body_position + Vector2(102, -55)
 	var top := base + Vector2(30, -115 * sign_amount)
-	draw_line(base, top, Color("a68a62"), 7.0, true)
-	draw_style_box(_panel(WHITE, 10, Color("d6cec0")), Rect2(top - Vector2(50, 53), Vector2(100, 65)))
-	_text_center("NO", top - Vector2(0, 9), 34, INK)
-	_ellipse(base, Vector2(18, 12), INK)
+	canvas.draw_line(base, top, Color("a68a62"), 7.0, true)
+	canvas.draw_style_box(_panel(WHITE, 10, Color("d6cec0")), Rect2(top - Vector2(50, 53), Vector2(100, 65)))
+	_text_center("NO", top - Vector2(0, 9), 34, INK, canvas)
+	_ellipse(base, Vector2(18, 12), INK, canvas)
 
 func _panel(color: Color, radius: int, border := Color.TRANSPARENT) -> StyleBoxFlat:
 	var style := StyleBoxFlat.new()
@@ -385,26 +434,30 @@ func _box_flaps(pos: Vector2) -> Array[PackedVector2Array]:
 		PackedVector2Array([pos + Vector2(0, -128), pos + Vector2(16, -150), pos + Vector2(158, -158), pos + Vector2(143, -128)]),
 	]
 
-func _draw_box() -> void:
-	var pos := body_position + Vector2(0, 190 * (1.0 - box_amount))
+func _draw_box(canvas: CanvasItem = null) -> void:
+	if canvas == null:
+		canvas = self
+	var pos := _box_position()
 	var color := Color("c6a77e")
-	draw_style_box(_panel(color, 5, Color("ae8f67")), Rect2(pos + Vector2(-143, -128), Vector2(286, 139)))
-	draw_line(pos + Vector2(0, -128), pos + Vector2(0, 10), Color("dfc69f"), 32, true)
-	draw_line(pos + Vector2(-143, -126), pos + Vector2(143, -126), Color("997c59"), 3, true)
+	canvas.draw_style_box(_panel(color, 5, Color("ae8f67")), Rect2(pos + Vector2(-143, -128), Vector2(286, 139)))
+	canvas.draw_line(pos + Vector2(0, -128), pos + Vector2(0, 10), Color("dfc69f"), 32, true)
+	canvas.draw_line(pos + Vector2(-143, -126), pos + Vector2(143, -126), Color("997c59"), 3, true)
 	var flaps := _box_flaps(pos)
-	draw_colored_polygon(flaps[0], Color("ddc49f"))
-	draw_colored_polygon(flaps[1], Color("d5b98e"))
-	_text_center("definitely empty", pos + Vector2(-3, -44), 19, Color("826a4c"))
+	canvas.draw_colored_polygon(flaps[0], Color("ddc49f"))
+	canvas.draw_colored_polygon(flaps[1], Color("d5b98e"))
+	_text_center("definitely empty", pos + Vector2(-3, -44), 19, Color("826a4c"), canvas)
 	if box_amount > 0.85:
 		for side in [-1.0, 1.0]:
-			_ellipse(pos + Vector2(side * 28, -148), Vector2(10, 8), WHITE)
+			_ellipse(pos + Vector2(side * 28, -148), Vector2(10, 8), WHITE, canvas)
 
-func _draw_bubble() -> void:
+func _draw_bubble(canvas: CanvasItem = null) -> void:
+	if canvas == null:
+		canvas = self
 	var size := 31 if reaction != Reaction.STOP else 43
 	var width := font.get_string_size(bubble, HORIZONTAL_ALIGNMENT_LEFT, -1, size).x + 54.0
 	var center := Vector2(clampf(body_position.x, width * 0.5 + 18, last_size.x - width * 0.5 - 18), maxf(110, body_position.y - 290))
 	center.y += (1.0 - bubble_alpha) * 10.0
 	var paper := Color(WHITE, bubble_alpha)
-	draw_style_box(_panel(paper, 22), Rect2(center - Vector2(width * 0.5, 43), Vector2(width, 78)))
-	draw_colored_polygon(PackedVector2Array([center + Vector2(-9, 31), center + Vector2(10, 31), center + Vector2(0, 48)]), paper)
-	_text_center(bubble, center + Vector2(0, 7), size, Color(INK, bubble_alpha))
+	canvas.draw_style_box(_panel(paper, 22), Rect2(center - Vector2(width * 0.5, 43), Vector2(width, 78)))
+	canvas.draw_colored_polygon(PackedVector2Array([center + Vector2(-9, 31), center + Vector2(10, 31), center + Vector2(0, 48)]), paper)
+	_text_center(bubble, center + Vector2(0, 7), size, Color(INK, bubble_alpha), canvas)
