@@ -4,3 +4,4 @@
 *.png binary
 *.ttf binary
 assets/fonts/OFL-*.txt whitespace=-blank-at-eol
+release/tools/typography-adobe-controller.patch text eol=lf whitespace=-space-before-tab

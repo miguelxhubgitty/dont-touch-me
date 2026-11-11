@@ -1,7 +1,7 @@
 <# Integration regression: local clone only, no network, generation or publication.
    Run when the workflow helper changes, not on every gameplay edit. #>
 [CmdletBinding()]
-param([string]$AestheticRef = 'origin/aesthetic/typography-v1')
+param([string]$AestheticRef = 'origin/aesthetic/typography-v1', [string]$BaseRef = 'main')
 $ErrorActionPreference = 'Stop'
 Set-StrictMode -Version Latest
 $checks = 0
@@ -24,7 +24,7 @@ function Assert-Rejected([scriptblock]$Action, [string]$Reason) {
 $repoRoot = [IO.Path]::GetFullPath((Join-Path $PSScriptRoot '..'))
 Push-Location -LiteralPath $repoRoot
 try {
-    $main = Invoke-Git -Arguments @('rev-parse', 'main')
+    $main = Invoke-Git -Arguments @('rev-parse', '--verify', '--end-of-options', "$BaseRef^{commit}")
     $aesthetic = Invoke-Git -Arguments @('rev-parse', '--verify', '--end-of-options', "$AestheticRef^{commit}")
     $out = Join-Path $repoRoot 'test-output'
     New-Item -ItemType Directory -Force -Path $out | Out-Null
@@ -38,7 +38,8 @@ try {
         Invoke-Git -Arguments @('config', 'user.name', 'Workflow verification')
         Invoke-Git -Arguments @('config', 'user.email', 'workflow@example.invalid')
         Invoke-Git -Arguments @('config', 'commit.gpgsign', 'false')
-        Assert-Workflow ((Invoke-Git -Arguments @('rev-parse', 'HEAD')) -eq $main) 'Fixture starts at current main'
+        Invoke-Git -Arguments @('switch', '--quiet', '--detach', $main)
+        Assert-Workflow ((Invoke-Git -Arguments @('rev-parse', 'HEAD')) -eq $main) 'Fixture starts at requested base'
         Assert-Rejected { & ./release/tools/apply_aesthetics.ps1 -AestheticRef $aesthetic -CheckOnly } 'release/'
         Invoke-Git -Arguments @('switch', '--quiet', '-c', 'release/workflow-verification')
         $readme = [IO.File]::ReadAllBytes((Join-Path $fixture 'README.md'))
