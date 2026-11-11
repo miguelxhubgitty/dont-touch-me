@@ -163,6 +163,10 @@ func run() -> void:
 	game.audio_manager.set_focused(true)
 	game.advance(.2)
 	check(contact_times.size() == 1,"focus restoration does not replay contact")
+	reset(game,320)
+	game.begin_reaction(Blob.Reaction.JUMP,game.body_position)
+	game.advance(1.1)
+	check(game.reaction == Blob.Reaction.NONE and contact_times.size() == 2,"single frame crossing contact and completion emits once")
 	game.free_jump_enabled = false
 	reset(game,320)
 	game.begin_reaction(Blob.Reaction.JUMP,game.body_position+Vector2(-20,-70))

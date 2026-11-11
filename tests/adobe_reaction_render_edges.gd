@@ -25,6 +25,11 @@ func distance_to_outline(point: Vector2,polygon: PackedVector2Array) -> float:
 		distance = minf(distance,point.distance_to(Geometry2D.get_closest_point_to_segment(point,polygon[i],polygon[(i+1)%polygon.size()])))
 	return distance
 
+class FrozenActor extends Native:
+	# The test advances elapsed explicitly, including after OS focus changes.
+	func _process(_delta: float) -> void:
+		pass
+
 func alpha_edges(image: Image) -> PackedVector2Array:
 	var points := PackedVector2Array()
 	for y in range(image.get_height()):
@@ -45,7 +50,7 @@ func run() -> void:
 	viewport.transparent_bg = true
 	viewport.render_target_update_mode = SubViewport.UPDATE_ALWAYS
 	root.add_child(viewport)
-	var actor = Native.new()
+	var actor = FrozenActor.new()
 	viewport.add_child(actor)
 	actor.set_process(false)
 	actor.free_jump_enabled = true
@@ -103,6 +108,7 @@ func run() -> void:
 				actor.advance(.85 if sample == 15 else (26.5/30 if sample == 16 else 1.35))
 			# Body-only contour audit; adobe_bubble_render.gd checks bubbles.
 			actor.bubble = ""
+			actor.bubble_drawer.hide()
 			actor.props.hide()
 			actor.box_amount = 0
 			actor.queue_redraw()

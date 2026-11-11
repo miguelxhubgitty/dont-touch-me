@@ -78,7 +78,7 @@ func run() -> void:
 			actor.reaction = 0
 			actor._update_pose()
 			actor.begin_reaction(reaction,actor.body_position+Vector2(-20,-70))
-		check(not simple.uses_authored_idle() and simple.visual.visible == Simple.AUTHORED_REACTIONS.has(reaction), "only three approved reactions use native rendering")
+		check(not simple.uses_authored_idle() and simple.visual.visible == Simple.AUTHORED_REACTIONS.has(reaction), "all approved reactions use native rendering")
 		for tick in range(120):
 			for actor in [original,simple]:
 				actor.advance(float(Original.DURATIONS[reaction])/120)
@@ -95,7 +95,7 @@ func run() -> void:
 		if tick == 2200:
 			check(simple.reaction == Original.Reaction.WAKE,"unchanged wake reaction")
 	var report := FileAccess.open("res://test-output/simple-tests.json",FileAccess.WRITE)
-	report.store_string(JSON.stringify(evidence,"\t"))
+	report.store_string(JSON.stringify({"checks":checks,"failures":failures,"max_procedural_outline_difference":max_hit_outline_difference},"\t"))
 	for actor in [original,simple]:
 		actor.free()
 	await process_frame
