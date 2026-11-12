@@ -35,7 +35,7 @@ Record the alias, certificate SHA-256 fingerprint, package ID, and account owner
 
 ## Sign the existing bundle without rebuilding the game
 
-The existing `builds/android/dont-touch-me-unsigned.aab` is release-mode and non-debuggable, but has no upload signature. Copy it before signing so the audited unsigned original stays intact:
+Start with a verified release-mode WANDIEL AAB. Check its package ID, version code and unsigned status using [Android identity and signing](ANDROID_IDENTITY.md). Copy it before signing so the audited unsigned original stays intact:
 
 ```powershell
 $unsignedBundle = 'builds\android\dont-touch-me-unsigned.aab'
@@ -47,7 +47,7 @@ Copy-Item -LiteralPath $unsignedBundle -Destination $uploadBundle
 & "$env:JAVA_HOME\bin\jarsigner.exe" -verify -verbose -certs $uploadBundle
 ```
 
-Run from the project folder, choose a fresh output filename if one already exists, and provide passwords only at prompts. `apksigner` is for APKs; AABs use JAR signing. Check the resulting certificate fingerprint against your intended upload certificate and Play Console, then run Google's `bundletool validate` on the signed copy. A self-signed certificate is normal for Android app signing; distinguish certificate-chain warnings from a failed signature. Play Console's actual upload validation is still required. If the existing app record already has a version-code-1 upload, a new version code/build is required later; do not attempt to reuse it blindly.
+Run from the project folder, choose a fresh output filename if one already exists, and provide passwords only at prompts. `apksigner` is for APKs; AABs use JAR signing. Check the resulting certificate fingerprint against your intended upload certificate and Play Console, then run Google's `bundletool validate` on the signed copy. A self-signed certificate is normal for Android app signing; distinguish certificate-chain warnings from a failed signature. Play Console's actual upload validation is still required. Use a version code above the record’s highest accepted code for an update.
 
 For future builds, use a separate store-upload preset with signing enabled and configure the owner's release key **locally**. Keep the shared **Android AAB Unsigned** preparation preset unsigned. Never paste release passwords into the committed preset. Godot credentials/local exports are already ignored by this repository; verify `git status` and `git check-ignore` before each commit.
 

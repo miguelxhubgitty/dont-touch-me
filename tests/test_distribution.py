@@ -21,6 +21,17 @@ class CatalogTests(unittest.TestCase):
         dist.check_catalog(self.catalog,self.registry)
         self.assertEqual(len(self.registry['platforms']),25)
         self.assertTrue(all(p['publication']['live_url'] is None for p in self.registry['platforms']))
+    def test_wandiel_android_presets_match_catalog(self):
+        self.assertEqual(self.catalog['android_application_id'], 'com.wandiel.donttouchme')
+        presets = (ROOT / 'export_presets.cfg').read_text()
+        self.assertEqual(dist.android_package_ids(presets), ['com.wandiel.donttouchme'] * 3)
+        self.assertIn('name="Android APK Unsigned"', presets)
+
+    def test_invalid_android_id_rejected(self):
+        self.catalog['android_application_id'] = 'com.wandiel.invalid-id'
+        with self.assertRaisesRegex(ValueError, 'Invalid Android application ID'):
+            dist.check_catalog(self.catalog, self.registry)
+
     def test_monetization_rejected(self):
         self.catalog['pricing']['payments']=True
         with self.assertRaises(ValueError): dist.check_catalog(self.catalog,self.registry)
