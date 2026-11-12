@@ -6,6 +6,7 @@
   "android_version_code": 2,
   "native_version": "0.1.0",
   "windows_version": "0.1.0.0",
+  "android_application_id": "com.wandiel.donttouchme",
   "application_id": "com.littlebutterflyproductions.donttouchme",
   "pricing": {
     "model": "free",

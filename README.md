@@ -33,7 +33,7 @@ The behavior suite checks tier boundaries, random coverage, repetition avoidance
 
 ## Android / future iOS
 
-An ARM64 Android preset is included, with signing enabled. Install matching Godot export templates and configure the Android SDK, JDK, and local debug keystore in the editor before exporting a debug APK. Create `builds/android/` if needed. The application ID is `com.littlebutterflyproductions.donttouchme`; version is `1.0.0` (code 1). Main and adaptive launcher icons are generated locally. No credentials are required to open or play the project in the editor. Release signing requires your own release/upload key; none is included. Keystores, local credentials, and builds are ignored by Git.
+An ARM64 Android preset is included, with signing enabled. Install matching Godot export templates and configure the Android SDK, JDK, and local debug keystore in the editor before exporting a debug APK. Create `builds/android/` if needed. The application ID is `com.wandiel.donttouchme`; version is `1.0.0` (code 1). Main and adaptive launcher icons are generated locally. No credentials are required to open or play the project in the editor. Release signing requires your own release/upload key; none is included. Keystores, local credentials, and builds are ignored by Git.
 
 iOS uses the same GDScript/Compatibility renderer and portrait layout. An iOS export will require matching templates, macOS/Xcode and your own signing configuration. No publishing setup is included.
 
@@ -50,3 +50,5 @@ Public Alpha v0.1.0-alpha downloads are available at [GitHub Releases](https://g
 The **Android AAB Unsigned** preset prepares a release-mode bundle with Gradle, target SDK 36, and no production signature. Install the Gradle template using Godot's Android build-template setup (or `--install-android-build-template` with the export command). An unsigned AAB is not ready to upload to Google Play: configure your own upload key, enable signing in a store-upload preset, and validate the signed result. No production key is included or generated.
 
 Engine and bundled-component acknowledgments are in `THIRD_PARTY_NOTICES.txt`, generated using Godot's license metadata. This file is explicitly included in game exports and should accompany the portable Windows build. It does not license the original game's code/art.
+
+The unsigned Android APK and AAB presets produce separate review artifacts. See [Android identity and signing](release/ANDROID_IDENTITY.md).
