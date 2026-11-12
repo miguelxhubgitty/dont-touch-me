@@ -53,6 +53,8 @@ func _initialize() -> void:
 	for section in presets.get_sections():
 		if not section.begins_with("preset.") or section.ends_with(".options"):
 			continue
+		if presets.get_value(section, "platform", "") == "Android":
+			check(presets.get_value(section + ".options", "package/unique_name") == "com.wandiel.donttouchme", "WANDIEL Android package identity")
 		check(str(presets.get_value(section, "exclude_filter")).contains("release/*"), "release material excluded from game")
 		check(str(presets.get_value(section, "include_filter")).contains("THIRD_PARTY_NOTICES.txt"), "license notices included")
 		if FileAccess.file_exists("res://assets/fonts/OFL-Space-Grotesk.txt"):
