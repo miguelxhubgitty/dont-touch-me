@@ -67,7 +67,8 @@ See CONTENT_RATING.md. Suggested answers are drafts, not assigned ratings. Confi
 ## Support and policy fields
 
 - Support website: https://miguelxhubgitty.github.io/dont-touch-me/ (published and verified); issue tracker linked there.
-- Required store support email: the owner must supply a working monitored address. No address has been invented.
+- Store support email: support@wandiel.com (owner-provided; confirm mailbox access before submission).
+- General business contact: hello@wandiel.com.
 - Privacy policy URL: https://miguelxhubgitty.github.io/dont-touch-me/privacy.html (published and verified). Source: PRIVACY_POLICY.md and ../docs/privacy.html.
 - Screenshots: assets/screenshots/google-play/ contains actual renderer captures. Apple-sized reference folders require Mac/iOS validation before store use.
 
