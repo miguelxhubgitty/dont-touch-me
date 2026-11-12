@@ -127,8 +127,14 @@ def clean_tree():
 def stamp():
     return datetime.now(timezone.utc).isoformat()
 
+def android_package_ids(presets):
+    return re.findall(r'(?m)^package/unique_name="([^"]+)"$', presets)
+
+
 def check_catalog(catalog=None, registry=None):
     c, r = catalog or load(CATALOG), registry or load(REGISTRY)
+    if not re.fullmatch(r'[a-zA-Z][a-zA-Z0-9_]*(?:\.[a-zA-Z][a-zA-Z0-9_]*)+', c.get('android_application_id', '')):
+        raise ValueError('Invalid Android application ID')
     if not re.fullmatch(r'\d+\.\d+\.\d+(?:-[a-zA-Z0-9.-]+)?', c['version']):
         raise ValueError('Invalid release version')
     if c['pricing'] != {'model':'free','payments':False,'donations':False,'in_app_purchases':False,'currency_integration':False}:
@@ -166,6 +172,7 @@ def sync():
     project.write_text(re.sub(r'(?m)^config/version="[^"]+"', f'config/version="{c["version"]}"', project.read_text()), encoding='utf-8')
     presets = ROOT / 'export_presets.cfg'
     text = presets.read_text()
+    text = re.sub(r'(?m)^package/unique_name="[^"]+"$', f'package/unique_name="{c["android_application_id"]}"', text)
     text = re.sub(r'(?m)^version/name="[^"]+"', f'version/name="{c["version"]}"', text)
     text = re.sub(r'(?m)^version/code=\d+', f'version/code={c["android_version_code"]}', text)
     text = re.sub(r'(?m)^application/(file_version|product_version)="[^"]+"', lambda m: f'application/{m[1]}="{c["windows_version"]}"', text)
@@ -313,6 +320,10 @@ class Release:
 
     def export(self, keys):
         clean_tree()
+        if any(key.startswith('android-') for key in keys):
+            ids = android_package_ids((ROOT / 'export_presets.cfg').read_text())
+            if not ids or any(value != self.catalog['android_application_id'] for value in ids):
+                raise ValueError('Android presets do not match the catalog package ID; run release sync.')
         self.current_validation()
         availability = self.doctor()
         for key in keys:
