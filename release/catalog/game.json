@@ -17,7 +17,8 @@
   "publisher": {
     "brand": "WANDIEL",
     "legal_name": "ONE TRU THING ONLY LLC",
-    "email": "admin@wandiel.com",
+    "email": "hello@wandiel.com",
+    "support_email": "support@wandiel.com",
     "website": "https://wandiel.com",
     "legal_rename_approved": false,
     "account_verification": "not_verified"

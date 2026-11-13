@@ -1,6 +1,6 @@
 # Privacy Policy — Don't Touch Me
 
-Last updated: October 29, 2026. Applies to version 1.0.
+Last updated: November 12, 2026. Applies to version 1.0.
 
 ## The game
 
@@ -24,7 +24,7 @@ The game has no feature for submitting personal information. Its offline data ha
 
 ## Support and privacy questions
 
-You can contact the developer through the [project's issue tracker](https://github.com/miguelxhubgitty/dont-touch-me/issues). Issues are public: please do not post personal, private, or sensitive information. If you choose to contact us through GitHub, that communication is separate from the game and is handled through GitHub's services and privacy policy. Information you voluntarily include in a support request may be used to answer that request.
+For private game support or privacy questions, email **support@wandiel.com**. You can also contact the developer through the [project's issue tracker](https://github.com/miguelxhubgitty/dont-touch-me/issues). Issues are public: please do not post personal, private, or sensitive information. If you choose to contact us through GitHub, that communication is separate from the game and is handled through GitHub's services and privacy policy. Information you voluntarily include in a support request may be used to answer that request.
 
 ## Changes
 
