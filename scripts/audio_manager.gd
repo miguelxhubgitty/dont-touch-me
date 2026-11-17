@@ -170,7 +170,7 @@ func play_event(id: String) -> bool:
 	var cue: Dictionary = events[id]
 	if not cue.enabled: return false
 	var role: String = cue.role
-	if role == "contact" and time - last_contact < 0.1 - 0.000001: return false
+	if role == "contact" and id != "user.game_start" and time - last_contact < 0.1 - 0.000001: return false
 	if role == "voice" and time - last_voice < 0.3 - 0.000001: return false
 	var stream = streams.get(str(cue.stream))
 	if stream == null: return false
@@ -180,7 +180,7 @@ func play_event(id: String) -> bool:
 	player.volume_db = float(cue.volume_db)
 	player.play()
 	slots[role] = {"id": id, "remaining": float(cue.max_seconds), "volume_db": float(cue.volume_db)}
-	if role == "contact": last_contact = time
+	if role == "contact" and id != "user.game_start": last_contact = time
 	if role == "voice": last_voice = time
 	if trace_enabled:
 		trace.append(id)
