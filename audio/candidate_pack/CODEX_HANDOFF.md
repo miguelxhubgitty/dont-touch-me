@@ -1,4 +1,4 @@
-# Implementation and acceptance plan for Codex
+# Deferred implementation notes — NOT a current Codex handoff
 
 ## Initial status / protection
 - Start from checked-out approved `main` in a new feature branch after checking `git status`; preserve all uncommitted changes and existing branches.

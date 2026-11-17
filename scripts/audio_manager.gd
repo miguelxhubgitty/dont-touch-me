@@ -31,9 +31,11 @@ func _ready() -> void:
 		push_error("Invalid blob audio event map; audio disabled")
 		return
 	events = parsed.events
+	_ensure_preview_buses()
 	for role in ["contact", "voice", "action"]:
 		var player := AudioStreamPlayer.new()
 		player.name = role.capitalize()
+		player.bus = {"contact": "UserSFX", "voice": "CharacterVoice", "action": "CharacterSFX"}[role]
 		add_child(player)
 		players[role] = player
 	# Validate/load once. Repeated touches must not hit disk or reimport assets.
@@ -49,6 +51,16 @@ func _ready() -> void:
 			streams[path] = resource if resource is AudioStream else null
 			if streams[path] == null:
 				push_error("Missing/invalid audio stream: " + path)
+
+func _ensure_preview_buses() -> void:
+	# Dedicated buses without changing existing project/release bus layouts.
+	for bus_name in ["UserSFX", "CharacterVoice", "CharacterSFX", "Environment", "Music"]:
+		if AudioServer.get_bus_index(bus_name) != -1:
+			continue
+		AudioServer.add_bus()
+		var index := AudioServer.get_bus_count() - 1
+		AudioServer.set_bus_name(index, bus_name)
+		AudioServer.set_bus_send(index, "Master")
 
 func _notification(what: int) -> void:
 	if what == NOTIFICATION_PAUSED:
