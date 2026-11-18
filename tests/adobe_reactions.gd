@@ -31,6 +31,8 @@ func reset(actor,t: float = .5) -> void:
 	actor.gaze_timer = 1
 	actor.idle_gaze = Vector2.ZERO
 	actor.rng.seed = 8127
+	actor.idle_rng.seed = 8127
+	actor._reset_special_idle()
 	actor.audio_manager.cancel_reaction()
 	actor._update_pose()
 
