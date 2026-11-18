@@ -18,6 +18,7 @@ var time := 0.0
 var click_streak := 0
 var last_click := -100.0
 var reaction_attenuation_db := 0.0
+var audio_rng := RandomNumberGenerator.new()
 var last_contact := -100.0
 var last_voice := -100.0
 var focused := true
@@ -231,6 +232,10 @@ func play_event(id: String, attenuation_db: float = 0.0) -> bool:
 	var player: AudioStreamPlayer = players[role]
 	player.stream = stream
 	player.volume_db = float(cue.volume_db) + attenuation_db
+	player.pitch_scale = 1.0
+	if id.ends_with(".contact") and not id.begins_with("box.") and not id.begins_with("sign."):
+		player.pitch_scale = audio_rng.randf_range(0.97, 1.03)
+		player.volume_db += audio_rng.randf_range(-0.6, 0.6)
 	player.play()
 	slots[role] = {"id": id, "remaining": float(cue.max_seconds), "volume_db": player.volume_db}
 	if role == "contact" and id != "user.game_start": last_contact = time
