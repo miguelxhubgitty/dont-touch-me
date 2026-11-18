@@ -136,7 +136,7 @@
       "role": "voice",
       "marker": "expression",
       "enabled": true,
-      "volume_db": -12,
+      "volume_db": -14,
       "max_seconds": 0.45
     },
     "dont.voice": {
@@ -152,7 +152,7 @@
       "role": "voice",
       "marker": "motion",
       "enabled": true,
-      "volume_db": -12,
+      "volume_db": -10,
       "max_seconds": 0.45
     },
     "stop.voice": {
@@ -160,7 +160,7 @@
       "role": "voice",
       "marker": "expression",
       "enabled": true,
-      "volume_db": -12,
+      "volume_db": -9,
       "max_seconds": 0.45
     },
     "wake.voice": {
