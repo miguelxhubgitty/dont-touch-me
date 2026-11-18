@@ -180,6 +180,8 @@ func marker_position(marker: String) -> float:
 		"held": return 1.0 / 7.0
 		"release": return 6.0 / 7.0
 		"squish_rebound": return atan(PI) / (1.5 * PI)
+		# First full authored swing, after the 2-frame anticipation.
+		"shake_first_swing": return (4.0 / 30.0) / 1.05
 		"slide_stop": return 2.0 / 3.0
 		"offscreen": return 0.23
 		"return": return 0.7

@@ -150,7 +150,7 @@
     "shake.voice": {
       "stream": "res://audio/voice/puppy_real_1.ogg",
       "role": "voice",
-      "marker": "motion",
+      "marker": "shake_first_swing",
       "enabled": true,
       "volume_db": -10,
       "max_seconds": 0.45
