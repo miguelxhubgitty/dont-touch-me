@@ -1,0 +1,34 @@
+# Don't Touch Me — Current state
+
+Development baseline: Godot 4.7.2 stable on `main`, verified through [PR #29](https://github.com/miguelxhubgitty/dont-touch-me/pull/29) at `02fefa4`. Use [the workflow](BRANCH_WORKFLOW.md) and [local checks](TESTING.md#development-test-runner) for new work.
+
+## Implemented on main
+
+- Mouse and native touch share the blob's hit rules. Accepted pokes add 7–10 hidden annoyance points within a 0–100 range. Four reaction pools avoid immediate repeats when selecting a new reaction. Annoyance starts decaying after 2.5 seconds of inactivity, at 4 points per second.
+- There are 15 regular reactions and one special wake reaction. Box cardboard and flaps block touches, peek eyes accept them, and BOX and RUN retain their protected timing. JUMP has ballistic flight, offscreen landing and return. Idle breathing, gaze, blinking, sleep and wake remain active. Sleep starts after 18 seconds of inactivity once the blob is free to sleep.
+- The normal scene uses a textured body and authored Godot AnimationPlayer poses with a procedural fallback. The existing controller owns timing, movement, props, speech and input. Development uses Godot's basic font.
+- [PR #18](https://github.com/miguelxhubgitty/dont-touch-me/pull/18) integrated kitten, puppy, robot and interaction cues. The [event map](audio/blob_events.json) defines cue timing and enabled states, and the [source register](audio/candidate_pack/SOURCE_REGISTRY.md) records provenance and notices. Background misses have a sound, and blocked cardboard remains silent. Sound defaults to off on a fresh profile, stops playback immediately, and remembers the player's choice.
+- PRs #21–#27 added click attenuation, interruption fades, voice gain balancing, an editor-only audition scene, SHAKE voice timing, variation on eligible poke sounds, and saved volumes for User SFX, Character Voice, Character SFX, Environment and Music. The Environment and Music controls have buses available for future content. PR #29 shortened the click streak reset to 0.45 seconds. Gains remain normal for clicks 1–4, then decrease by 6 dB per click to −30 dB from click 9 onward.
+
+## Review queue and next milestone
+
+GitHub snapshot, November 18, 2026. Recheck live PR status before acting.
+
+| PR | State and scope |
+| --- | --- |
+| [#28](https://github.com/miguelxhubgitty/dont-touch-me/pull/28) | Open for review. Multiples-of-nine preference. |
+| [#20](https://github.com/miguelxhubgitty/dont-touch-me/pull/20) | Draft sound-polish candidates. Separate from the merged audio starter pack. |
+| [#10](https://github.com/miguelxhubgitty/dont-touch-me/pull/10) | Draft test teardown improvement. |
+| [#4](https://github.com/miguelxhubgitty/dont-touch-me/pull/4) | Draft historical audio-first roadmap. Use this file and the current roadmap for present scope. |
+| [#13](https://github.com/miguelxhubgitty/dont-touch-me/pull/13), [#15](https://github.com/miguelxhubgitty/dont-touch-me/pull/15), [#16](https://github.com/miguelxhubgitty/dont-touch-me/pull/16) | Separate draft publisher identity, future Android identity, and Amazon documentation work. |
+
+The global Codex instructions carry the multiples-of-nine preference for flexible design values. Existing specifications, measurements, IDs and engine versions take precedence. PR #28 tracks the repository copy.
+
+The owner selected stretch and humming/bobbing idles, then recoil and puffer-huff reactions, as the next scoped development milestone after this tooling review. The animation implementation still follows the design approval gate. Confirm idle cadence, transition poses and spike touch behavior in the plans before coding. The stretch vocalization, humming melody, recognizable-song ideas, new annoyance mechanics, emotional stages, trust and auras are deferred. The architecture review follows this animation work.
+
+## Evidence and release boundary
+
+- Rapid automated audio shutdown has intermittently reported outstanding playback resources. A normal WASAPI window close after a tap exited cleanly in a prior check, which does not rule out every active-audio shutdown case. Compare exact conditions before labeling a warning harmless.
+- Desktop and synthetic viewport tests cover the development tree. Physical Android/iOS touch timing, audio latency, focus/background behavior and device performance still need direct testing. Browser autoplay and mobile audio also need real-browser checks against a separately approved web build.
+- The published **v0.1.0-alpha** uses its frozen, audio-free runtime. Its 24-second sleep threshold, procedural presentation and approved release typography belong to that historical source. Use the [release manifest](release/distribution/manifest-v0.1.0-alpha.json) for provenance and the [distribution registry](release/distribution/platforms.json) for recorded destination status. A merged development PR does not update a public package.
+- The [journal](docs/INTERNAL_DEVELOPER_JOURNAL.md) preserves historical results and decision context. The permanent foundation branch is a separate read-only historical reference for this workflow.

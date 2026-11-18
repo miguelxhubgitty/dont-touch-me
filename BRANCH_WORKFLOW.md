@@ -3,36 +3,37 @@
 ## Branch responsibilities
 
 - `main`: the latest **approved and merged** gameplay baseline, Godot's bundled fallback font, fast behavior/layout checks. No Space Grotesk/Ink Free runtime resources or automatic image generation.
-- `feature/*`, `fix/*`, `docs/*`, `tooling/*`: scoped work branches for all changes. Propose a PR and obtain separate owner approval before merging into `main`.
+- `feature/*`, `fix/*`, `docs/*`, `tooling/*`: scoped work branches for all changes. Integrate through a PR using the authorization mode below.
 - `aesthetic/typography-v1`: the approved presentation snapshot originally committed at `c0bfa4e`. Tooling-only portability fixes may follow it. Preserve the original commit and artwork; do not merge future gameplay into this branch or develop gameplay here.
 - `release/<version>`: fork current `main`, apply the presentation patch, finalize assets/builds, then tag this branch's finished commit. Future releases always start from `main`, not a previous release/aesthetic branch.
 
 `c0bfa4e` is already an ancestor of `main`; `c7397822` restored the basic presentation without deleting that history. A normal merge of the aesthetic branch therefore does not reapply the fonts. Do not undo `c7397822`, copy its entire old gameplay tree, or depend on a wholesale branch merge.
 
-## 1. Normal gameplay development — branch-first, no direct edits to main
+## 1. Development and verification
 
-**Every change, including plans/docs, needs a purpose-specific branch before editing.** First inspect `git branch --show-current`, `git status --short`, and local-vs-remote commits. If your working tree is dirty, preserve it; do not reset, clean, force-push, auto-stash, or discard any work. Separate unrelated local changes before committing. Approving a pseudocode/plan is **not** approval to merge the implementation.
+**Standard mode (default).** Obtain explicit design approval for meaningful changes, then implement and test in a topic branch. Open a PR against `main` with scope, test evidence and limitations. Wait for explicit approval of the reviewed PR before merging.
 
-For a new task with a clean working tree, create a fresh topic branch from approved `main`:
+**Authorized batch mode.** The owner must explicitly approve a defined, ordered sequence and authorize merging its verified PRs. Sequence approval without merge authorization remains standard mode. For each item, create a separate branch from current `origin/main`, add regression coverage, run applicable checks, and open a focused PR. Merge through GitHub only after verification passes. Verify the merge SHA and resulting `main`, then branch from that updated base for the next item. Stop for a real regression, conflict, unexpected change, or decision outside the approved scope. Record each PR, merge SHA and test result.
 
-Replace `feature/example-task` with a new, descriptive branch name. Use Godot 4.7.2 and substitute the executable path for `godot` below.
+Neither mode grants authority to push directly to `main`, change unrelated work, publish, deploy, modify frozen releases or move tags. The foundation context branch stays permanently isolated. Read it in place and never transfer its commits or files into `main`.
+
+Inspect Git status, branch, worktrees and local/remote divergence before editing. Prefer a separate worktree to protect in-progress work:
 
 ```powershell
-git status --short
-git branch --show-current
-git fetch origin main aesthetic/typography-v1
-git switch main
-git merge --ff-only origin/main
-git switch -c feature/example-task
-godot --headless --path . --editor --import --quit
-godot --headless --path . --script tests/behavior.gd
-godot --headless --path . --script tests/release.gd
-godot --headless --path . --script tests/fingerprints.gd
+git status --short --branch
+git worktree list
+git fetch --no-tags origin main
+git log --left-right --oneline main...origin/main
+git worktree add -b feature/example-task ../dont-touch-me-example-task origin/main
 ```
 
-Check every command's exit code. Commit/push **only the scoped topic branch** and open a PR targeting `main`. Present the diff, tests, and limitations; obtain **separate explicit owner approval** before a PR merge. Never self-merge, auto-merge, or directly push changes to `main`. A rendering contact sheet (`tests/render.gd`, real renderer) is optional when poses/layout change; it is not part of the routine text/gameplay loop. Do not run either authoring generator, package screenshots or rebuild marketing assets on every edit.
+Check each command before proceeding. Preserve unfinished work and unpushed commits in place. Avoid resetting, cleaning, force-pushing, auto-stashing or overwriting a checkout. Keep independent changes on separate branches.
 
-Existing store images and manifests are historical snapshots. `validate_package.gd` is a release gate, not a daily gameplay test: a source-fingerprint mismatch after gameplay edits is expected until finalization. Never update a capture fingerprint by hand just to silence the gate.
+Use [the local runner](TESTING.md#development-test-runner) for relevant Godot 4.7.2 checks. Add focused regression tests for meaningful changes and exercise authored and procedural animation paths when affected. Tests must isolate player preferences. A test-shutdown warning calls for a comparison with normal application behavior before classification. Stop on actual errors or failed checks, and report any unverified behavior. Update relevant docs and the journal before review.
+
+After an authorized merge, verify the resulting `origin/main`. Fast-forward a clean local `main` when needed. Delete a merged feature branch only if it has no unique commits, is not in use, and its local worktree has no changes to preserve. Keep experimental, preservation and release refs.
+
+Use `tests/render.gd` for optional pose/layout contact sheets. Store images and manifests are historical snapshots. Package validation is a separate release gate, so a runtime fingerprint mismatch must never be fixed by editing historical capture fingerprints. Regenerate store artwork only during authorized release finalization.
 
 ## 2. Start a release from current gameplay
 
