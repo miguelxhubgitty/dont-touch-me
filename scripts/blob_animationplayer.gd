@@ -1,8 +1,8 @@
 extends "res://scripts/blob.gd"
 ## Experiment adapter only. Native scene/AnimationPlayer own visual transforms.
 const VisualScene = preload("res://scenes/blob/blob.tscn")
-const AUTHORED_REACTIONS := {Reaction.BLINK:"reaction_blink",Reaction.SIDE_EYE:"reaction_side_eye",Reaction.SQUISH:"reaction_squish",Reaction.IRRITATED:"reaction_irritated",Reaction.DONT:"reaction_dont",Reaction.SERIOUSLY:"reaction_seriously",Reaction.SLIDE:"reaction_slide",Reaction.JUMP:"reaction_jump",Reaction.SHAKE:"reaction_shake",Reaction.FLATTEN:"reaction_flatten",Reaction.TURN:"reaction_turn",Reaction.STOP:"reaction_stop",Reaction.SIGN:"reaction_sign",Reaction.BOX:"reaction_box",Reaction.RUN:"reaction_run",Reaction.WAKE:"reaction_wake"}
-const MODEL_EYE_REACTIONS := [Reaction.FLATTEN, Reaction.TURN, Reaction.STOP, Reaction.SIGN, Reaction.BOX, Reaction.RUN, Reaction.WAKE]
+const AUTHORED_REACTIONS := {Reaction.BLINK:"reaction_blink",Reaction.SIDE_EYE:"reaction_side_eye",Reaction.SQUISH:"reaction_squish",Reaction.IRRITATED:"reaction_irritated",Reaction.DONT:"reaction_dont",Reaction.SERIOUSLY:"reaction_seriously",Reaction.SLIDE:"reaction_slide",Reaction.JUMP:"reaction_jump",Reaction.SHAKE:"reaction_shake",Reaction.FLATTEN:"reaction_flatten",Reaction.TURN:"reaction_turn",Reaction.STOP:"reaction_stop",Reaction.SIGN:"reaction_sign",Reaction.BOX:"reaction_box",Reaction.RUN:"reaction_run",Reaction.WAKE:"reaction_wake",Reaction.PUFFER_HUFF:"reaction_puffer_huff"}
+const MODEL_EYE_REACTIONS := [Reaction.FLATTEN, Reaction.TURN, Reaction.STOP, Reaction.SIGN, Reaction.BOX, Reaction.RUN, Reaction.WAKE, Reaction.PUFFER_HUFF]
 const BubbleDrawer = preload("res://scripts/bubble_foreground.gd")
 
 class Props extends Node2D:
@@ -230,6 +230,9 @@ func _draw() -> void:
 		_text_center("(especially the little one)",Vector2(last_size.x*.5,last_size.y*.84),19,Color(MUTED,intro_alpha*.8))
 	var height := maxf(0, anchor.y-body_position.y)
 	_ellipse(Vector2(body_position.x,anchor.y+5),Vector2(111-minf(height*.2,45),13),Color(.35,.31,.24,.075))
+	if spike_extension > 0.0:
+		draw_set_transform(body_position, breathing.rotation, breathing.scale)
+		_draw_puffer_spikes(idle_outline)
 	if touch_flash > 0 and reaction != Reaction.TURN:
 		draw_set_transform(body_position,breathing.rotation,breathing.scale)
 		for side in [-1.0,1.0]:
