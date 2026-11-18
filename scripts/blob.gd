@@ -3,7 +3,7 @@ extends Node2D
 const AudioManager = preload("res://scripts/audio_manager.gd")
 
 enum Reaction { NONE, BLINK, SIDE_EYE, SQUISH, IRRITATED, DONT, SERIOUSLY,
-	SLIDE, JUMP, SHAKE, FLATTEN, TURN, STOP, SIGN, BOX, RUN, WAKE, PUFFER_HUFF }
+	SLIDE, JUMP, SHAKE, FLATTEN, TURN, STOP, SIGN, BOX, RUN, WAKE, RECOIL, PUFFER_HUFF }
 
 const INK := Color("202124")
 const WHITE := Color("fffdf8")
@@ -14,23 +14,37 @@ const DURATIONS := {
 	Reaction.IRRITATED: 1.2, Reaction.DONT: 1.25, Reaction.SERIOUSLY: 1.5,
 	Reaction.SLIDE: 0.9, Reaction.JUMP: 1.05, Reaction.SHAKE: 1.05,
 	Reaction.FLATTEN: 1.65, Reaction.TURN: 1.8, Reaction.STOP: 1.25,
-	Reaction.SIGN: 2.0, Reaction.BOX: 2.7, Reaction.RUN: 4.1, Reaction.WAKE: 1.65, Reaction.PUFFER_HUFF: 1.8,
+	Reaction.SIGN: 2.0, Reaction.BOX: 2.7, Reaction.RUN: 4.1, Reaction.WAKE: 1.65, Reaction.RECOIL: 0.9,
+	Reaction.PUFFER_HUFF: 1.8,
 }
 const POOLS := [
-	[Reaction.BLINK, Reaction.SIDE_EYE, Reaction.SQUISH],
+	[Reaction.BLINK, Reaction.SIDE_EYE, Reaction.SQUISH, Reaction.RECOIL],
 	[Reaction.IRRITATED, Reaction.DONT, Reaction.SERIOUSLY, Reaction.SLIDE, Reaction.PUFFER_HUFF],
 	[Reaction.JUMP, Reaction.SHAKE, Reaction.FLATTEN, Reaction.TURN, Reaction.STOP, Reaction.SIGN],
 	[Reaction.STOP, Reaction.SIGN, Reaction.BOX, Reaction.RUN],
 ]
 const SLEEP_AFTER := 18.0
+const STRETCH_DURATION := 1.8
+const STRETCH_SCALE := Vector2(0.81, 1.27)
+const STRETCH_EYES := 0.27
+const HUMMING_BEAT := 0.9
+const HUMMING_DURATION := 3.0 * HUMMING_BEAT
+
+enum SpecialIdle { NONE, STRETCH, HUMMING }
 const FREE_JUMP_FLIGHT := .85
 const FREE_JUMP_TRAVEL := 230.0
 const JUMP_RETURN_SPEED := FREE_JUMP_TRAVEL / FREE_JUMP_FLIGHT
 @export var free_jump_enabled := false
+var recoil_travel := 0.0
 var jump_returning := false
 var jump_return_target := Vector2.ZERO
 
 var rng := RandomNumberGenerator.new()
+var idle_rng := RandomNumberGenerator.new()
+var next_idle := SpecialIdle.NONE
+var next_idle_at := 0.0
+var active_idle := SpecialIdle.NONE
+var special_idle_started := 0.0
 var annoyance := 0.0
 var idle_time := 0.0
 var asleep := false
@@ -71,6 +85,7 @@ func _ready() -> void:
 	audio_manager = AudioManager.new()
 	audio_manager.name = "BlobAudio"
 	add_child(audio_manager)
+	_reset_special_idle()
 	var sound_button := get_node_or_null("SoundHUD/SoundButton")
 	if sound_button != null:
 		sound_button.initialize(audio_manager)
@@ -93,6 +108,7 @@ func _resize() -> void:
 	origin = anchor
 	destination = anchor
 	reaction = Reaction.NONE
+	active_idle = SpecialIdle.NONE
 	_update_pose()
 
 func _notification(what: int) -> void:
@@ -156,6 +172,7 @@ func advance(delta: float) -> void:
 		if not asleep and audio_manager != null:
 			audio_manager.play_event("sleep.enter")
 		asleep = true
+	_update_special_idle()
 	blink_timer -= delta
 	blink_remaining = maxf(0.0, blink_remaining - delta)
 	if blink_timer <= 0.0:
@@ -169,6 +186,39 @@ func advance(delta: float) -> void:
 	if free_contact and audio_manager != null:
 		audio_manager.play_event("jump.land", audio_manager.reaction_attenuation_db)
 	queue_redraw()
+
+func _reset_special_idle() -> void:
+	active_idle = SpecialIdle.NONE
+	var roll := idle_rng.randf()
+	if roll < 0.2:
+		next_idle = SpecialIdle.NONE
+	elif roll < 0.6:
+		next_idle = SpecialIdle.STRETCH
+		next_idle_at = 4.5 + idle_rng.randf_range(0.0, 1.8)
+	else:
+		next_idle = SpecialIdle.HUMMING
+		next_idle_at = 9.0 + idle_rng.randf_range(0.0, 1.8)
+
+func _special_idle_duration(which: SpecialIdle) -> float:
+	return STRETCH_DURATION if which == SpecialIdle.STRETCH else HUMMING_DURATION
+
+func _update_special_idle() -> void:
+	if asleep or reaction != Reaction.NONE or jump_returning:
+		active_idle = SpecialIdle.NONE
+		return
+	if active_idle != SpecialIdle.NONE and idle_time - special_idle_started >= _special_idle_duration(active_idle):
+		active_idle = SpecialIdle.NONE
+	if next_idle != SpecialIdle.NONE and idle_time >= next_idle_at:
+		if idle_time + _special_idle_duration(next_idle) <= SLEEP_AFTER:
+			active_idle = next_idle
+			special_idle_started = idle_time
+		next_idle = SpecialIdle.NONE
+
+func _stretch_strength() -> float:
+	if active_idle != SpecialIdle.STRETCH:
+		return 0.0
+	var phase := idle_time - special_idle_started
+	return _ease(phase / 0.72) * _ease((STRETCH_DURATION - phase) / 0.81)
 
 func _free_jump_enabled() -> bool:
 	return free_jump_enabled
@@ -219,6 +269,7 @@ func touch_at(point: Vector2) -> bool:
 	if audio_manager != null:
 		audio_manager.register_click()
 	idle_time = 0.0
+	_reset_special_idle()
 	intro_alpha = 0.0
 	annoyance = minf(100.0, annoyance + rng.randf_range(7.0, 10.0))
 	touch_flash = 1.0
@@ -233,14 +284,18 @@ func touch_at(point: Vector2) -> bool:
 	return true
 
 func begin_reaction(which: int, touch: Vector2) -> void:
+	active_idle = SpecialIdle.NONE
 	jump_returning = false
-	origin = Vector2(body_position.x if which == Reaction.JUMP and _free_jump_enabled() else clampf(body_position.x, 190.0, last_size.x - 190.0), anchor.y)
+	origin = Vector2(body_position.x if which == Reaction.RECOIL or (which == Reaction.JUMP and _free_jump_enabled()) else clampf(body_position.x, 190.0, last_size.x - 190.0), anchor.y)
 	anchor = origin
 	destination = origin
 	elapsed = 0.0
 	reaction = which
 	last_reaction = which
 	direction = 1.0 if touch.x <= origin.x else -1.0
+	if which == Reaction.RECOIL:
+		var edge := last_size.x - 144.0 if direction > 0.0 else 144.0
+		recoil_travel = clampf((edge - origin.x) * direction, 0.0, 45.0)
 	if which == Reaction.JUMP and _free_jump_enabled():
 		destination.x = origin.x+direction*FREE_JUMP_TRAVEL
 	elif which == Reaction.SLIDE or which == Reaction.JUMP:
@@ -273,6 +328,17 @@ func _update_pose() -> void:
 	bubble = ""
 	bubble_alpha = 0.0
 	if reaction == Reaction.NONE:
+		var stretch := _stretch_strength()
+		body_scale = body_scale.lerp(STRETCH_SCALE, stretch)
+		eye_open = minf(eye_open, lerpf(1.0, STRETCH_EYES, stretch))
+		if active_idle == SpecialIdle.HUMMING:
+			var phase := idle_time - special_idle_started
+			var beat := phase / HUMMING_BEAT
+			var strength := _ease(beat) * _ease(3.0 - beat)
+			var bob := sin(PI * beat)
+			body_position.y -= 9.0 * strength * bob * bob
+			body_angle = 0.018 * strength * bob
+			eye_open = minf(eye_open, lerpf(1.0, 0.54, strength))
 		return
 	var t := clampf(elapsed / float(DURATIONS[reaction]), 0.0, 1.0)
 	var envelope := sin(PI * t)
@@ -355,6 +421,15 @@ func _update_pose() -> void:
 				body_position = peek.lerp(destination, _ease((t - 0.7) / 0.3))
 				gaze.x = -direction * 12.0
 			body_position.y -= absf(sin(t * 55.0)) * 9.0
+		Reaction.RECOIL:
+			var anticipation := _ease(elapsed / 0.09) * (1.0 - _ease((elapsed - 0.09) / 0.18))
+			var hop := _ease((elapsed - 0.09) / 0.18) * (1.0 - _ease((elapsed - 0.27) / 0.36))
+			var toward_room := maxf(0.0, origin.x - 144.0 if direction > 0.0 else last_size.x - 144.0 - origin.x)
+			body_position.x += direction * (recoil_travel * hop - minf(9.0, toward_room) * anticipation)
+			body_position.y -= 18.0 * hop
+			var landing := _ease((elapsed - 0.45) / 0.18) * (1.0 - _ease((elapsed - 0.63) / 0.27))
+			body_scale += Vector2(0.09, -0.09) * (anticipation + landing)
+			eye_open = lerpf(eye_open, 1.18, hop)
 		Reaction.PUFFER_HUFF:
 			var inflation := _ease((elapsed - 0.18) / 0.27) * (1.0 - _ease((elapsed - 1.35) / 0.45))
 			spike_extension = _ease((elapsed - 0.18) / 0.27) * (1.0 - _ease((elapsed - 1.08) / 0.27))

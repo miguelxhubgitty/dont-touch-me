@@ -3,7 +3,7 @@ extends Node
 signal event_played(event_name: String)
 
 const REACTIONS := ["", "blink", "side_eye", "squish", "irritated", "dont", "seriously",
-	"slide", "jump", "shake", "flatten", "turn", "stop", "sign", "box", "run", "wake", "puffer_huff"]
+	"slide", "jump", "shake", "flatten", "turn", "stop", "sign", "box", "run", "wake", "recoil", "puffer_huff"]
 var events: Dictionary = {}
 const INTERRUPTION_FADE := 0.035
 const CLICK_STREAK_INTERVAL := 0.45

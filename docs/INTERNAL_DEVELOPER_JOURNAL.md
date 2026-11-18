@@ -334,6 +334,18 @@ The reviewed typography branch changed controller text helpers that the experime
 
 Godot 4.7.2 passed all 22 applicable suites after two test fixtures were corrected. The idle test had a stale comparison report after removal of the PNG reference. The rendered-body fixture now freezes its actor's automatic processing and hides the foreground layers during contour checks. The independent hit suite passed 4,960,952 checks. Rendered validation covered 198 cases and 2,620,492 probes with a maximum gap of 0.482207 px. The normal scene completed all reactions in both renderer modes. Python reported 31 passed and two skipped. A disposable 34-entry Windows resource ZIP ran for 120 frames and contained no experiment media or tools. Physical touch, web and device performance remain unverified. The existing noncommercial placeholder sample is still in the development pack and requires release review before any audio-enabled distribution.
 
+## Stretch idle — implementation review
+
+The [approved Stretch plan](../plans/stretch-idle.md) adds an occasional silent stretch at existing idle-clock time. Native breathing and the procedural pose share the stretch envelope and preserve their respective moving hit outlines. The reserved Humming selection still shows normal breathing in this branch. The focused fixture exercises both rendering paths, interruption and sleep.
+
+## Humming idle — implementation review
+
+[Humming](../plans/humming-idle.md) now uses the reserved idle choice. Both renderers sample three silent bobs from the shared inactivity clock and keep the existing sleep and poke rules.
+
+## Recoil reaction — implementation review
+
+[Recoil](../plans/recoil-reaction.md) enters the lowest annoyance tier. Near a boundary the horizontal movement is reduced while the hop and startled eyes remain. The body returns to its starting anchor. Authored scale tracks and procedural poses use the existing reaction clock.
+
 ## Puffer-huff reaction — implementation review
 
 [Puffer-huff](../plans/puffer-huff-reaction.md) adds a short defensive inflation to the second tier. Its authored and fallback outlines anchor the same visual-only spike treatment. The existing transformed body determines touch acceptance.

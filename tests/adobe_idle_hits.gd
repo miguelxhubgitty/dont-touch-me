@@ -27,6 +27,8 @@ func reset(actor,t: float = .9) -> void:
 	actor.origin = actor.anchor
 	actor.destination = actor.anchor
 	actor.rng.seed = 833
+	actor.idle_rng.seed = 833
+	actor._reset_special_idle()
 	actor.audio_manager.cancel_reaction()
 	actor._update_pose()
 

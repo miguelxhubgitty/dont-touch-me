@@ -31,6 +31,8 @@ func reset(actor,t: float = .5) -> void:
 	actor.gaze_timer = 1
 	actor.idle_gaze = Vector2.ZERO
 	actor.rng.seed = 8127
+	actor.idle_rng.seed = 8127
+	actor._reset_special_idle()
 	actor.audio_manager.cancel_reaction()
 	actor._update_pose()
 
@@ -50,7 +52,7 @@ func run() -> void:
 		root.add_child(actor)
 		actor.set_process(false)
 		actor.audio_manager.muted = true
-	check(Native.AUTHORED_REACTIONS.size() == 17,"the original native reactions and Puffer-huff are registered")
+	check(Native.AUTHORED_REACTIONS.size() == 18,"the original native reactions plus Recoil and Puffer-huff are registered")
 	var shared_scene: Node2D = Native.VisualScene.instantiate()
 	var authored_player: AnimationPlayer = shared_scene.get_node("BreathingPlayer")
 	for which in Native.AUTHORED_REACTIONS:

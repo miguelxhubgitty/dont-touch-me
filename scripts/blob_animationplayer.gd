@@ -1,8 +1,8 @@
 extends "res://scripts/blob.gd"
 ## Experiment adapter only. Native scene/AnimationPlayer own visual transforms.
 const VisualScene = preload("res://scenes/blob/blob.tscn")
-const AUTHORED_REACTIONS := {Reaction.BLINK:"reaction_blink",Reaction.SIDE_EYE:"reaction_side_eye",Reaction.SQUISH:"reaction_squish",Reaction.IRRITATED:"reaction_irritated",Reaction.DONT:"reaction_dont",Reaction.SERIOUSLY:"reaction_seriously",Reaction.SLIDE:"reaction_slide",Reaction.JUMP:"reaction_jump",Reaction.SHAKE:"reaction_shake",Reaction.FLATTEN:"reaction_flatten",Reaction.TURN:"reaction_turn",Reaction.STOP:"reaction_stop",Reaction.SIGN:"reaction_sign",Reaction.BOX:"reaction_box",Reaction.RUN:"reaction_run",Reaction.WAKE:"reaction_wake",Reaction.PUFFER_HUFF:"reaction_puffer_huff"}
-const MODEL_EYE_REACTIONS := [Reaction.FLATTEN, Reaction.TURN, Reaction.STOP, Reaction.SIGN, Reaction.BOX, Reaction.RUN, Reaction.WAKE, Reaction.PUFFER_HUFF]
+const AUTHORED_REACTIONS := {Reaction.BLINK:"reaction_blink",Reaction.SIDE_EYE:"reaction_side_eye",Reaction.SQUISH:"reaction_squish",Reaction.IRRITATED:"reaction_irritated",Reaction.DONT:"reaction_dont",Reaction.SERIOUSLY:"reaction_seriously",Reaction.SLIDE:"reaction_slide",Reaction.JUMP:"reaction_jump",Reaction.SHAKE:"reaction_shake",Reaction.FLATTEN:"reaction_flatten",Reaction.TURN:"reaction_turn",Reaction.STOP:"reaction_stop",Reaction.SIGN:"reaction_sign",Reaction.BOX:"reaction_box",Reaction.RUN:"reaction_run",Reaction.WAKE:"reaction_wake",Reaction.RECOIL:"reaction_recoil",Reaction.PUFFER_HUFF:"reaction_puffer_huff"}
+const MODEL_EYE_REACTIONS := [Reaction.FLATTEN, Reaction.TURN, Reaction.STOP, Reaction.SIGN, Reaction.BOX, Reaction.RUN, Reaction.WAKE, Reaction.RECOIL, Reaction.PUFFER_HUFF]
 const BubbleDrawer = preload("res://scripts/bubble_foreground.gd")
 
 class Props extends Node2D:
@@ -164,7 +164,17 @@ func contains_touch(point: Vector2) -> bool:
 	# particular rolls. Reject points outside its exact inclusive bounds first.
 	if local.x < outline_bounds.position.x or local.x > outline_bounds.end.x or local.y < outline_bounds.position.y or local.y > outline_bounds.end.y:
 		return false
-	return Geometry2D.is_point_in_polygon(local,idle_outline)
+	# Count horizontal crossings in local space. Using scalar arithmetic here
+	# avoids the engine polygon helper's near-vertex ray intersection error.
+	var inside := false
+	var previous := idle_outline[-1]
+	for vertex in idle_outline:
+		if (vertex.y > local.y) != (previous.y > local.y):
+			var crossing := vertex.x + (previous.x - vertex.x) * (local.y - vertex.y) / (previous.y - vertex.y)
+			if local.x < crossing:
+				inside = not inside
+		previous = vertex
+	return inside
 
 func _update_pose() -> void:
 	super._update_pose()
@@ -207,7 +217,8 @@ func _update_pose() -> void:
 		visual_reaction = Reaction.NONE
 		if player.current_animation != "breathe": player.play("breathe")
 		player.seek(fposmod(clock,3),true)
-		breathing.rotation = 0
+		breathing.scale = breathing.scale.lerp(STRETCH_SCALE, _stretch_strength())
+		breathing.rotation = body_angle
 		eyes.position = Vector2(gaze.x,-113+gaze.y)
 		eyes.scale.y = maxf(2.0/21,eye_open)
 	props.visible = uses_authored_visual() and (sign_amount > 0 or box_amount > 0)
