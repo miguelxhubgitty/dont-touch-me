@@ -1,8 +1,10 @@
-[gd_scene load_steps=4 format=3]
+[gd_scene load_steps=5 format=3]
 
 [ext_resource type="Script" path="res://scripts/blob_animationplayer.gd" id="1"]
 
 [ext_resource type="Script" path="res://scripts/audio_mute_button.gd" id="2"]
+
+[ext_resource type="Script" path="res://scripts/audio_volume_controls.gd" id="3"]
 
 [sub_resource type="StyleBoxFlat" id="SoundButtonNormal"]
 bg_color = Color(0.91, 0.89, 0.85, 1)
@@ -32,3 +34,14 @@ theme_override_font_sizes/font_size = 24
 theme_override_styles/normal = SubResource("SoundButtonNormal")
 text = "Sound Off"
 script = ExtResource("2")
+
+[node name="VolumeButton" type="Button" parent="SoundHUD"]
+offset_left = 20.0
+offset_top = 20.0
+offset_right = 182.0
+offset_bottom = 100.0
+theme_override_colors/font_color = Color(0.20, 0.19, 0.17, 1)
+theme_override_font_sizes/font_size = 24
+theme_override_styles/normal = SubResource("SoundButtonNormal")
+text = "Volume"
+script = ExtResource("3")
