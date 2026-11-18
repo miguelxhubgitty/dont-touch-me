@@ -23,6 +23,8 @@ func run() -> void:
 		actor.set_process(false)
 		actor.audio_manager.muted = true
 		actor.rng.seed = 41837
+		actor.idle_rng.seed = 41837
+		actor._reset_special_idle()
 	var animation: Animation = simple.player.get_animation("breathe")
 	check(animation.get_track_count() == 2, "only two native scale tracks")
 	for track in range(2):

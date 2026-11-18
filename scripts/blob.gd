@@ -23,6 +23,11 @@ const POOLS := [
 	[Reaction.STOP, Reaction.SIGN, Reaction.BOX, Reaction.RUN],
 ]
 const SLEEP_AFTER := 18.0
+const STRETCH_DURATION := 1.8
+const STRETCH_SCALE := Vector2(0.81, 1.27)
+const STRETCH_EYES := 0.27
+
+enum SpecialIdle { NONE, STRETCH, HUMMING }
 const FREE_JUMP_FLIGHT := .85
 const FREE_JUMP_TRAVEL := 230.0
 const JUMP_RETURN_SPEED := FREE_JUMP_TRAVEL / FREE_JUMP_FLIGHT
@@ -31,6 +36,10 @@ var jump_returning := false
 var jump_return_target := Vector2.ZERO
 
 var rng := RandomNumberGenerator.new()
+var idle_rng := RandomNumberGenerator.new()
+var next_idle := SpecialIdle.NONE
+var next_idle_at := 0.0
+var stretch_started := -1.0
 var annoyance := 0.0
 var idle_time := 0.0
 var asleep := false
@@ -65,6 +74,7 @@ var audio_manager: Node
 func _ready() -> void:
 	free_jump_enabled = free_jump_enabled or "--free-jump" in OS.get_cmdline_user_args()
 	rng.randomize()
+	_reset_special_idle()
 	font = ThemeDB.fallback_font
 	_resize()
 	audio_manager = AudioManager.new()
@@ -92,6 +102,7 @@ func _resize() -> void:
 	origin = anchor
 	destination = anchor
 	reaction = Reaction.NONE
+	stretch_started = -1.0
 	_update_pose()
 
 func _notification(what: int) -> void:
@@ -155,6 +166,7 @@ func advance(delta: float) -> void:
 		if not asleep and audio_manager != null:
 			audio_manager.play_event("sleep.enter")
 		asleep = true
+	_update_special_idle()
 	blink_timer -= delta
 	blink_remaining = maxf(0.0, blink_remaining - delta)
 	if blink_timer <= 0.0:
@@ -168,6 +180,35 @@ func advance(delta: float) -> void:
 	if free_contact and audio_manager != null:
 		audio_manager.play_event("jump.land", audio_manager.reaction_attenuation_db)
 	queue_redraw()
+
+func _reset_special_idle() -> void:
+	stretch_started = -1.0
+	var roll := idle_rng.randf()
+	if roll < 0.2:
+		next_idle = SpecialIdle.NONE
+	elif roll < 0.6:
+		next_idle = SpecialIdle.STRETCH
+		next_idle_at = 4.5 + idle_rng.randf_range(0.0, 1.8)
+	else:
+		# Preserve the approved selection share until the separate humming clip lands.
+		next_idle = SpecialIdle.HUMMING
+
+func _update_special_idle() -> void:
+	if asleep or reaction != Reaction.NONE or jump_returning:
+		stretch_started = -1.0
+		return
+	if stretch_started >= 0.0 and idle_time - stretch_started >= STRETCH_DURATION:
+		stretch_started = -1.0
+	if next_idle == SpecialIdle.STRETCH and idle_time >= next_idle_at:
+		next_idle = SpecialIdle.NONE
+		if idle_time + STRETCH_DURATION <= SLEEP_AFTER:
+			stretch_started = idle_time
+
+func _stretch_strength() -> float:
+	if stretch_started < 0.0:
+		return 0.0
+	var phase := idle_time - stretch_started
+	return _ease(phase / 0.72) * _ease((STRETCH_DURATION - phase) / 0.81)
 
 func _free_jump_enabled() -> bool:
 	return free_jump_enabled
@@ -218,6 +259,7 @@ func touch_at(point: Vector2) -> bool:
 	if audio_manager != null:
 		audio_manager.register_click()
 	idle_time = 0.0
+	_reset_special_idle()
 	intro_alpha = 0.0
 	annoyance = minf(100.0, annoyance + rng.randf_range(7.0, 10.0))
 	touch_flash = 1.0
@@ -232,6 +274,7 @@ func touch_at(point: Vector2) -> bool:
 	return true
 
 func begin_reaction(which: int, touch: Vector2) -> void:
+	stretch_started = -1.0
 	jump_returning = false
 	origin = Vector2(body_position.x if which == Reaction.JUMP and _free_jump_enabled() else clampf(body_position.x, 190.0, last_size.x - 190.0), anchor.y)
 	anchor = origin
@@ -271,6 +314,9 @@ func _update_pose() -> void:
 	bubble = ""
 	bubble_alpha = 0.0
 	if reaction == Reaction.NONE:
+		var stretch := _stretch_strength()
+		body_scale = body_scale.lerp(STRETCH_SCALE, stretch)
+		eye_open = minf(eye_open, lerpf(1.0, STRETCH_EYES, stretch))
 		return
 	var t := clampf(elapsed / float(DURATIONS[reaction]), 0.0, 1.0)
 	var envelope := sin(PI * t)

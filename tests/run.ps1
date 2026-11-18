@@ -27,7 +27,8 @@ $audio = @('audio', 'audio_mute', 'audio_click_attenuation', 'audio_interruption
 $animation = @('adobe_playable', 'adobe_simple', 'adobe_idle_hits', 'adobe_hit_outline_audit',
     'adobe_reactions', 'adobe_reaction_hits', 'adobe_reaction_geometry', 'adobe_next_reactions',
     'adobe_moving_reactions', 'adobe_flatten_turn_stop', 'adobe_sign_box_run', 'adobe_wake',
-    'jump_unbounded', 'adobe_unbounded_game', 'adobe_bubble_render', 'adobe_reaction_render_edges')
+    'jump_unbounded', 'adobe_unbounded_game', 'adobe_bubble_render', 'adobe_reaction_render_edges',
+    'stretch_idle')
 $rendered = @('adobe_sign_box_run', 'adobe_bubble_render', 'adobe_reaction_render_edges')
 $suites = switch ($Mode) {
     fast { $fast }
