@@ -5,7 +5,10 @@ signal event_played(event_name: String)
 const REACTIONS := ["", "blink", "side_eye", "squish", "irritated", "dont", "seriously",
 	"slide", "jump", "shake", "flatten", "turn", "stop", "sign", "box", "run", "wake"]
 var events: Dictionary = {}
+const INTERRUPTION_FADE := 0.035
 var players: Dictionary = {}
+var fade_players: Dictionary = {}
+var fades: Dictionary = {}
 var streams: Dictionary = {}
 var slots: Dictionary = {}
 var fired: Dictionary = {}
@@ -41,6 +44,10 @@ func _ready() -> void:
 		player.bus = {"contact": "UserSFX", "voice": "CharacterVoice", "action": "CharacterSFX"}[role]
 		add_child(player)
 		players[role] = player
+		var spare := AudioStreamPlayer.new()
+		spare.bus = player.bus
+		add_child(spare)
+		fade_players[role] = spare
 	# Validate/load once. Repeated touches must not hit disk or reimport assets.
 	for id in events:
 		var cue: Dictionary = events[id]
@@ -84,9 +91,28 @@ func stop_role(role: String) -> void:
 func stop_all() -> void:
 	for role in players:
 		stop_role(role)
+	for player in fade_players.values():
+		player.stop()
+	fades.clear()
 
-func cancel_reaction() -> void:
-	stop_all()
+func _fade_role(role: String) -> void:
+	var outgoing: AudioStreamPlayer = players[role]
+	var incoming: AudioStreamPlayer = fade_players[role]
+	incoming.stop()
+	players[role] = incoming
+	fade_players[role] = outgoing
+	fades[role] = {"remaining": INTERRUPTION_FADE, "gain": db_to_linear(outgoing.volume_db)}
+	slots.erase(role)
+
+func cancel_reaction(fade := false) -> void:
+	if fade:
+		for role in slots.keys():
+			if players[role].playing and not str(slots[role].id).begins_with("user."):
+				_fade_role(role)
+			else:
+				stop_role(role)
+	else:
+		stop_all()
 	active_reaction = ""
 	fired.clear()
 	progress = 0.0
@@ -103,7 +129,7 @@ func click_attenuation_db() -> float:
 	return -6.0 * maxi(click_streak - 4, 0)
 
 func begin_reaction(which: int) -> void:
-	cancel_reaction()
+	cancel_reaction(true)
 	if which <= 0 or which >= REACTIONS.size():
 		return
 	active_reaction = REACTIONS[which]
@@ -119,6 +145,16 @@ func contact(which: int) -> void:
 
 func tick(delta: float) -> void:
 	time += maxf(0, delta)
+	for role in fades.keys():
+		var fade: Dictionary = fades[role]
+		fade.remaining -= delta
+		var player: AudioStreamPlayer = fade_players[role]
+		if fade.remaining <= 0.0 or not player.playing:
+			player.stop()
+			fades.erase(role)
+		else:
+			player.volume_db = linear_to_db(fade.gain * fade.remaining / INTERRUPTION_FADE)
+
 	for role in slots.keys():
 		var slot: Dictionary = slots[role]
 		slot.remaining -= delta
