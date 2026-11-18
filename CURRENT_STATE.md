@@ -1,30 +1,31 @@
 # Don't Touch Me — Current state
 
-Development baseline: Godot 4.7.2 stable on `main`, verified through [PR #29](https://github.com/miguelxhubgitty/dont-touch-me/pull/29) at `02fefa4`. Use [the workflow](BRANCH_WORKFLOW.md) and [local checks](TESTING.md#development-test-runner) for new work.
+Development baseline: Godot 4.7.2 stable on `main`, with the four-animation milestone integrated through [PR #33](https://github.com/miguelxhubgitty/dont-touch-me/pull/33). Use [the workflow](BRANCH_WORKFLOW.md) and [local checks](TESTING.md#development-test-runner) for new work.
 
 ## Implemented on main
 
 - Mouse and native touch share the blob's hit rules. Accepted pokes add 7–10 hidden annoyance points within a 0–100 range. Four reaction pools avoid immediate repeats when selecting a new reaction. Annoyance starts decaying after 2.5 seconds of inactivity, at 4 points per second.
-- There are 15 regular reactions and one special wake reaction. Box cardboard and flaps block touches, peek eyes accept them, and BOX and RUN retain their protected timing. JUMP has ballistic flight, offscreen landing and return. Idle breathing, gaze, blinking, sleep and wake remain active. Sleep starts after 18 seconds of inactivity once the blob is free to sleep.
+- There are 17 regular reactions and one special wake reaction. Box cardboard and flaps block touches, peek eyes accept them, and BOX and RUN retain their protected timing. JUMP has ballistic flight, offscreen landing and return. Idle breathing, gaze, blinking, sleep and wake remain active. Sleep starts after 18 seconds of inactivity once the blob is free to sleep.
+- The shared inactivity scheduler selects 20% regular breathing only, 40% Stretch, or 40% Humming, once per inactivity period. Stretch lasts 1.8 seconds. Humming lasts 2.7 seconds and uses three 0.9-second bobs. Both are silent and use the existing sleep clock.
+- Recoil is a 0.9-second reaction in the lowest annoyance tier. Near an edge it travels less without reversing. Puffer-huff is a 1.8-second reaction in the second tier. The inflated body accepts pokes and the attached spikes are visual only. Both support the authored renderer and procedural fallback.
 - The normal scene uses a textured body and authored Godot AnimationPlayer poses with a procedural fallback. The existing controller owns timing, movement, props, speech and input. Development uses Godot's basic font.
 - [PR #18](https://github.com/miguelxhubgitty/dont-touch-me/pull/18) integrated kitten, puppy, robot and interaction cues. The [event map](audio/blob_events.json) defines cue timing and enabled states, and the [source register](audio/candidate_pack/SOURCE_REGISTRY.md) records provenance and notices. Background misses have a sound, and blocked cardboard remains silent. Sound defaults to off on a fresh profile, stops playback immediately, and remembers the player's choice.
 - PRs #21–#27 added click attenuation, interruption fades, voice gain balancing, an editor-only audition scene, SHAKE voice timing, variation on eligible poke sounds, and saved volumes for User SFX, Character Voice, Character SFX, Environment and Music. The Environment and Music controls have buses available for future content. PR #29 shortened the click streak reset to 0.45 seconds. Gains remain normal for clicks 1–4, then decrease by 6 dB per click to −30 dB from click 9 onward.
 
-## Review queue and next milestone
+## Review queue and next work
 
 GitHub snapshot, November 18, 2026. Recheck live PR status before acting.
 
 | PR | State and scope |
 | --- | --- |
-| [#28](https://github.com/miguelxhubgitty/dont-touch-me/pull/28) | Open for review. Multiples-of-nine preference. |
 | [#20](https://github.com/miguelxhubgitty/dont-touch-me/pull/20) | Draft sound-polish candidates. Separate from the merged audio starter pack. |
 | [#10](https://github.com/miguelxhubgitty/dont-touch-me/pull/10) | Draft test teardown improvement. |
 | [#4](https://github.com/miguelxhubgitty/dont-touch-me/pull/4) | Draft historical audio-first roadmap. Use this file and the current roadmap for present scope. |
 | [#13](https://github.com/miguelxhubgitty/dont-touch-me/pull/13), [#15](https://github.com/miguelxhubgitty/dont-touch-me/pull/15), [#16](https://github.com/miguelxhubgitty/dont-touch-me/pull/16) | Separate draft publisher identity, future Android identity, and Amazon documentation work. |
 
-The global Codex instructions carry the multiples-of-nine preference for flexible design values. Existing specifications, measurements, IDs and engine versions take precedence. PR #28 tracks the repository copy.
+The global Codex instructions carry the multiples-of-nine preference for flexible design values. Existing specifications, measurements, IDs and engine versions take precedence. Merged PR #28 established the repository copy.
 
-The owner selected stretch and humming/bobbing idles, then recoil and puffer-huff reactions, as the next scoped development milestone after this tooling review. The animation implementation still follows the design approval gate. Confirm idle cadence, transition poses and spike touch behavior in the plans before coding. The stretch vocalization, humming melody, recognizable-song ideas, new annoyance mechanics, emotional stages, trust and auras are deferred. The architecture review follows this animation work.
+Stretch ([#31](https://github.com/miguelxhubgitty/dont-touch-me/pull/31)), Humming ([#34](https://github.com/miguelxhubgitty/dont-touch-me/pull/34)), Recoil ([#32](https://github.com/miguelxhubgitty/dont-touch-me/pull/32)) and Puffer-huff ([#33](https://github.com/miguelxhubgitty/dont-touch-me/pull/33)) complete the animation milestone. The architecture review follows this work. The stretch vocalization, humming melody, recognizable-song ideas, new annoyance mechanics, emotional stages, trust and auras are deferred.
 
 ## Evidence and release boundary
 

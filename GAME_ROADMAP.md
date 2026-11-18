@@ -2,16 +2,14 @@
 
 Use [CURRENT_STATE.md](CURRENT_STATE.md) for implemented behavior, the review queue and public release status. Follow [BRANCH_WORKFLOW.md](BRANCH_WORKFLOW.md) for design approval, topic branches and integration.
 
-## Next milestone
+## Animation milestone
 
-After owner review and merge of the development tooling, plan and verify each visual change independently.
+1. **[Stretch](plans/stretch-idle.md)** — An occasional 1.8-second upward stretch, squint, hold and return.
+2. **[Humming](plans/humming-idle.md)** — Three 0.9-second bobs with subtle sway and relaxed eyes.
+3. **[Recoil](plans/recoil-reaction.md)** — A 0.9-second startled reaction in the lowest annoyance tier.
+4. **[Puffer-huff](plans/puffer-huff-reaction.md)** — A 1.8-second defensive inflation in the second tier, with a touchable body and attached visual-only spikes.
 
-1. **Stretch idle:** a slow upward stretch, squint, brief hold and return in about 1.8 seconds.
-2. **Humming and bobbing idle:** gentle rhythmic bobbing and subtle sway, with relaxed eyes and timing that can later support a melody.
-3. **Recoil:** a roughly 0.9-second startled response in the lowest annoyance tier, with compression toward the touch, a jolt away, widened eyes and return.
-4. **Puffer-huff:** defensive inflation with attached visual spikes. The second annoyance tier is the starting proposal. Confirm the spike touch policy before implementation.
-
-Keep both authored and procedural visuals, existing audio, reaction timing and interruption rules, and the 18-second sleep threshold. The new idles should play occasionally during inactivity and use existing timing. Approve detailed pose/trigger plans before implementation. Review the architecture after this animation milestone.
+The development game supports each animation in both renderers. The idles use the shared inactivity scheduler and preserve the 18-second sleep threshold. The architecture review is the next milestone and requires its own scope.
 
 ## Deferred ideas
 

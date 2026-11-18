@@ -3,7 +3,7 @@ extends Node2D
 const AudioManager = preload("res://scripts/audio_manager.gd")
 
 enum Reaction { NONE, BLINK, SIDE_EYE, SQUISH, IRRITATED, DONT, SERIOUSLY,
-	SLIDE, JUMP, SHAKE, FLATTEN, TURN, STOP, SIGN, BOX, RUN, WAKE, RECOIL }
+	SLIDE, JUMP, SHAKE, FLATTEN, TURN, STOP, SIGN, BOX, RUN, WAKE, RECOIL, PUFFER_HUFF }
 
 const INK := Color("202124")
 const WHITE := Color("fffdf8")
@@ -15,10 +15,11 @@ const DURATIONS := {
 	Reaction.SLIDE: 0.9, Reaction.JUMP: 1.05, Reaction.SHAKE: 1.05,
 	Reaction.FLATTEN: 1.65, Reaction.TURN: 1.8, Reaction.STOP: 1.25,
 	Reaction.SIGN: 2.0, Reaction.BOX: 2.7, Reaction.RUN: 4.1, Reaction.WAKE: 1.65, Reaction.RECOIL: 0.9,
+	Reaction.PUFFER_HUFF: 1.8,
 }
 const POOLS := [
 	[Reaction.BLINK, Reaction.SIDE_EYE, Reaction.SQUISH, Reaction.RECOIL],
-	[Reaction.IRRITATED, Reaction.DONT, Reaction.SERIOUSLY, Reaction.SLIDE],
+	[Reaction.IRRITATED, Reaction.DONT, Reaction.SERIOUSLY, Reaction.SLIDE, Reaction.PUFFER_HUFF],
 	[Reaction.JUMP, Reaction.SHAKE, Reaction.FLATTEN, Reaction.TURN, Reaction.STOP, Reaction.SIGN],
 	[Reaction.STOP, Reaction.SIGN, Reaction.BOX, Reaction.RUN],
 ]
@@ -63,6 +64,7 @@ var idle_gaze := Vector2.ZERO
 var gaze_timer := 1.0
 var blink_timer := 2.5
 var blink_remaining := 0.0
+var spike_extension := 0.0
 var turn_amount := 0.0
 var box_amount := 0.0
 var sign_amount := 0.0
@@ -319,6 +321,7 @@ func _update_pose() -> void:
 	body_angle = 0.0
 	eye_open = 0.07 if asleep else (0.08 if blink_remaining > 0.0 else 1.0)
 	gaze = idle_gaze
+	spike_extension = 0.0
 	turn_amount = 0.0
 	sign_amount = 0.0
 	box_amount = 0.0
@@ -427,11 +430,32 @@ func _update_pose() -> void:
 			var landing := _ease((elapsed - 0.45) / 0.18) * (1.0 - _ease((elapsed - 0.63) / 0.27))
 			body_scale += Vector2(0.09, -0.09) * (anticipation + landing)
 			eye_open = lerpf(eye_open, 1.18, hop)
+		Reaction.PUFFER_HUFF:
+			var inflation := _ease((elapsed - 0.18) / 0.27) * (1.0 - _ease((elapsed - 1.35) / 0.45))
+			spike_extension = _ease((elapsed - 0.18) / 0.27) * (1.0 - _ease((elapsed - 1.08) / 0.27))
+			body_scale = body_scale.lerp(Vector2(1.18, 1.18), inflation)
+			var tension := _ease(elapsed / 0.18) * (1.0 - _ease((elapsed - 1.35) / 0.45))
+			eye_open = minf(eye_open, lerpf(1.0, 0.27, tension))
 		Reaction.WAKE:
 			bubble = "I was DREAMING."
 			body_position.y -= sin(PI * minf(t * 2.0, 1.0)) * 100.0
 			body_scale += Vector2(-0.12, 0.24) * envelope
 			eye_open = 1.35 if t < 0.55 else 0.4
+
+func _puffer_spike(outline: PackedVector2Array, index: int) -> PackedVector2Array:
+	var count := outline.size()
+	var root_point := outline[index]
+	var outward := (root_point - Vector2(0, -81)).normalized()
+	return PackedVector2Array([
+		outline[posmod(index - 1, count)] - outward * 2.0,
+		root_point + outward * (18.0 * spike_extension),
+		outline[(index + 1) % count] - outward * 2.0,
+	])
+
+func _draw_puffer_spikes(outline: PackedVector2Array) -> void:
+	for spike in range(18):
+		var index := floori(float(spike * outline.size()) / 18.0)
+		draw_colored_polygon(_puffer_spike(outline, index), INK)
 
 func _silhouette() -> PackedVector2Array:
 	var points := PackedVector2Array()
@@ -470,7 +494,10 @@ func _draw() -> void:
 	var height := maxf(0.0, anchor.y - body_position.y)
 	_ellipse(Vector2(body_position.x, anchor.y + 5), Vector2(111.0 - minf(height * 0.2, 45), 13), Color(0.35, 0.31, 0.24, 0.075))
 	draw_set_transform(body_position, body_angle, body_scale)
-	draw_colored_polygon(_silhouette(), INK)
+	var outline := _silhouette()
+	if spike_extension > 0.0:
+		_draw_puffer_spikes(outline)
+	draw_colored_polygon(outline, INK)
 	if turn_amount < 0.97:
 		var face_alpha := 1.0 - turn_amount
 		for side in [-1.0, 1.0]:

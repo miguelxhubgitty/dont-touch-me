@@ -345,3 +345,7 @@ The [approved Stretch plan](../plans/stretch-idle.md) adds an occasional silent 
 ## Recoil reaction — implementation review
 
 [Recoil](../plans/recoil-reaction.md) enters the lowest annoyance tier. Near a boundary the horizontal movement is reduced while the hop and startled eyes remain. The body returns to its starting anchor. Authored scale tracks and procedural poses use the existing reaction clock.
+
+## Puffer-huff reaction — implementation review
+
+[Puffer-huff](../plans/puffer-huff-reaction.md) adds a short defensive inflation to the second tier. Its authored and fallback outlines anchor the same visual-only spike treatment. The existing transformed body determines touch acceptance.
