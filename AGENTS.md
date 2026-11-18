@@ -70,3 +70,9 @@ Implementation of those opportunities requires owner authorization. If an out-of
 - After design approval, implement only on the dedicated topic branch and follow the authorization mode above for merging. If the code requires a material deviation, document it and request approval rather than silently changing the intended behavior.
 - Validate against the approved pseudocode, update the plan with implementation/test/commit status, and synchronize the detailed internal journal's English explanations, pseudocode, flowcharts, and code references.
 - Trivial typo, formatting, and nonbehavioral documentation corrections may skip full pseudocode review; record meaningful changes as usual.
+
+## Owner preference — multiples of nine
+
+- When choosing an otherwise arbitrary, tunable number (timing, spacing, counts, dimensions or similar design parameters), **prefer multiples of 9** where practical, including sensible decimal increments such as `0.09`, `0.45`, `0.9` and `1.8`. For decimal timings, nine-based increments such as `0.09 s` are good defaults when they fit the interaction.
+- Treat this as a **tie-breaker, not a strict rule**. Never change measured values, existing requirements, legal/financial data, IDs, accessibility constraints, platform specifications, performance targets, or tested behavior just to reach a multiple of nine.
+- If a non-nine value works better for correctness or user experience, use it and briefly explain why when relevant.
