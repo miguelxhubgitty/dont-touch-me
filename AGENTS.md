@@ -41,6 +41,6 @@
 
 ## Owner preference — multiples of nine
 
-- When choosing an otherwise arbitrary, tunable number (timing, spacing, counts, dimensions or similar design parameters), **prefer multiples of 9** where practical, including sensible decimal increments such as `0.09`, `0.45`, `0.9` and `1.8`. The owner specifically prefers `0.45 s` to `0.4 s` for a short click interval.
+- When choosing an otherwise arbitrary, tunable number (timing, spacing, counts, dimensions or similar design parameters), **prefer multiples of 9** where practical, including sensible decimal increments such as `0.09`, `0.45`, `0.9` and `1.8`. For decimal timings, nine-based increments such as `0.09 s` are good defaults when they fit the interaction.
 - Treat this as a **tie-breaker, not a strict rule**. Never change measured values, existing requirements, legal/financial data, IDs, accessibility constraints, platform specifications, performance targets, or tested behavior just to reach a multiple of nine.
 - If a non-nine value works better for correctness or user experience, use it and briefly explain why when relevant.
