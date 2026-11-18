@@ -158,9 +158,10 @@ func run() -> void:
 	# User-side miss/startup event layer never increases annoyance or duplicates contacts.
 	reset(game)
 	audio.tick(1)
+	var annoyance_before_miss: float = game.annoyance
 	game._handle_player_touch(Vector2(2, 2))
 	check(audio.trace.count("user.tap_miss") == 1, "background miss plays one user SFX")
-	check(game.annoyance == 0 and game.reaction == 0, "miss does not touch blob")
+	check(game.annoyance == annoyance_before_miss and game.reaction == 0, "miss does not touch blob")
 	audio.tick(1)
 	check(audio.play_event("user.game_start"), "startup sample import and playback work")
 	check(audio.slots.size() <= 3, "bounded preview role count")
