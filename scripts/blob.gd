@@ -73,6 +73,9 @@ func _ready() -> void:
 	var sound_button := get_node_or_null("SoundHUD/SoundButton")
 	if sound_button != null:
 		sound_button.initialize(audio_manager)
+	var volume_button := get_node_or_null("SoundHUD/VolumeButton")
+	if volume_button != null:
+		volume_button.initialize()
 	# On the initial launch only; respected by the saved mute preference.
 	audio_manager.play_event("user.game_start")
 
