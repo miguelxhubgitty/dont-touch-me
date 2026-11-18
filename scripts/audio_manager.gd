@@ -6,6 +6,7 @@ const REACTIONS := ["", "blink", "side_eye", "squish", "irritated", "dont", "ser
 	"slide", "jump", "shake", "flatten", "turn", "stop", "sign", "box", "run", "wake"]
 var events: Dictionary = {}
 const INTERRUPTION_FADE := 0.035
+const CLICK_STREAK_INTERVAL := 0.45
 var players: Dictionary = {}
 var fade_players: Dictionary = {}
 var fades: Dictionary = {}
@@ -119,13 +120,13 @@ func cancel_reaction(fade := false) -> void:
 	progress = 0.0
 
 func register_click() -> void:
-	if time - last_click >= 1.8 - 0.000001:
+	if time - last_click >= CLICK_STREAK_INTERVAL - 0.000001:
 		click_streak = 0
 	click_streak = mini(click_streak + 1, 9)
 	last_click = time
 
 func click_attenuation_db() -> float:
-	if time - last_click >= 1.8 - 0.000001:
+	if time - last_click >= CLICK_STREAK_INTERVAL - 0.000001:
 		return 0.0
 	return -6.0 * maxi(click_streak - 4, 0)
 
