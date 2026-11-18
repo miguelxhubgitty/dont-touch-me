@@ -1,8 +1,8 @@
 extends "res://scripts/blob.gd"
 ## Experiment adapter only. Native scene/AnimationPlayer own visual transforms.
 const VisualScene = preload("res://scenes/blob/blob.tscn")
-const AUTHORED_REACTIONS := {Reaction.BLINK:"reaction_blink",Reaction.SIDE_EYE:"reaction_side_eye",Reaction.SQUISH:"reaction_squish",Reaction.IRRITATED:"reaction_irritated",Reaction.DONT:"reaction_dont",Reaction.SERIOUSLY:"reaction_seriously",Reaction.SLIDE:"reaction_slide",Reaction.JUMP:"reaction_jump",Reaction.SHAKE:"reaction_shake",Reaction.FLATTEN:"reaction_flatten",Reaction.TURN:"reaction_turn",Reaction.STOP:"reaction_stop",Reaction.SIGN:"reaction_sign",Reaction.BOX:"reaction_box",Reaction.RUN:"reaction_run",Reaction.WAKE:"reaction_wake"}
-const MODEL_EYE_REACTIONS := [Reaction.FLATTEN, Reaction.TURN, Reaction.STOP, Reaction.SIGN, Reaction.BOX, Reaction.RUN, Reaction.WAKE]
+const AUTHORED_REACTIONS := {Reaction.BLINK:"reaction_blink",Reaction.SIDE_EYE:"reaction_side_eye",Reaction.SQUISH:"reaction_squish",Reaction.IRRITATED:"reaction_irritated",Reaction.DONT:"reaction_dont",Reaction.SERIOUSLY:"reaction_seriously",Reaction.SLIDE:"reaction_slide",Reaction.JUMP:"reaction_jump",Reaction.SHAKE:"reaction_shake",Reaction.FLATTEN:"reaction_flatten",Reaction.TURN:"reaction_turn",Reaction.STOP:"reaction_stop",Reaction.SIGN:"reaction_sign",Reaction.BOX:"reaction_box",Reaction.RUN:"reaction_run",Reaction.WAKE:"reaction_wake",Reaction.RECOIL:"reaction_recoil"}
+const MODEL_EYE_REACTIONS := [Reaction.FLATTEN, Reaction.TURN, Reaction.STOP, Reaction.SIGN, Reaction.BOX, Reaction.RUN, Reaction.WAKE, Reaction.RECOIL]
 const BubbleDrawer = preload("res://scripts/bubble_foreground.gd")
 
 class Props extends Node2D:

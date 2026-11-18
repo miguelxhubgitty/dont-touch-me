@@ -50,7 +50,7 @@ func run() -> void:
 		root.add_child(actor)
 		actor.set_process(false)
 		actor.audio_manager.muted = true
-	check(Native.AUTHORED_REACTIONS.size() == 16,"sixteen approved native reactions")
+	check(Native.AUTHORED_REACTIONS.size() == 17,"the original native reactions and Recoil are registered")
 	var shared_scene: Node2D = Native.VisualScene.instantiate()
 	var authored_player: AnimationPlayer = shared_scene.get_node("BreathingPlayer")
 	for which in Native.AUTHORED_REACTIONS:

@@ -19,7 +19,7 @@ func run() -> void:
 	game.set_process(false)
 	game.rng.seed = 48291
 	check(game.reaction == Blob.Reaction.NONE, "starts idle")
-	check(Blob.DURATIONS.size() == 16, "version 1.0 retains exactly 16 reactions")
+	check(Blob.DURATIONS.size() == 17, "the original reactions and Recoil are registered")
 	check(not game.touch_at(Vector2(2, 2)), "background ignores touches")
 	check(game.annoyance == 0, "background does not annoy")
 	for boundary in [0.0, 20.0, 20.01, 50.0, 50.01, 80.0, 80.01, 100.0]:
