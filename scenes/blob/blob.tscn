@@ -873,7 +873,7 @@ tracks/1/keys = {
 }
 
 [sub_resource type="Animation" id="Animation_puffer_huff"]
-length = 1.8
+length = 1.35
 tracks/0/type = "bezier"
 tracks/0/imported = false
 tracks/0/enabled = true
@@ -881,9 +881,9 @@ tracks/0/path = NodePath("Breathing:scale:x")
 tracks/0/interp = 1
 tracks/0/loop_wrap = true
 tracks/0/keys = {
-"handle_modes": PackedInt32Array(0, 0, 0, 0, 0, 0),
-"points": PackedFloat32Array(1, 0, 0, 0.06, 0, 1, -0.06, 0, 0.09, 0, 1.18, -0.09, 0, 0.21, 0, 1.18, -0.21, 0, 0.09, 0, 1.18, -0.09, 0, 0.15, 0, 1, -0.15, 0, 0, 0),
-"times": PackedFloat32Array(0, 0.18, 0.45, 1.08, 1.35, 1.8)
+"handle_modes": PackedInt32Array(0, 0, 0, 0, 0),
+"points": PackedFloat32Array(1, 0, 0, 0.06, 0, 0.81, -0.06, 0, 0.03, 0, 1.35, -0.03, 0, 0.21, 0, 1.35, -0.21, 0, 0.15, 0, 1, -0.15, 0, 0, 0),
+"times": PackedFloat32Array(0, 0.18, 0.27, 0.9, 1.35)
 }
 tracks/1/type = "bezier"
 tracks/1/imported = false
@@ -892,9 +892,9 @@ tracks/1/path = NodePath("Breathing:scale:y")
 tracks/1/interp = 1
 tracks/1/loop_wrap = true
 tracks/1/keys = {
-"handle_modes": PackedInt32Array(0, 0, 0, 0, 0, 0),
-"points": PackedFloat32Array(1, 0, 0, 0.06, 0, 1, -0.06, 0, 0.09, 0, 1.18, -0.09, 0, 0.21, 0, 1.18, -0.21, 0, 0.09, 0, 1.18, -0.09, 0, 0.15, 0, 1, -0.15, 0, 0, 0),
-"times": PackedFloat32Array(0, 0.18, 0.45, 1.08, 1.35, 1.8)
+"handle_modes": PackedInt32Array(0, 0, 0, 0, 0),
+"points": PackedFloat32Array(1, 0, 0, 0.06, 0, 0.81, -0.06, 0, 0.03, 0, 1.35, -0.03, 0, 0.21, 0, 1.35, -0.21, 0, 0.15, 0, 1, -0.15, 0, 0, 0),
+"times": PackedFloat32Array(0, 0.18, 0.27, 0.9, 1.35)
 }
 
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_wnrw6"]

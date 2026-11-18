@@ -15,7 +15,7 @@ const DURATIONS := {
 	Reaction.SLIDE: 0.9, Reaction.JUMP: 1.05, Reaction.SHAKE: 1.05,
 	Reaction.FLATTEN: 1.65, Reaction.TURN: 1.8, Reaction.STOP: 1.25,
 	Reaction.SIGN: 2.0, Reaction.BOX: 2.7, Reaction.RUN: 4.1, Reaction.WAKE: 1.65, Reaction.RECOIL: 0.9,
-	Reaction.PUFFER_HUFF: 1.8,
+	Reaction.PUFFER_HUFF: 1.35,
 }
 const POOLS := [
 	[Reaction.BLINK, Reaction.SIDE_EYE, Reaction.SQUISH, Reaction.RECOIL],
@@ -431,10 +431,14 @@ func _update_pose() -> void:
 			body_scale += Vector2(0.09, -0.09) * (anticipation + landing)
 			eye_open = lerpf(eye_open, 1.18, hop)
 		Reaction.PUFFER_HUFF:
-			var inflation := _ease((elapsed - 0.18) / 0.27) * (1.0 - _ease((elapsed - 1.35) / 0.45))
-			spike_extension = _ease((elapsed - 0.18) / 0.27) * (1.0 - _ease((elapsed - 1.08) / 0.27))
-			body_scale = body_scale.lerp(Vector2(1.18, 1.18), inflation)
-			var tension := _ease(elapsed / 0.18) * (1.0 - _ease((elapsed - 1.35) / 0.45))
+			var inflation := _ease((elapsed - 0.18) / 0.09)
+			var recovery := _ease((elapsed - 0.90) / 0.45)
+			if elapsed < 0.18:
+				body_scale = body_scale.lerp(Vector2.ONE * 0.81, _ease(elapsed / 0.18))
+			else:
+				body_scale = (Vector2.ONE * lerpf(0.81, 1.35, inflation)).lerp(body_scale, recovery)
+			spike_extension = inflation * (1.0 - recovery)
+			var tension := _ease(elapsed / 0.18) * (1.0 - recovery)
 			eye_open = minf(eye_open, lerpf(1.0, 0.27, tension))
 		Reaction.WAKE:
 			bubble = "I was DREAMING."
