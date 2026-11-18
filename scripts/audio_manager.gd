@@ -12,6 +12,9 @@ var fired: Dictionary = {}
 var active_reaction := ""
 var progress := 0.0
 var time := 0.0
+var click_streak := 0
+var last_click := -100.0
+var reaction_attenuation_db := 0.0
 var last_contact := -100.0
 var last_voice := -100.0
 var focused := true
@@ -88,19 +91,31 @@ func cancel_reaction() -> void:
 	fired.clear()
 	progress = 0.0
 
+func register_click() -> void:
+	if time - last_click >= 1.8 - 0.000001:
+		click_streak = 0
+	click_streak = mini(click_streak + 1, 9)
+	last_click = time
+
+func click_attenuation_db() -> float:
+	if time - last_click >= 1.8 - 0.000001:
+		return 0.0
+	return -6.0 * maxi(click_streak - 4, 0)
+
 func begin_reaction(which: int) -> void:
 	cancel_reaction()
 	if which <= 0 or which >= REACTIONS.size():
 		return
 	active_reaction = REACTIONS[which]
+	reaction_attenuation_db = click_attenuation_db()
 	for id in events:
 		if id.begins_with(active_reaction + ".") and events[id].marker == "start":
 			fired[id] = true
-			play_event(id)
+			play_event(id, reaction_attenuation_db)
 
 func contact(which: int) -> void:
 	if which > 0 and which < REACTIONS.size():
-		play_event(REACTIONS[which] + ".contact")
+		play_event(REACTIONS[which] + ".contact", click_attenuation_db())
 
 func tick(delta: float) -> void:
 	time += maxf(0, delta)
@@ -160,11 +175,11 @@ func advance_reaction(next_progress: float, moved_horizontally: bool = true) -> 
 			stop_role(role)
 	progress = current
 	for role in candidates:
-		play_event(candidates[role].id)
+		play_event(candidates[role].id, reaction_attenuation_db)
 	if current >= 1.0:
 		active_reaction = "" # Let the landing snippet finish; no future reaction cues.
 
-func play_event(id: String) -> bool:
+func play_event(id: String, attenuation_db: float = 0.0) -> bool:
 	if not events.has(id) or muted or not focused or not is_inside_tree() or get_tree().paused:
 		return false
 	var cue: Dictionary = events[id]
@@ -177,9 +192,9 @@ func play_event(id: String) -> bool:
 	stop_role(role)
 	var player: AudioStreamPlayer = players[role]
 	player.stream = stream
-	player.volume_db = float(cue.volume_db)
+	player.volume_db = float(cue.volume_db) + attenuation_db
 	player.play()
-	slots[role] = {"id": id, "remaining": float(cue.max_seconds), "volume_db": float(cue.volume_db)}
+	slots[role] = {"id": id, "remaining": float(cue.max_seconds), "volume_db": player.volume_db}
 	if role == "contact" and id != "user.game_start": last_contact = time
 	if role == "voice": last_voice = time
 	if trace_enabled:

@@ -112,7 +112,8 @@ func _handle_player_touch(point: Vector2) -> void:
 	# Accepted pokes already play their reaction-specific contact cue.
 	# Only background misses make a separate user sound.
 	if not touch_at(point) and _box_hit(point) == BoxHit.EXPOSED and audio_manager != null:
-		audio_manager.play_event("user.tap_miss")
+		audio_manager.register_click()
+		audio_manager.play_event("user.tap_miss", audio_manager.click_attenuation_db())
 
 func _process(delta: float) -> void:
 	_resize()
@@ -162,7 +163,7 @@ func advance(delta: float) -> void:
 		gaze_timer = rng.randf_range(1.8, 4.0)
 	_update_pose()
 	if free_contact and audio_manager != null:
-		audio_manager.play_event("jump.land")
+		audio_manager.play_event("jump.land", audio_manager.reaction_attenuation_db)
 	queue_redraw()
 
 func _free_jump_enabled() -> bool:
@@ -211,6 +212,8 @@ func contains_touch(point: Vector2) -> bool:
 func touch_at(point: Vector2) -> bool:
 	if not contains_touch(point):
 		return false
+	if audio_manager != null:
+		audio_manager.register_click()
 	idle_time = 0.0
 	intro_alpha = 0.0
 	annoyance = minf(100.0, annoyance + rng.randf_range(7.0, 10.0))
