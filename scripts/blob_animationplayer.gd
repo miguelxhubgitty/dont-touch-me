@@ -207,6 +207,7 @@ func _update_pose() -> void:
 		visual_reaction = Reaction.NONE
 		if player.current_animation != "breathe": player.play("breathe")
 		player.seek(fposmod(clock,3),true)
+		breathing.scale = breathing.scale.lerp(STRETCH_SCALE, _stretch_strength())
 		breathing.rotation = 0
 		eyes.position = Vector2(gaze.x,-113+gaze.y)
 		eyes.scale.y = maxf(2.0/21,eye_open)
