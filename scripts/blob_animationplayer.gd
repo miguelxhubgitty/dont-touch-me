@@ -220,7 +220,11 @@ func _update_pose() -> void:
 		breathing.scale = breathing.scale.lerp(STRETCH_SCALE, _stretch_strength())
 		breathing.rotation = body_angle
 		eyes.position = Vector2(gaze.x,-113+gaze.y)
-		eyes.scale.y = maxf(2.0/21,eye_open)
+		if active_idle == SpecialIdle.STRETCH:
+			eyes.visible = eye_open > 0.0
+			eyes.scale.y = eye_open
+		else:
+			eyes.scale.y = maxf(2.0/21,eye_open)
 	props.visible = uses_authored_visual() and (sign_amount > 0 or box_amount > 0)
 	if props.visible:
 		props.queue_redraw()

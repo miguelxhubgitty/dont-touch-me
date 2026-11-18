@@ -7,3 +7,5 @@ At launch and after an accepted poke, use an independent random draw to select n
 - **Controller:** Ease up, hold and ease down using elapsed inactivity since activation. Blend the fallback pose and its hit test around the existing anchor.
 - **Authored renderer:** Sample native breathing at its usual phase and blend its scale toward the same stretched pose. Use the existing eye and transformed-outline paths.
 - **Verification:** Force a deterministic opportunity in both renderers, inspect the scale/eyes and anchor, test misses and pokes at the extended silhouette, then confirm return to breathing and sleep at 18 seconds. The standard animation runner includes the focused Stretch fixture.
+
+The later [Stretch refinement](stretch-refinement.md) sets the grounded peak to 0.72 × 1.45 and fully closes both eyes during the hold.
