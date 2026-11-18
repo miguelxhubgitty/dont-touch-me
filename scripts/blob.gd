@@ -29,6 +29,7 @@ const STRETCH_SCALE := Vector2(0.81, 1.27)
 const STRETCH_EYES := 0.27
 const HUMMING_BEAT := 0.9
 const HUMMING_DURATION := 3.0 * HUMMING_BEAT
+const HUMMING_SQUINT_EXIT := 0.09
 
 enum SpecialIdle { NONE, STRETCH, HUMMING }
 const FREE_JUMP_FLIGHT := .85
@@ -59,6 +60,7 @@ var body_position := Vector2.ZERO
 var body_scale := Vector2.ONE
 var body_angle := 0.0
 var eye_open := 1.0
+var humming_squint := 0.0
 var gaze := Vector2.ZERO
 var idle_gaze := Vector2.ZERO
 var gaze_timer := 1.0
@@ -146,6 +148,7 @@ func advance(delta: float) -> void:
 	var return_delta := delta if jump_returning else 0.0
 	if audio_manager != null:
 		audio_manager.tick(delta)
+	humming_squint = move_toward(humming_squint, 0.0, delta / HUMMING_SQUINT_EXIT)
 	clock += delta
 	idle_time += delta
 	intro_alpha = move_toward(intro_alpha, 0.0, delta * 0.1 if idle_time > 5.0 else 0.0)
@@ -338,7 +341,7 @@ func _update_pose() -> void:
 			var bob := sin(PI * beat)
 			body_position.y -= 9.0 * strength * bob * bob
 			body_angle = 0.018 * strength * bob
-			eye_open = minf(eye_open, lerpf(1.0, 0.54, strength))
+			humming_squint = strength
 		return
 	var t := clampf(elapsed / float(DURATIONS[reaction]), 0.0, 1.0)
 	var envelope := sin(PI * t)
@@ -468,13 +471,21 @@ func _silhouette() -> PackedVector2Array:
 		points.append(Vector2(x, y - 73.0))
 	return points
 
-func _ellipse(center: Vector2, radius: Vector2, color: Color, canvas: CanvasItem = null) -> void:
+func _soft_squint_point(unit_point: Vector2, strength: float) -> Vector2:
+	# Retain each oval's width and taper. Raise the middle into a shallow arch.
+	var arch_y := -0.18 * (1.0 - unit_point.x * unit_point.x)
+	return Vector2(unit_point.x, lerpf(unit_point.y, arch_y + 0.13 * unit_point.y, strength))
+
+func _ellipse(center: Vector2, radius: Vector2, color: Color, canvas: CanvasItem = null, squint := 0.0) -> void:
 	if canvas == null:
 		canvas = self
 	var points := PackedVector2Array()
 	for i in range(48):
 		var a := TAU * float(i) / 48.0
-		points.append(center + Vector2(cos(a), sin(a)) * radius)
+		var point := Vector2(cos(a), sin(a))
+		if squint > 0.0:
+			point = _soft_squint_point(point, squint)
+		points.append(center + point * radius)
 	canvas.draw_colored_polygon(points, color)
 
 func _text_center(text: String, center: Vector2, size: int, color: Color, canvas: CanvasItem = null) -> void:
@@ -505,7 +516,7 @@ func _draw() -> void:
 			var opening := eye_open
 			if reaction == Reaction.SERIOUSLY and side < 0:
 				opening *= 0.5
-			_ellipse(eye, Vector2(13.5 * (1.0 - turn_amount * 0.8), maxf(2.0, 21.0 * opening)), Color(WHITE, face_alpha))
+			_ellipse(eye, Vector2(13.5 * (1.0 - turn_amount * 0.8), maxf(2.0, 21.0 * opening)), Color(WHITE, face_alpha), self, humming_squint)
 	if turn_amount > 0.1:
 		draw_arc(Vector2(0, -105), 21, 0.35, 1.5, 20, Color(0.30, 0.30, 0.31, turn_amount * 0.45), 2.0, true)
 	if touch_flash > 0.0:
