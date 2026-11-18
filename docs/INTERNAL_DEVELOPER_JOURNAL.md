@@ -341,3 +341,7 @@ The [approved Stretch plan](../plans/stretch-idle.md) adds an occasional silent 
 ## Humming idle — implementation review
 
 [Humming](../plans/humming-idle.md) now uses the reserved idle choice. Both renderers sample three silent bobs from the shared inactivity clock and keep the existing sleep and poke rules.
+
+## Recoil reaction — implementation review
+
+[Recoil](../plans/recoil-reaction.md) enters the lowest annoyance tier. Near a boundary the horizontal movement is reduced while the hop and startled eyes remain. The body returns to its starting anchor. Authored scale tracks and procedural poses use the existing reaction clock.

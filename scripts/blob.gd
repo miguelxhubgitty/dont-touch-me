@@ -3,7 +3,7 @@ extends Node2D
 const AudioManager = preload("res://scripts/audio_manager.gd")
 
 enum Reaction { NONE, BLINK, SIDE_EYE, SQUISH, IRRITATED, DONT, SERIOUSLY,
-	SLIDE, JUMP, SHAKE, FLATTEN, TURN, STOP, SIGN, BOX, RUN, WAKE }
+	SLIDE, JUMP, SHAKE, FLATTEN, TURN, STOP, SIGN, BOX, RUN, WAKE, RECOIL }
 
 const INK := Color("202124")
 const WHITE := Color("fffdf8")
@@ -14,10 +14,10 @@ const DURATIONS := {
 	Reaction.IRRITATED: 1.2, Reaction.DONT: 1.25, Reaction.SERIOUSLY: 1.5,
 	Reaction.SLIDE: 0.9, Reaction.JUMP: 1.05, Reaction.SHAKE: 1.05,
 	Reaction.FLATTEN: 1.65, Reaction.TURN: 1.8, Reaction.STOP: 1.25,
-	Reaction.SIGN: 2.0, Reaction.BOX: 2.7, Reaction.RUN: 4.1, Reaction.WAKE: 1.65,
+	Reaction.SIGN: 2.0, Reaction.BOX: 2.7, Reaction.RUN: 4.1, Reaction.WAKE: 1.65, Reaction.RECOIL: 0.9,
 }
 const POOLS := [
-	[Reaction.BLINK, Reaction.SIDE_EYE, Reaction.SQUISH],
+	[Reaction.BLINK, Reaction.SIDE_EYE, Reaction.SQUISH, Reaction.RECOIL],
 	[Reaction.IRRITATED, Reaction.DONT, Reaction.SERIOUSLY, Reaction.SLIDE],
 	[Reaction.JUMP, Reaction.SHAKE, Reaction.FLATTEN, Reaction.TURN, Reaction.STOP, Reaction.SIGN],
 	[Reaction.STOP, Reaction.SIGN, Reaction.BOX, Reaction.RUN],
@@ -34,6 +34,7 @@ const FREE_JUMP_FLIGHT := .85
 const FREE_JUMP_TRAVEL := 230.0
 const JUMP_RETURN_SPEED := FREE_JUMP_TRAVEL / FREE_JUMP_FLIGHT
 @export var free_jump_enabled := false
+var recoil_travel := 0.0
 var jump_returning := false
 var jump_return_target := Vector2.ZERO
 
@@ -77,12 +78,12 @@ var audio_manager: Node
 func _ready() -> void:
 	free_jump_enabled = free_jump_enabled or "--free-jump" in OS.get_cmdline_user_args()
 	rng.randomize()
-	_reset_special_idle()
 	font = ThemeDB.fallback_font
 	_resize()
 	audio_manager = AudioManager.new()
 	audio_manager.name = "BlobAudio"
 	add_child(audio_manager)
+	_reset_special_idle()
 	var sound_button := get_node_or_null("SoundHUD/SoundButton")
 	if sound_button != null:
 		sound_button.initialize(audio_manager)
@@ -283,13 +284,16 @@ func touch_at(point: Vector2) -> bool:
 func begin_reaction(which: int, touch: Vector2) -> void:
 	active_idle = SpecialIdle.NONE
 	jump_returning = false
-	origin = Vector2(body_position.x if which == Reaction.JUMP and _free_jump_enabled() else clampf(body_position.x, 190.0, last_size.x - 190.0), anchor.y)
+	origin = Vector2(body_position.x if which == Reaction.RECOIL or (which == Reaction.JUMP and _free_jump_enabled()) else clampf(body_position.x, 190.0, last_size.x - 190.0), anchor.y)
 	anchor = origin
 	destination = origin
 	elapsed = 0.0
 	reaction = which
 	last_reaction = which
 	direction = 1.0 if touch.x <= origin.x else -1.0
+	if which == Reaction.RECOIL:
+		var edge := last_size.x - 144.0 if direction > 0.0 else 144.0
+		recoil_travel = clampf((edge - origin.x) * direction, 0.0, 45.0)
 	if which == Reaction.JUMP and _free_jump_enabled():
 		destination.x = origin.x+direction*FREE_JUMP_TRAVEL
 	elif which == Reaction.SLIDE or which == Reaction.JUMP:
@@ -414,6 +418,15 @@ func _update_pose() -> void:
 				body_position = peek.lerp(destination, _ease((t - 0.7) / 0.3))
 				gaze.x = -direction * 12.0
 			body_position.y -= absf(sin(t * 55.0)) * 9.0
+		Reaction.RECOIL:
+			var anticipation := _ease(elapsed / 0.09) * (1.0 - _ease((elapsed - 0.09) / 0.18))
+			var hop := _ease((elapsed - 0.09) / 0.18) * (1.0 - _ease((elapsed - 0.27) / 0.36))
+			var toward_room := maxf(0.0, origin.x - 144.0 if direction > 0.0 else last_size.x - 144.0 - origin.x)
+			body_position.x += direction * (recoil_travel * hop - minf(9.0, toward_room) * anticipation)
+			body_position.y -= 18.0 * hop
+			var landing := _ease((elapsed - 0.45) / 0.18) * (1.0 - _ease((elapsed - 0.63) / 0.27))
+			body_scale += Vector2(0.09, -0.09) * (anticipation + landing)
+			eye_open = lerpf(eye_open, 1.18, hop)
 		Reaction.WAKE:
 			bubble = "I was DREAMING."
 			body_position.y -= sin(PI * minf(t * 2.0, 1.0)) * 100.0
