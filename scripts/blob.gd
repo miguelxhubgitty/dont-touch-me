@@ -78,12 +78,12 @@ var audio_manager: Node
 func _ready() -> void:
 	free_jump_enabled = free_jump_enabled or "--free-jump" in OS.get_cmdline_user_args()
 	rng.randomize()
-	_reset_special_idle()
 	font = ThemeDB.fallback_font
 	_resize()
 	audio_manager = AudioManager.new()
 	audio_manager.name = "BlobAudio"
 	add_child(audio_manager)
+	_reset_special_idle()
 	var sound_button := get_node_or_null("SoundHUD/SoundButton")
 	if sound_button != null:
 		sound_button.initialize(audio_manager)
