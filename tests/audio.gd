@@ -32,9 +32,16 @@ func run() -> void:
 	var audio = game.audio_manager
 	audio.trace_enabled = true
 	check(audio.players.size() == 3, "exactly three bounded players")
-	check(audio.streams.size() == 1, "one shared placeholder loaded")
-	check(audio.streams.values()[0] is AudioStreamWAV, "actual WAV decoded")
-	check(absf(audio.streams.values()[0].get_length() - 1.99) < .01, "correct unchanged study loaded")
+	check(audio.streams.size() >= 3, "several independent candidate audio streams")
+	for stream in audio.streams.values():
+		check(stream is AudioStream, "candidate WAV/MP3 imports decode")
+	for id in audio.events:
+		check(not str(audio.events[id].stream).contains("alligator"), "no noncommercial active event: " + id)
+	check(AudioServer.get_bus_index("UserSFX") >= 0, "user SFX bus exists")
+	check(AudioServer.get_bus_index("CharacterVoice") >= 0, "voice bus exists")
+	check(AudioServer.get_bus_index("CharacterSFX") >= 0, "action bus exists")
+	check(AudioServer.get_bus_index("Environment") >= 0, "environment bus reserved")
+	check(AudioServer.get_bus_index("Music") >= 0, "music bus reserved")
 	var covered := {}
 	# Exercise all configured cues, including optional ones, through real reactions.
 	for pass_index in range(2):
@@ -148,6 +155,16 @@ func run() -> void:
 	check(not audio.play_event("dont.voice"), "paused cue suppressed")
 	paused = false
 	check(audio.slots.is_empty(), "tree resume silent")
+	# User-side miss/startup event layer never increases annoyance or duplicates contacts.
+	reset(game)
+	audio.tick(1)
+	var annoyance_before_miss: float = game.annoyance
+	game._handle_player_touch(Vector2(2, 2))
+	check(audio.trace.count("user.tap_miss") == 1, "background miss plays one user SFX")
+	check(game.annoyance == annoyance_before_miss and game.reaction == 0, "miss does not touch blob")
+	audio.tick(1)
+	check(audio.play_event("user.game_start"), "startup sample import and playback work")
+	check(audio.slots.size() <= 3, "bounded preview role count")
 	# A large time jump keeps current cues, not an accumulated audio burst.
 	reset(game)
 	game.begin_reaction(Blob.Reaction.BOX, Vector2(330, 680))

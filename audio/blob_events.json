@@ -1,10 +1,10 @@
 {
-  "schema_version": 1,
+  "schema_version": 2,
   "development_placeholder_only": true,
-  "license": "CC BY-NC 3.0; MattesHaus; see prototypes/M1.3R_ALLIGATOR_NONCOMMERCIAL_SOURCE.md",
+  "license": "Review candidate: CC0 kitten cuts, CC0 puppy whimpers, CC0 Fupicat notification sample, MIT robot servo, original generated SFX. See audio/candidate_pack/SOURCE_REGISTRY.md. The original preferred johnnypanic/Fupicat voice files and ZapSplat Foley downloads require authenticated access.",
   "events": {
     "blink.contact": {
-      "stream": "res://audio/prototypes/M1.3R_baby_alligator_call_study_NONCOMMERCIAL_CC-BY-NC-3.0.wav",
+      "stream": "res://audio/candidate_sfx/user/tap_success.wav",
       "role": "contact",
       "marker": "contact",
       "enabled": true,
@@ -12,7 +12,7 @@
       "max_seconds": 0.3
     },
     "side_eye.contact": {
-      "stream": "res://audio/prototypes/M1.3R_baby_alligator_call_study_NONCOMMERCIAL_CC-BY-NC-3.0.wav",
+      "stream": "res://audio/candidate_sfx/user/tap_success.wav",
       "role": "contact",
       "marker": "contact",
       "enabled": true,
@@ -20,7 +20,7 @@
       "max_seconds": 0.3
     },
     "squish.contact": {
-      "stream": "res://audio/prototypes/M1.3R_baby_alligator_call_study_NONCOMMERCIAL_CC-BY-NC-3.0.wav",
+      "stream": "res://audio/candidate_sfx/user/tap_success.wav",
       "role": "contact",
       "marker": "contact",
       "enabled": true,
@@ -28,7 +28,7 @@
       "max_seconds": 0.3
     },
     "irritated.contact": {
-      "stream": "res://audio/prototypes/M1.3R_baby_alligator_call_study_NONCOMMERCIAL_CC-BY-NC-3.0.wav",
+      "stream": "res://audio/candidate_sfx/user/tap_success.wav",
       "role": "contact",
       "marker": "contact",
       "enabled": true,
@@ -36,7 +36,7 @@
       "max_seconds": 0.3
     },
     "dont.contact": {
-      "stream": "res://audio/prototypes/M1.3R_baby_alligator_call_study_NONCOMMERCIAL_CC-BY-NC-3.0.wav",
+      "stream": "res://audio/candidate_sfx/user/tap_success.wav",
       "role": "contact",
       "marker": "contact",
       "enabled": true,
@@ -44,7 +44,7 @@
       "max_seconds": 0.3
     },
     "seriously.contact": {
-      "stream": "res://audio/prototypes/M1.3R_baby_alligator_call_study_NONCOMMERCIAL_CC-BY-NC-3.0.wav",
+      "stream": "res://audio/candidate_sfx/user/tap_success.wav",
       "role": "contact",
       "marker": "contact",
       "enabled": true,
@@ -52,7 +52,7 @@
       "max_seconds": 0.3
     },
     "slide.contact": {
-      "stream": "res://audio/prototypes/M1.3R_baby_alligator_call_study_NONCOMMERCIAL_CC-BY-NC-3.0.wav",
+      "stream": "res://audio/candidate_sfx/user/tap_success.wav",
       "role": "contact",
       "marker": "contact",
       "enabled": true,
@@ -60,7 +60,7 @@
       "max_seconds": 0.3
     },
     "jump.contact": {
-      "stream": "res://audio/prototypes/M1.3R_baby_alligator_call_study_NONCOMMERCIAL_CC-BY-NC-3.0.wav",
+      "stream": "res://audio/candidate_sfx/user/tap_success.wav",
       "role": "contact",
       "marker": "contact",
       "enabled": true,
@@ -68,7 +68,7 @@
       "max_seconds": 0.3
     },
     "shake.contact": {
-      "stream": "res://audio/prototypes/M1.3R_baby_alligator_call_study_NONCOMMERCIAL_CC-BY-NC-3.0.wav",
+      "stream": "res://audio/candidate_sfx/user/tap_success.wav",
       "role": "contact",
       "marker": "contact",
       "enabled": true,
@@ -76,7 +76,7 @@
       "max_seconds": 0.3
     },
     "flatten.contact": {
-      "stream": "res://audio/prototypes/M1.3R_baby_alligator_call_study_NONCOMMERCIAL_CC-BY-NC-3.0.wav",
+      "stream": "res://audio/candidate_sfx/user/tap_success.wav",
       "role": "contact",
       "marker": "contact",
       "enabled": true,
@@ -84,7 +84,7 @@
       "max_seconds": 0.3
     },
     "turn.contact": {
-      "stream": "res://audio/prototypes/M1.3R_baby_alligator_call_study_NONCOMMERCIAL_CC-BY-NC-3.0.wav",
+      "stream": "res://audio/candidate_sfx/user/tap_success.wav",
       "role": "contact",
       "marker": "contact",
       "enabled": true,
@@ -92,7 +92,7 @@
       "max_seconds": 0.3
     },
     "stop.contact": {
-      "stream": "res://audio/prototypes/M1.3R_baby_alligator_call_study_NONCOMMERCIAL_CC-BY-NC-3.0.wav",
+      "stream": "res://audio/candidate_sfx/user/tap_success.wav",
       "role": "contact",
       "marker": "contact",
       "enabled": true,
@@ -100,7 +100,7 @@
       "max_seconds": 0.3
     },
     "sign.contact": {
-      "stream": "res://audio/prototypes/M1.3R_baby_alligator_call_study_NONCOMMERCIAL_CC-BY-NC-3.0.wav",
+      "stream": "res://audio/candidate_sfx/user/tap_success.wav",
       "role": "contact",
       "marker": "contact",
       "enabled": true,
@@ -108,7 +108,7 @@
       "max_seconds": 0.3
     },
     "box.contact": {
-      "stream": "res://audio/prototypes/M1.3R_baby_alligator_call_study_NONCOMMERCIAL_CC-BY-NC-3.0.wav",
+      "stream": "res://audio/candidate_sfx/user/tap_success.wav",
       "role": "contact",
       "marker": "contact",
       "enabled": true,
@@ -116,7 +116,7 @@
       "max_seconds": 0.3
     },
     "run.contact": {
-      "stream": "res://audio/prototypes/M1.3R_baby_alligator_call_study_NONCOMMERCIAL_CC-BY-NC-3.0.wav",
+      "stream": "res://audio/candidate_sfx/user/tap_success.wav",
       "role": "contact",
       "marker": "contact",
       "enabled": true,
@@ -124,7 +124,7 @@
       "max_seconds": 0.3
     },
     "wake.contact": {
-      "stream": "res://audio/prototypes/M1.3R_baby_alligator_call_study_NONCOMMERCIAL_CC-BY-NC-3.0.wav",
+      "stream": "res://audio/candidate_sfx/user/tap_success.wav",
       "role": "contact",
       "marker": "contact",
       "enabled": true,
@@ -132,7 +132,7 @@
       "max_seconds": 0.3
     },
     "irritated.voice": {
-      "stream": "res://audio/prototypes/M1.3R_baby_alligator_call_study_NONCOMMERCIAL_CC-BY-NC-3.0.wav",
+      "stream": "res://audio/voice/puppy_chihuahua_whine.wav",
       "role": "voice",
       "marker": "expression",
       "enabled": true,
@@ -140,7 +140,7 @@
       "max_seconds": 0.45
     },
     "dont.voice": {
-      "stream": "res://audio/prototypes/M1.3R_baby_alligator_call_study_NONCOMMERCIAL_CC-BY-NC-3.0.wav",
+      "stream": "res://audio/voice/robot_fupicat_notification.mp3",
       "role": "voice",
       "marker": "expression",
       "enabled": true,
@@ -148,7 +148,7 @@
       "max_seconds": 0.45
     },
     "shake.voice": {
-      "stream": "res://audio/prototypes/M1.3R_baby_alligator_call_study_NONCOMMERCIAL_CC-BY-NC-3.0.wav",
+      "stream": "res://audio/voice/puppy_real_1.ogg",
       "role": "voice",
       "marker": "motion",
       "enabled": true,
@@ -156,7 +156,7 @@
       "max_seconds": 0.45
     },
     "stop.voice": {
-      "stream": "res://audio/prototypes/M1.3R_baby_alligator_call_study_NONCOMMERCIAL_CC-BY-NC-3.0.wav",
+      "stream": "res://audio/voice/robot_servo_mit.wav",
       "role": "voice",
       "marker": "expression",
       "enabled": true,
@@ -164,7 +164,7 @@
       "max_seconds": 0.45
     },
     "wake.voice": {
-      "stream": "res://audio/prototypes/M1.3R_baby_alligator_call_study_NONCOMMERCIAL_CC-BY-NC-3.0.wav",
+      "stream": "res://audio/voice/kitten_lolamadeus_1.ogg",
       "role": "voice",
       "marker": "start",
       "enabled": true,
@@ -172,7 +172,7 @@
       "max_seconds": 0.45
     },
     "side_eye.voice": {
-      "stream": "res://audio/prototypes/M1.3R_baby_alligator_call_study_NONCOMMERCIAL_CC-BY-NC-3.0.wav",
+      "stream": "res://audio/voice/kitten_lolamadeus_2.ogg",
       "role": "voice",
       "marker": "expression",
       "enabled": false,
@@ -180,7 +180,7 @@
       "max_seconds": 0.45
     },
     "squish.voice": {
-      "stream": "res://audio/prototypes/M1.3R_baby_alligator_call_study_NONCOMMERCIAL_CC-BY-NC-3.0.wav",
+      "stream": "res://audio/voice/kitten_lolamadeus_3.ogg",
       "role": "voice",
       "marker": "motion",
       "enabled": false,
@@ -188,7 +188,7 @@
       "max_seconds": 0.45
     },
     "squish.rebound": {
-      "stream": "res://audio/prototypes/M1.3R_baby_alligator_call_study_NONCOMMERCIAL_CC-BY-NC-3.0.wav",
+      "stream": "res://audio/candidate_sfx/character/squish.wav",
       "role": "action",
       "marker": "squish_rebound",
       "enabled": false,
@@ -196,7 +196,7 @@
       "max_seconds": 0.3
     },
     "seriously.voice": {
-      "stream": "res://audio/prototypes/M1.3R_baby_alligator_call_study_NONCOMMERCIAL_CC-BY-NC-3.0.wav",
+      "stream": "res://audio/voice/robot_fupicat_notification.mp3",
       "role": "voice",
       "marker": "expression",
       "enabled": false,
@@ -204,7 +204,7 @@
       "max_seconds": 0.45
     },
     "slide.move": {
-      "stream": "res://audio/prototypes/M1.3R_baby_alligator_call_study_NONCOMMERCIAL_CC-BY-NC-3.0.wav",
+      "stream": "res://audio/candidate_sfx/character/slide.wav",
       "role": "action",
       "marker": "motion",
       "enabled": true,
@@ -213,7 +213,7 @@
       "stop_marker": "slide_stop"
     },
     "jump.voice": {
-      "stream": "res://audio/prototypes/M1.3R_baby_alligator_call_study_NONCOMMERCIAL_CC-BY-NC-3.0.wav",
+      "stream": "res://audio/voice/kitten_lolamadeus_4.ogg",
       "role": "voice",
       "marker": "motion",
       "enabled": false,
@@ -221,7 +221,7 @@
       "max_seconds": 0.45
     },
     "jump.land": {
-      "stream": "res://audio/prototypes/M1.3R_baby_alligator_call_study_NONCOMMERCIAL_CC-BY-NC-3.0.wav",
+      "stream": "res://audio/candidate_sfx/character/jump_land.wav",
       "role": "action",
       "marker": "end",
       "enabled": true,
@@ -229,7 +229,7 @@
       "max_seconds": 0.3
     },
     "flatten.compress": {
-      "stream": "res://audio/prototypes/M1.3R_baby_alligator_call_study_NONCOMMERCIAL_CC-BY-NC-3.0.wav",
+      "stream": "res://audio/candidate_sfx/character/squish.wav",
       "role": "action",
       "marker": "motion",
       "enabled": false,
@@ -238,7 +238,7 @@
       "stop_marker": "held"
     },
     "flatten.release": {
-      "stream": "res://audio/prototypes/M1.3R_baby_alligator_call_study_NONCOMMERCIAL_CC-BY-NC-3.0.wav",
+      "stream": "res://audio/candidate_sfx/character/squish.wav",
       "role": "action",
       "marker": "release",
       "enabled": false,
@@ -246,7 +246,7 @@
       "max_seconds": 0.3
     },
     "turn.voice": {
-      "stream": "res://audio/prototypes/M1.3R_baby_alligator_call_study_NONCOMMERCIAL_CC-BY-NC-3.0.wav",
+      "stream": "res://audio/voice/puppy_real_2.ogg",
       "role": "voice",
       "marker": "expression",
       "enabled": false,
@@ -254,7 +254,7 @@
       "max_seconds": 0.45
     },
     "sign.raise": {
-      "stream": "res://audio/prototypes/M1.3R_baby_alligator_call_study_NONCOMMERCIAL_CC-BY-NC-3.0.wav",
+      "stream": "res://audio/candidate_sfx/character/sign_raise.wav",
       "role": "action",
       "marker": "motion",
       "enabled": true,
@@ -263,7 +263,7 @@
       "stop_marker": "held"
     },
     "sign.settle": {
-      "stream": "res://audio/prototypes/M1.3R_baby_alligator_call_study_NONCOMMERCIAL_CC-BY-NC-3.0.wav",
+      "stream": "res://audio/candidate_sfx/character/sign_settle.wav",
       "role": "action",
       "marker": "held",
       "enabled": false,
@@ -271,7 +271,7 @@
       "max_seconds": 0.3
     },
     "sign.lower": {
-      "stream": "res://audio/prototypes/M1.3R_baby_alligator_call_study_NONCOMMERCIAL_CC-BY-NC-3.0.wav",
+      "stream": "res://audio/candidate_sfx/character/sign_lower.wav",
       "role": "action",
       "marker": "release",
       "enabled": false,
@@ -279,7 +279,7 @@
       "max_seconds": 0.3
     },
     "box.raise": {
-      "stream": "res://audio/prototypes/M1.3R_baby_alligator_call_study_NONCOMMERCIAL_CC-BY-NC-3.0.wav",
+      "stream": "res://audio/candidate_sfx/character/box_raise.wav",
       "role": "action",
       "marker": "motion",
       "enabled": true,
@@ -288,7 +288,7 @@
       "stop_marker": "held"
     },
     "box.lower": {
-      "stream": "res://audio/prototypes/M1.3R_baby_alligator_call_study_NONCOMMERCIAL_CC-BY-NC-3.0.wav",
+      "stream": "res://audio/candidate_sfx/character/box_lower.wav",
       "role": "action",
       "marker": "release",
       "enabled": true,
@@ -296,7 +296,7 @@
       "max_seconds": 0.3
     },
     "box.voice": {
-      "stream": "res://audio/prototypes/M1.3R_baby_alligator_call_study_NONCOMMERCIAL_CC-BY-NC-3.0.wav",
+      "stream": "res://audio/voice/puppy_real_3.ogg",
       "role": "voice",
       "marker": "expression",
       "enabled": false,
@@ -304,7 +304,7 @@
       "max_seconds": 0.45
     },
     "run.depart": {
-      "stream": "res://audio/prototypes/M1.3R_baby_alligator_call_study_NONCOMMERCIAL_CC-BY-NC-3.0.wav",
+      "stream": "res://audio/candidate_sfx/character/run_depart.wav",
       "role": "action",
       "marker": "motion",
       "enabled": true,
@@ -313,7 +313,7 @@
       "stop_marker": "offscreen"
     },
     "run.voice": {
-      "stream": "res://audio/prototypes/M1.3R_baby_alligator_call_study_NONCOMMERCIAL_CC-BY-NC-3.0.wav",
+      "stream": "res://audio/voice/robot_servo_mit.wav",
       "role": "voice",
       "marker": "motion",
       "enabled": false,
@@ -321,7 +321,7 @@
       "max_seconds": 0.45
     },
     "run.return": {
-      "stream": "res://audio/prototypes/M1.3R_baby_alligator_call_study_NONCOMMERCIAL_CC-BY-NC-3.0.wav",
+      "stream": "res://audio/candidate_sfx/character/run_return.wav",
       "role": "action",
       "marker": "return",
       "enabled": false,
@@ -329,7 +329,7 @@
       "max_seconds": 0.3
     },
     "wake.land": {
-      "stream": "res://audio/prototypes/M1.3R_baby_alligator_call_study_NONCOMMERCIAL_CC-BY-NC-3.0.wav",
+      "stream": "res://audio/candidate_sfx/character/jump_land.wav",
       "role": "action",
       "marker": "wake_land",
       "enabled": false,
@@ -337,7 +337,7 @@
       "max_seconds": 0.3
     },
     "wake.grumble": {
-      "stream": "res://audio/prototypes/M1.3R_baby_alligator_call_study_NONCOMMERCIAL_CC-BY-NC-3.0.wav",
+      "stream": "res://audio/voice/puppy_chihuahua_whine.wav",
       "role": "voice",
       "marker": "wake_narrow",
       "enabled": false,
@@ -345,12 +345,29 @@
       "max_seconds": 0.45
     },
     "sleep.enter": {
-      "stream": "res://audio/prototypes/M1.3R_baby_alligator_call_study_NONCOMMERCIAL_CC-BY-NC-3.0.wav",
+      "stream": "res://audio/voice/kitten_lolamadeus_1.ogg",
       "role": "voice",
       "marker": "sleep",
       "enabled": true,
       "volume_db": -12,
       "max_seconds": 0.45
+    },
+    "user.tap_miss": {
+      "stream": "res://audio/candidate_sfx/user/tap_miss.wav",
+      "role": "contact",
+      "marker": "contact",
+      "enabled": true,
+      "volume_db": -16,
+      "max_seconds": 0.145
+    },
+    "user.game_start": {
+      "stream": "res://audio/candidate_sfx/user/game_start.wav",
+      "role": "contact",
+      "marker": "contact",
+      "enabled": true,
+      "volume_db": -18,
+      "max_seconds": 0.49
     }
-  }
+  },
+  "preview_only": true
 }

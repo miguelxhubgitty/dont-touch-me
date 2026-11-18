@@ -1,0 +1,248 @@
+{
+  "note": "Review-only; do not use as active audio/blob_events.json",
+  "current_event_count": 43,
+  "new_event_count": 3,
+  "source_wav_pack": "DontTouchMe_Audio_Starter_2026-11-17.zip",
+  "sources_pending": "CC0_SOURCES.md",
+  "categories": [
+    "character_voice",
+    "user_sfx",
+    "character_sfx",
+    "environment",
+    "music"
+  ],
+  "events": {
+    "blink.contact": {
+      "category": "user_sfx",
+      "candidate": "audio/candidate_sfx/user/tap_success.wav",
+      "migration": "Either reuse this trigger or add user.tap_success, not both. One hit per accepted tap."
+    },
+    "side_eye.contact": {
+      "category": "user_sfx",
+      "candidate": "audio/candidate_sfx/user/tap_success.wav",
+      "migration": "Either reuse this trigger or add user.tap_success, not both. One hit per accepted tap."
+    },
+    "squish.contact": {
+      "category": "user_sfx",
+      "candidate": "audio/candidate_sfx/user/tap_success.wav",
+      "migration": "Either reuse this trigger or add user.tap_success, not both. One hit per accepted tap."
+    },
+    "irritated.contact": {
+      "category": "user_sfx",
+      "candidate": "audio/candidate_sfx/user/tap_success.wav",
+      "migration": "Either reuse this trigger or add user.tap_success, not both. One hit per accepted tap."
+    },
+    "dont.contact": {
+      "category": "user_sfx",
+      "candidate": "audio/candidate_sfx/user/tap_success.wav",
+      "migration": "Either reuse this trigger or add user.tap_success, not both. One hit per accepted tap."
+    },
+    "seriously.contact": {
+      "category": "user_sfx",
+      "candidate": "audio/candidate_sfx/user/tap_success.wav",
+      "migration": "Either reuse this trigger or add user.tap_success, not both. One hit per accepted tap."
+    },
+    "slide.contact": {
+      "category": "user_sfx",
+      "candidate": "audio/candidate_sfx/user/tap_success.wav",
+      "migration": "Either reuse this trigger or add user.tap_success, not both. One hit per accepted tap."
+    },
+    "jump.contact": {
+      "category": "user_sfx",
+      "candidate": "audio/candidate_sfx/user/tap_success.wav",
+      "migration": "Either reuse this trigger or add user.tap_success, not both. One hit per accepted tap."
+    },
+    "shake.contact": {
+      "category": "user_sfx",
+      "candidate": "audio/candidate_sfx/user/tap_success.wav",
+      "migration": "Either reuse this trigger or add user.tap_success, not both. One hit per accepted tap."
+    },
+    "flatten.contact": {
+      "category": "user_sfx",
+      "candidate": "audio/candidate_sfx/user/tap_success.wav",
+      "migration": "Either reuse this trigger or add user.tap_success, not both. One hit per accepted tap."
+    },
+    "turn.contact": {
+      "category": "user_sfx",
+      "candidate": "audio/candidate_sfx/user/tap_success.wav",
+      "migration": "Either reuse this trigger or add user.tap_success, not both. One hit per accepted tap."
+    },
+    "stop.contact": {
+      "category": "user_sfx",
+      "candidate": "audio/candidate_sfx/user/tap_success.wav",
+      "migration": "Either reuse this trigger or add user.tap_success, not both. One hit per accepted tap."
+    },
+    "sign.contact": {
+      "category": "user_sfx",
+      "candidate": "audio/candidate_sfx/user/tap_success.wav",
+      "migration": "Either reuse this trigger or add user.tap_success, not both. One hit per accepted tap."
+    },
+    "box.contact": {
+      "category": "user_sfx",
+      "candidate": "audio/candidate_sfx/user/tap_success.wav",
+      "migration": "Either reuse this trigger or add user.tap_success, not both. One hit per accepted tap."
+    },
+    "run.contact": {
+      "category": "user_sfx",
+      "candidate": "audio/candidate_sfx/user/tap_success.wav",
+      "migration": "Either reuse this trigger or add user.tap_success, not both. One hit per accepted tap."
+    },
+    "wake.contact": {
+      "category": "user_sfx",
+      "candidate": "audio/candidate_sfx/user/tap_success.wav",
+      "migration": "Either reuse this trigger or add user.tap_success, not both. One hit per accepted tap."
+    },
+    "irritated.voice": {
+      "category": "character_voice",
+      "candidate": "audio/voice/kitten_01.wav",
+      "status": "disabled until CC0 source downloaded"
+    },
+    "dont.voice": {
+      "category": "character_voice",
+      "candidate": "audio/voice/puppy_01.wav",
+      "status": "disabled until CC0 source downloaded"
+    },
+    "shake.voice": {
+      "category": "character_voice",
+      "candidate": "audio/voice/robot_01.wav",
+      "status": "disabled until CC0 source downloaded"
+    },
+    "stop.voice": {
+      "category": "character_voice",
+      "candidate": "audio/voice/kitten_01.wav",
+      "status": "disabled until CC0 source downloaded"
+    },
+    "wake.voice": {
+      "category": "character_voice",
+      "candidate": "audio/voice/puppy_01.wav",
+      "status": "disabled until CC0 source downloaded"
+    },
+    "side_eye.voice": {
+      "category": "character_voice",
+      "candidate": "audio/voice/robot_01.wav",
+      "status": "disabled until CC0 source downloaded"
+    },
+    "squish.voice": {
+      "category": "character_voice",
+      "candidate": "audio/voice/kitten_01.wav",
+      "status": "disabled until CC0 source downloaded"
+    },
+    "seriously.voice": {
+      "category": "character_voice",
+      "candidate": "audio/voice/puppy_01.wav",
+      "status": "disabled until CC0 source downloaded"
+    },
+    "jump.voice": {
+      "category": "character_voice",
+      "candidate": "audio/voice/robot_01.wav",
+      "status": "disabled until CC0 source downloaded"
+    },
+    "turn.voice": {
+      "category": "character_voice",
+      "candidate": "audio/voice/kitten_01.wav",
+      "status": "disabled until CC0 source downloaded"
+    },
+    "box.voice": {
+      "category": "character_voice",
+      "candidate": "audio/voice/puppy_01.wav",
+      "status": "disabled until CC0 source downloaded"
+    },
+    "run.voice": {
+      "category": "character_voice",
+      "candidate": "audio/voice/robot_01.wav",
+      "status": "disabled until CC0 source downloaded"
+    },
+    "wake.grumble": {
+      "category": "character_voice",
+      "candidate": "audio/voice/kitten_01.wav",
+      "status": "disabled until CC0 source downloaded"
+    },
+    "sleep.enter": {
+      "category": "character_voice",
+      "candidate": "audio/voice/puppy_01.wav",
+      "status": "disabled until CC0 source downloaded"
+    },
+    "squish.rebound": {
+      "category": "character_sfx",
+      "candidate": "audio/candidate_sfx/character/squish.wav",
+      "status": "candidate asset in separate ZIP"
+    },
+    "slide.move": {
+      "category": "character_sfx",
+      "candidate": "audio/candidate_sfx/character/slide.wav",
+      "status": "candidate asset in separate ZIP"
+    },
+    "jump.land": {
+      "category": "character_sfx",
+      "candidate": "audio/candidate_sfx/character/jump_land.wav",
+      "status": "candidate asset in separate ZIP"
+    },
+    "flatten.compress": {
+      "category": "character_sfx",
+      "candidate": "audio/candidate_sfx/character/squish.wav",
+      "status": "candidate asset in separate ZIP"
+    },
+    "flatten.release": {
+      "category": "character_sfx",
+      "candidate": "audio/candidate_sfx/character/squish.wav",
+      "status": "candidate asset in separate ZIP"
+    },
+    "sign.raise": {
+      "category": "character_sfx",
+      "candidate": "audio/candidate_sfx/character/sign_raise.wav",
+      "status": "candidate asset in separate ZIP"
+    },
+    "sign.settle": {
+      "category": "character_sfx",
+      "candidate": "audio/candidate_sfx/character/sign_settle.wav",
+      "status": "candidate asset in separate ZIP"
+    },
+    "sign.lower": {
+      "category": "character_sfx",
+      "candidate": "audio/candidate_sfx/character/sign_lower.wav",
+      "status": "candidate asset in separate ZIP"
+    },
+    "box.raise": {
+      "category": "character_sfx",
+      "candidate": "audio/candidate_sfx/character/box_raise.wav",
+      "status": "candidate asset in separate ZIP"
+    },
+    "box.lower": {
+      "category": "character_sfx",
+      "candidate": "audio/candidate_sfx/character/box_lower.wav",
+      "status": "candidate asset in separate ZIP"
+    },
+    "run.depart": {
+      "category": "character_sfx",
+      "candidate": "audio/candidate_sfx/character/run_depart.wav",
+      "status": "candidate asset in separate ZIP"
+    },
+    "run.return": {
+      "category": "character_sfx",
+      "candidate": "audio/candidate_sfx/character/run_return.wav",
+      "status": "candidate asset in separate ZIP"
+    },
+    "wake.land": {
+      "category": "character_sfx",
+      "candidate": "audio/candidate_sfx/character/jump_land.wav",
+      "status": "candidate asset in separate ZIP"
+    },
+    "user.tap_success": {
+      "category": "user_sfx",
+      "candidate": "audio/candidate_sfx/user/tap_success.wav",
+      "new_trigger": true,
+      "conflict_rule": "Disable/migrate legacy reaction.contact playback to avoid double sound"
+    },
+    "user.tap_miss": {
+      "category": "user_sfx",
+      "candidate": "audio/candidate_sfx/user/tap_miss.wav",
+      "new_trigger": true
+    },
+    "user.game_start": {
+      "category": "user_sfx",
+      "candidate": "audio/candidate_sfx/user/game_start.wav",
+      "new_trigger": true,
+      "rule": "once per process launch"
+    }
+  }
+}

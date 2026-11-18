@@ -73,6 +73,8 @@ func _ready() -> void:
 	var sound_button := get_node_or_null("SoundHUD/SoundButton")
 	if sound_button != null:
 		sound_button.initialize(audio_manager)
+	# On the initial launch only; respected by the saved mute preference.
+	audio_manager.play_event("user.game_start")
 
 func _resize() -> void:
 	var size := get_viewport_rect().size
@@ -102,9 +104,15 @@ func _notification(what: int) -> void:
 func _unhandled_input(event: InputEvent) -> void:
 	if event is InputEventMouseButton:
 		if event.pressed and event.button_index == MOUSE_BUTTON_LEFT:
-			touch_at(event.position)
+			_handle_player_touch(event.position)
 	elif event is InputEventScreenTouch and event.pressed:
-		touch_at(event.position)
+		_handle_player_touch(event.position)
+
+func _handle_player_touch(point: Vector2) -> void:
+	# Accepted pokes already play their reaction-specific contact cue.
+	# Only background misses make a separate user sound.
+	if not touch_at(point) and _box_hit(point) == BoxHit.EXPOSED and audio_manager != null:
+		audio_manager.play_event("user.tap_miss")
 
 func _process(delta: float) -> void:
 	_resize()
