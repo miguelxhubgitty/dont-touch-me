@@ -18,6 +18,27 @@ Read [BRANCH_WORKFLOW.md](BRANCH_WORKFLOW.md) for the detailed procedure and [CU
 - Run the relevant [test runner modes](TESTING.md#development-test-runner). Isolate test settings from player preferences. Check exit codes and runtime errors. Investigate shutdown warnings in context, including a normal game close where relevant, before treating them as test-only. A leak during normal play, a failed test, or a reproducible runtime error blocks integration.
 - Update the relevant plan, current-state documentation and journal. Report the scope, PR and commit, tests with results and coverage limits, and any work or decisions still pending.
 
+## Code Quality & Refactoring Policy
+
+Prefer simple, maintainable code. Before adding logic, look for existing functions or behavior you can reuse or improve. Address root causes where practical. Introduce abstractions, classes, managers, or compatibility layers only when there is a demonstrated need.
+
+- Small refactors directly related to an approved task are permitted when they simplify the implementation, preserve behavior, and pass relevant tests.
+- Obtain explicit owner approval before a larger structural change, even if you discover it during an approved task. Obtain explicit approval before overwriting, removing, modifying, or refactoring unrelated code.
+- Before removing apparently unused functionality, verify its purpose, callers, and dependencies. Preserve unrelated changes, including uncommitted local work.
+
+### Refactoring opportunities
+
+Notice worthwhile opportunities during normal development. When an opportunity falls outside the approved task, finish the assigned work if it can proceed independently and report the opportunity with:
+
+- **What** — relevant files, functions, or systems.
+- **Why** — the specific problem or unnecessary complexity.
+- **Solution** — the proposed rewrite, consolidation, or removal.
+- **Impact** — affected behavior and dependencies.
+- **Risk** — possible regressions and tests needed.
+- **Priority** — now, later, or not worthwhile.
+
+Implementation of those opportunities requires owner authorization. If an out-of-scope decision blocks the assigned work, follow the project's approval and stop rules.
+
 ## Release boundaries
 
 - Develop/test gameplay on a dedicated topic branch derived from approved `main`, with Godot's fallback font. Do not run typography or store-image generators during normal gameplay work.
