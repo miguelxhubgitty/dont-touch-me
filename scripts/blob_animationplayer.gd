@@ -164,7 +164,17 @@ func contains_touch(point: Vector2) -> bool:
 	# particular rolls. Reject points outside its exact inclusive bounds first.
 	if local.x < outline_bounds.position.x or local.x > outline_bounds.end.x or local.y < outline_bounds.position.y or local.y > outline_bounds.end.y:
 		return false
-	return Geometry2D.is_point_in_polygon(local,idle_outline)
+	# Count horizontal crossings in local space. Using scalar arithmetic here
+	# avoids the engine polygon helper's near-vertex ray intersection error.
+	var inside := false
+	var previous := idle_outline[-1]
+	for vertex in idle_outline:
+		if (vertex.y > local.y) != (previous.y > local.y):
+			var crossing := vertex.x + (previous.x - vertex.x) * (local.y - vertex.y) / (previous.y - vertex.y)
+			if local.x < crossing:
+				inside = not inside
+		previous = vertex
+	return inside
 
 func _update_pose() -> void:
 	super._update_pose()

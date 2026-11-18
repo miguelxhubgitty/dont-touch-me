@@ -32,5 +32,29 @@ func run() -> void:
 				if actor.body_position != start or actor.reaction != actor.Reaction.NONE: failures += 1
 				actor.free()
 		viewport.free()
+	if not compression_vertex_hit():
+		failures += 1
 	print("Recoil failures: ", failures)
 	quit(0 if failures == 0 else 1)
+
+
+func compression_vertex_hit() -> bool:
+	# The former ray test accepted the outward probe at vertex 48 in this pose.
+	var viewport := SubViewport.new()
+	viewport.size = Vector2i(720, 1280)
+	root.add_child(viewport)
+	var actor = load("res://main.tscn").instantiate()
+	viewport.add_child(actor)
+	actor.set_process(false)
+	actor.audio_manager.muted = true
+	actor.clock = 0.65
+	actor._update_pose()
+	actor.begin_reaction(actor.Reaction.RECOIL, actor.body_position + Vector2(-20, -70))
+	actor.advance(4.0 / 60.0)
+	var outline: PackedVector2Array = actor.breathing.get_global_transform_with_canvas() * actor.idle_outline
+	var tangent := outline[49] - outline[47]
+	var outward := Vector2(tangent.y, -tangent.x).normalized()
+	var outside: bool = not actor.contains_touch(outline[48] + outward * 0.003)
+	var inside: bool = actor.contains_touch(outline[48] - outward * 0.003)
+	viewport.free()
+	return outside and inside
