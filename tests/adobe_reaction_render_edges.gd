@@ -90,7 +90,7 @@ func run() -> void:
 			if which == Native.Reaction.SQUISH: fraction = atan(PI)/(1.5*PI) if sample < 2 else .3/.85
 			if sample == 5: fraction = actor.audio_manager.marker_position("expression")
 			if sample == 6:
-				var accent_time: float = {Native.Reaction.BLINK:4.0/30,Native.Reaction.SIDE_EYE:.2,Native.Reaction.SQUISH:atan(PI)/(1.5*PI)*.85,Native.Reaction.IRRITATED:7.0/30,Native.Reaction.DONT:.2,Native.Reaction.SERIOUSLY:7.0/30,Native.Reaction.SLIDE:7.0/30,Native.Reaction.JUMP:7.0/30,Native.Reaction.SHAKE:7.0/30,Native.Reaction.FLATTEN:1.65/7,Native.Reaction.TURN:1.8/14,Native.Reaction.STOP:.2,Native.Reaction.SIGN:2.0/7,Native.Reaction.BOX:2.7/7,Native.Reaction.RUN:2.6,Native.Reaction.WAKE:.4125}[which]
+				var accent_time: float = {Native.Reaction.BLINK:4.0/30,Native.Reaction.SIDE_EYE:.2,Native.Reaction.SQUISH:atan(PI)/(1.5*PI)*.85,Native.Reaction.IRRITATED:7.0/30,Native.Reaction.DONT:.2,Native.Reaction.SERIOUSLY:7.0/30,Native.Reaction.SLIDE:7.0/30,Native.Reaction.JUMP:7.0/30,Native.Reaction.SHAKE:7.0/30,Native.Reaction.FLATTEN:1.65/7,Native.Reaction.TURN:1.8/14,Native.Reaction.STOP:.2,Native.Reaction.SIGN:2.0/7,Native.Reaction.BOX:2.7/7,Native.Reaction.RUN:2.6,Native.Reaction.WAKE:.4125,Native.Reaction.PUFFER_HUFF:.72}[which]
 				fraction = accent_time/float(Native.DURATIONS[which])
 			if sample >= 7 and sample < 15: fraction = [0,.05,.1,.4,.5,2.0/3,.9,.99][sample-7]
 			if new_pose and sample >= 12: fraction = [1.0/14,.5,13.0/14][sample-12]
@@ -106,11 +106,12 @@ func run() -> void:
 			if edge_jump:
 				actor.elapsed = 0
 				actor.advance(.85 if sample == 15 else (26.5/30 if sample == 16 else 1.35))
-			# Body-only contour audit; adobe_bubble_render.gd checks bubbles.
+			# Body-only contour audit. Puffer-huff spikes are intentionally outside the hit outline.
 			actor.bubble = ""
 			actor.bubble_drawer.hide()
 			actor.props.hide()
 			actor.box_amount = 0
+			actor.spike_extension = 0.0
 			actor.queue_redraw()
 			await RenderingServer.frame_post_draw
 			var image := viewport.get_texture().get_image()
