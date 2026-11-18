@@ -1,14 +1,46 @@
 # Game development and release rules
 
-## Mandatory topic branches and separate merge approval
+## Branches and owner authorization
 
-- **Never develop, edit, commit, or push routine changes directly on `main`.** `main` is the last owner-approved integrated gameplay baseline, using Godot's fallback font; it is not the working branch. Start a separate named topic branch based on updated `main` **before any change** (including game code, tests, audio/assets, documentation, plans, tooling and config).
-- Before changing anything, inspect current branch, working-tree status, and local/remote divergence. If uncommitted work or unpushed commits already exist on `main`, **preserve them in a new topic branch** and avoid resets, cleans, force pushes, automatic stashes or discarding unrelated work. If changes span unrelated tasks, keep them separate and report what could not be safely separated.
-- Approval of a proposal/pseudocode **authorizes implementation only**. After implementation and tests, present a focused PR from the topic branch to `main` with a change list, test evidence, and any limitations; **obtain separate explicit owner approval before merging**. Never self-merge/auto-merge just because implementation was approved. Do not bypass this via cherry-picks, direct commits, or releases.
-- After owner-authorized PR merge, update the local `main` non-destructively; start the next task from fresh approved `main` on a **new** topic branch. Continue using dedicated `release/<version>` branches for finalization, and never merge release aesthetics back to `main`.
-- The permanently isolated `docs/foundation-context-2026-11-02` and approved `aesthetic/typography-v1` branches follow their existing **never-merge** rules. Written instructions are not GitHub repository branch protection; use a GitHub ruleset to technically require approved PRs if desired.
+- Start every change on a dedicated topic branch based on updated `origin/main`. Keep `main` as the approved integration baseline. Use GitHub PRs for integration.
+- Inspect the current branch, Git status, worktrees, and local/remote divergence. Preserve unfinished and unpushed work in place. Use a separate worktree when needed. Keep unrelated changes separate. Do not reset, clean, force-push, auto-stash, overwrite, or discard existing work.
+- **Standard mode is the default.** Obtain the owner's design approval for meaningful changes, implement and test on a topic branch, open a focused PR, and wait for explicit approval to merge the reviewed PR. Design approval alone authorizes implementation.
+- **Authorized batch mode requires the owner to explicitly approve both a defined, ordered sequence of tasks and permission to merge the verified PR for each task.** Record that scope. Create a separate branch, regression tests, and PR for every task. Verify each merged result before starting the next branch from updated `origin/main`. Stop the batch on a real regression, conflict, unexpected change, or decision outside the approved scope. Report each PR, merge SHA and verification result.
+- Both modes use the protected PR workflow. Neither authorizes unrelated changes, releases, publication, deployments, or changes to another repository.
+- After an authorized merge, verify `origin/main` and update a clean local main only by fast-forward when needed. Remove a merged task branch only after checking it has no unique work or changes to preserve and is not in use.
+- Keep `docs/foundation-context-2026-11-02` permanently isolated. Read it for history. Never merge, cherry-pick or copy its files to `main`. Preserve `aesthetic/typography-v1`, historical release branches, frozen Alpha artifacts and release tags.
 
-- Read [BRANCH_WORKFLOW.md](BRANCH_WORKFLOW.md) before branching or preparing a release.
+Read [BRANCH_WORKFLOW.md](BRANCH_WORKFLOW.md) for the detailed procedure and [CURRENT_STATE.md](CURRENT_STATE.md) for the live development snapshot. GitHub branch protection and these instructions apply together.
+
+## Verification and handoff
+
+- Preserve established behavior and add regression coverage for meaningful changes. Verify both authored and procedural animation paths, hit detection and interruptions when affected.
+- Run the relevant [test runner modes](TESTING.md#development-test-runner). Isolate test settings from player preferences. Check exit codes and runtime errors. Investigate shutdown warnings in context, including a normal game close where relevant, before treating them as test-only. A leak during normal play, a failed test, or a reproducible runtime error blocks integration.
+- Update the relevant plan, current-state documentation and journal. Report the scope, PR and commit, tests with results and coverage limits, and any work or decisions still pending.
+
+## Code Quality & Refactoring Policy
+
+Prefer simple, maintainable code. Before adding logic, look for existing functions or behavior you can reuse or improve. Address root causes where practical. Introduce abstractions, classes, managers, or compatibility layers only when there is a demonstrated need.
+
+- Small refactors directly related to an approved task are permitted when they simplify the implementation, preserve behavior, and pass relevant tests.
+- Obtain explicit owner approval before a larger structural change, even if you discover it during an approved task. Obtain explicit approval before overwriting, removing, modifying, or refactoring unrelated code.
+- Before removing apparently unused functionality, verify its purpose, callers, and dependencies. Preserve unrelated changes, including uncommitted local work.
+
+### Refactoring opportunities
+
+Notice worthwhile opportunities during normal development. When an opportunity falls outside the approved task, finish the assigned work if it can proceed independently and report the opportunity with:
+
+- **What** — relevant files, functions, or systems.
+- **Why** — the specific problem or unnecessary complexity.
+- **Solution** — the proposed rewrite, consolidation, or removal.
+- **Impact** — affected behavior and dependencies.
+- **Risk** — possible regressions and tests needed.
+- **Priority** — now, later, or not worthwhile.
+
+Implementation of those opportunities requires owner authorization. If an out-of-scope decision blocks the assigned work, follow the project's approval and stop rules.
+
+## Release boundaries
+
 - Develop/test gameplay on a dedicated topic branch derived from approved `main`, with Godot's fallback font. Do not run typography or store-image generators during normal gameplay work.
 - `aesthetic/typography-v1` preserves the approved presentation; it is not a second gameplay branch. Never replace current gameplay with files from it.
 - Create `release/<version>` from current `main`; use `release/tools/apply_aesthetics.ps1` for a reviewed three-way integration. Resolve conflicts in favor of current gameplay while adding only presentation changes.
@@ -35,6 +67,6 @@
 
 - For every meaningful gameplay, animation, audio, or system change, first create/update a plan under `plans/` describing player-visible behavior, source-grounded current behavior, proposed pseudocode, edge cases, acceptance criteria, and relevant design choices. Add a Mermaid state/decision flowchart when helpful.
 - Present the proposed pseudocode and trade-offs to the owner and **obtain explicit approval before implementing**. Approval of the overall workflow is not approval of individual future changes.
-- After design approval, implement only on the dedicated topic branch using the approved design; require separate owner approval of its reviewed PR before merging to `main`. If the code requires a material deviation, document it and request approval rather than silently changing the intended behavior.
+- After design approval, implement only on the dedicated topic branch and follow the authorization mode above for merging. If the code requires a material deviation, document it and request approval rather than silently changing the intended behavior.
 - Validate against the approved pseudocode, update the plan with implementation/test/commit status, and synchronize the detailed internal journal's English explanations, pseudocode, flowcharts, and code references.
 - Trivial typo, formatting, and nonbehavioral documentation corrections may skip full pseudocode review; record meaningful changes as usual.

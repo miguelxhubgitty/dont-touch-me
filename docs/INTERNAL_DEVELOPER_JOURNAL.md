@@ -27,6 +27,15 @@ A living, readable explanation of every important part of the game, from player 
 - Append meaningful dated entries rather than rewriting history; update the current reference sections when behavior actually changes.
 - Public devlogs are **separate**. Their brief, dry, critical Butter Boy voice is not required here.
 
+## Development snapshot — November 18, 2026
+
+[CURRENT_STATE.md](../CURRENT_STATE.md) is the current baseline through PR #29. On development main, the Adobe AnimationPlayer renderer and procedural fallback coexist, sleep begins after 18 seconds, and the audio system includes the licensed starter pack, saved master mute and bus levels, and a 0.45-second click streak reset. The frozen Alpha used the historical rules recorded below.
+
+- **Current workflow:** [AGENTS.md](../AGENTS.md) and [BRANCH_WORKFLOW.md](../BRANCH_WORKFLOW.md) define standard review and explicitly authorized sequential batch work. [TESTING.md](../TESTING.md#development-test-runner) provides reusable validation commands.
+- **Runner validation:** the authored/procedural fixture now resets accumulated inactivity before each manually started reaction so earlier poses cannot put the next fixture to sleep. The continuous simulation still checks sleep and wake. The full run completed 28 Godot suites and the 19-check disposable Git workflow. Python ran 33 tests with one skipped because the local release package set was unavailable. The frozen Windows ZIP was available for the read-only MSIX staging test. Godot shutdown summaries remain visible in the runner output.
+
+- **Next:** stretch, humming/bobbing, recoil and puffer-huff are the next visual milestone. Design approval and individual verification are pending. The comprehensive architecture review follows it.
+
 ## Audited reference — October 31, 2026
 
 This journal is now populated against actual source and Git history. Companion chapters are [the complete implemented pseudocode](ALPHA_BEHAVIOR_SPEC.md) and [the source/evidence audit](ALPHA_SOURCE_AUDIT.md). Together they explain every controller function, all16 reactions, calculations, examples, historical distinctions and evidence limitations. “Internal” means owner-oriented, not private: this repository is public; no confidential information belongs here. Dates use America/New_York.
@@ -35,7 +44,7 @@ This journal is now populated against actual source and Git history. Companion c
 
 | Owner question / search phrase | Answer location |
 | --- | --- |
-| Which exact source was published? Is main the same? | [Current snapshot](#current-snapshot); source audit baseline comparison |
+| Which exact source was published? Is main the same? | [Development snapshot](#development-snapshot--november-18-2026) and [historical snapshot](#current-snapshot-historical-audit) |
 | Why does main look different from itch? | [Typography decisions](#typography-and-branch-decisions); pseudocode §11 |
 | What happens on the first tap? | [Player walkthrough](#player-walkthrough); pseudocode §2–3 |
 | Why does the box ignore me? Can I tap peek eyes? | Pseudocode §2, §7 BOX; [Mechanic reference](#mechanic-reference) |
@@ -58,7 +67,7 @@ This journal is now populated against actual source and Git history. Companion c
 | Why were these particular constants chosen? | [Decisions](#recorded-decisions-and-unknown-motivations) |
 | How do future approved changes stay documented? | [Change protocol](#ongoing-change-protocol), `AGENTS.md` |
 
-### Current snapshot
+### Current snapshot (historical audit)
 
 | Category | Immutable identity | Meaning |
 | --- | --- | --- |

@@ -1,4 +1,32 @@
-# Validation — 2026-10-29
+# Testing Don't Touch Me
+
+## Development test runner
+
+From the repository root, use PowerShell 7 and Godot 4.7.2 stable. On Windows, point `-Godot` to the console executable so diagnostics reach the terminal. Omit it if `godot` on PATH is the correct executable.
+
+```powershell
+pwsh -File tests/run.ps1 fast -Godot <path-to-godot>
+pwsh -File tests/run.ps1 audio -Godot <path-to-godot>
+pwsh -File tests/run.ps1 animation -Godot <path-to-godot>
+pwsh -File tests/run.ps1 full -Godot <path-to-godot> -Python <path-to-python>
+```
+
+| Mode | Coverage |
+| --- | --- |
+| `fast` | Core gameplay, input, tiers, sleep/wake and basic viewport behavior. |
+| `audio` | Cue dispatch, mute, click streak, fades, voice timing, balancing, variation, preview and saved volumes. |
+| `animation` | Authored and procedural playback, pose geometry, interruption, hit outlines, viewport movement, props, speech bubbles and rendered edges. |
+| `full` | All three groups plus Godot release and fingerprint checks, existing Python unit tests, and the local typography/Git workflow fixture. |
+
+The runner imports once and stops on nonzero exits, a Godot error, or a timeout. Each Godot invocation has a 270-second limit by default. Use `-TimeoutSeconds` for slower machines. Godot can print shutdown diagnostics despite a zero exit. The runner calls out the specific paired ObjectDB/resource summary when it is the only error on a passing test. Investigate new or persistent shutdown evidence and compare with a normal game close. Treat a normal-game leak or any other runtime error as a blocker.
+
+Godot's Dummy driver is the default. Add `-AudioDriver WASAPI` on Windows for audio suites to use the real Windows driver. Tests still need physical listening checks. Pixel comparisons require a working graphical session with the Compatibility renderer. Always check reported skips and limitations. Full mode also needs Python and Git with the referenced aesthetic history available. To make that ref available, run `git fetch --no-tags origin aesthetic/typography-v1`. Set `DTM_ALPHA_WINDOWS_ZIP` to a known local frozen Alpha ZIP for the optional real-input MSIX regression. The Python suite reports any skipped cases, including unavailable local historical packages or Pillow.
+
+The runner creates a fresh temporary Godot profile for user data and logs. Godot import can regenerate local `.import` or `.uid` metadata, so use a dedicated topic worktree and keep unrelated generated changes out of commits. The typography workflow uses a disposable Git clone under ignored `test-output/`. The runner leaves these files available for diagnosis.
+
+Run optional contact sheets directly with `godot --path . --script tests/render.gd`. Browser smoke checks require an existing, separately approved Web export and Playwright. Package validation, exports, signing, certification, and publication are separate release work. Physical Android/iOS tests still need to cover touch, simultaneous inputs, safe areas, audio output and latency, focus/background/resume, and device performance. Check browser autoplay and mobile audio on the actual Web target.
+
+## Historical validation — October 29, 2026
 
 ## Final free-preparation follow-up
 

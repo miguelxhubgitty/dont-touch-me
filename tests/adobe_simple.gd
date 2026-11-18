@@ -76,6 +76,9 @@ func run() -> void:
 	for reaction in Original.DURATIONS:
 		for actor in [original,simple]:
 			actor.reaction = 0
+			# Keep each manually started pose independent of earlier idle time.
+			actor.idle_time = 0.0
+			actor.asleep = false
 			actor._update_pose()
 			actor.begin_reaction(reaction,actor.body_position+Vector2(-20,-70))
 		check(not simple.uses_authored_idle() and simple.visual.visible == Simple.AUTHORED_REACTIONS.has(reaction), "all approved reactions use native rendering")

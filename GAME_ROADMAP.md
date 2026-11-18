@@ -1,28 +1,23 @@
 # Don't Touch Me — Gameplay Roadmap
 
-Planning document; proposals are not commitments to the current Public Alpha. Gameplay changes belong on `main`; release typography and final artwork are applied later through `BRANCH_WORKFLOW.md`.
+Use [CURRENT_STATE.md](CURRENT_STATE.md) for implemented behavior, the review queue and public release status. Follow [BRANCH_WORKFLOW.md](BRANCH_WORKFLOW.md) for design approval, topic branches and integration.
 
-## Audio — future update (currently absent)
+## Next milestone
 
-**Goal:** Give the blob a recognizable sonic personality without overwhelming a simple, quiet interaction game.
+After owner review and merge of the development tooling, plan and verify each visual change independently.
 
-- **Input / interaction SFX:** taps and clicks, successful blob touches, distinct UI/selection sounds if controls are added later.
-- **Blob vocalizations:** nonverbal squeaks, grumbles, surprised noises, annoyed protests, sleepy sounds, and happy/trusting responses if that system is implemented.
-- **Action / reaction SFX:** squishes, hops, hiding/box movement, sign appearing, dramatic exits, sleep and wake transitions; map individual effects to animations and avoid noisy repetition.
-- **Ambience:** subtle room/background environmental texture that suits the scene; allow quiet moments.
-- **Background music:** unobtrusive looping theme(s), with options to fade or mute during particular reactions.
-- **Mixing / accessibility:** separate master, music, ambience, voice, and SFX volume controls; mute option; consistent levels; no sudden spikes; respect app focus/pause.
-- **Implementation:** use Godot audio buses, event-driven sounds, and reusable audio definitions; prefer small, optimized, properly licensed/original clips; verify looping, browser autoplay restrictions, and Android/Desktop behavior.
-- **Release discipline:** design/test audio on `main`, keep approved aesthetics separate, validate audio and licensing before inclusion in a future release. Do not add sound retroactively to v0.1.0-alpha without creating a new release.
+1. **Stretch idle:** a slow upward stretch, squint, brief hold and return in about 1.8 seconds.
+2. **Humming and bobbing idle:** gentle rhythmic bobbing and subtle sway, with relaxed eyes and timing that can later support a melody.
+3. **Recoil:** a roughly 0.9-second startled response in the lowest annoyance tier, with compression toward the touch, a jolt away, widened eyes and return.
+4. **Puffer-huff:** defensive inflation with attached visual spikes. The second annoyance tier is the starting proposal. Confirm the spike touch policy before implementation.
 
-## Other possible future expansions
+Keep both authored and procedural visuals, existing audio, reaction timing and interruption rules, and the 18-second sleep threshold. The new idles should play occasionally during inactivity and use existing timing. Approve detailed pose/trigger plans before implementation. Review the architecture after this animation milestone.
 
-- More idle animations and reactions.
-- Counters/statistics for interactions.
-- Outfits, furniture, and environmental customization.
-- A trust/relationship mechanic: extremely slow, respectful approaches could eventually earn the blob's trust and allow petting.
-- Optional cosmetic monetization later; retain free core gameplay and determine store-compliant payments before implementation.
+## Deferred ideas
 
-## Next audio design decisions
+- Stretch vocalization and an original humming melody. Recognizable-song interpretations are deferred.
+- Further sound polish, ambience and music. The audio buses and volume controls already exist, but future sound content needs separate review. See [PR #20](https://github.com/miguelxhubgitty/dont-touch-me/pull/20) for its independent candidate work.
+- Changes to annoyance, emotional stages, trust or petting, and auras. These are separate designs.
+- Interaction statistics, clothing, furniture and customization. Optional cosmetic monetization would require separate owner authorization and store review.
 
-Choose whether the atmosphere is mostly quiet, ambient, or musical; define the blob's vocal style; build an event-to-sound map; select or create original/licensed assets; then implement and test incrementally. No audio assets or audio implementation have been created by this planning document.
+Early plans are preserved in Git and in the [internal journal](docs/INTERNAL_DEVELOPER_JOURNAL.md). This roadmap applies to development. The frozen v0.1.0-alpha stays audio-free.
