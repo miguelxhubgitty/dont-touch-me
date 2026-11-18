@@ -19,11 +19,11 @@ func run() -> void:
 		game._handle_player_touch(miss)
 		if not is_equal_approx(audio.players.contact.volume_db, base + attenuation):
 			failures += 1
-	audio.tick(1.79)
+	audio.tick(0.44)
 	game._handle_player_touch(miss)
 	if not is_equal_approx(audio.players.contact.volume_db, base - 30):
 		failures += 1
-	audio.tick(1.8)
+	audio.tick(0.45)
 	game._handle_player_touch(miss)
 	if not is_equal_approx(audio.players.contact.volume_db, base):
 		failures += 1
