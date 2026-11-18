@@ -208,7 +208,7 @@ func _update_pose() -> void:
 		if player.current_animation != "breathe": player.play("breathe")
 		player.seek(fposmod(clock,3),true)
 		breathing.scale = breathing.scale.lerp(STRETCH_SCALE, _stretch_strength())
-		breathing.rotation = 0
+		breathing.rotation = body_angle
 		eyes.position = Vector2(gaze.x,-113+gaze.y)
 		eyes.scale.y = maxf(2.0/21,eye_open)
 	props.visible = uses_authored_visual() and (sign_amount > 0 or box_amount > 0)
