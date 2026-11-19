@@ -32,11 +32,12 @@ func run() -> void:
 		game._resize()
 		check(game.last_size == Vector2(size), "test uses distinct logical viewport size")
 		game.annoyance = 0
+		game.successful_poke_streak = 0
 		var touch := InputEventScreenTouch.new()
 		touch.position = game.body_position + Vector2(0, -70)
 		touch.pressed = true
 		viewport.push_input(touch, true)
-		check(game.annoyance >= 7 and game.annoyance <= 10, "native touch dispatch hits silhouette")
+		check(game.annoyance >= 1.8 and game.annoyance <= 3.6, "native touch dispatch hits silhouette")
 		var before: float = game.annoyance
 		touch.pressed = false
 		viewport.push_input(touch, true)
@@ -44,7 +45,8 @@ func run() -> void:
 		touch.position = Vector2(1, 1)
 		touch.pressed = true
 		viewport.push_input(touch, true)
-		check(game.annoyance == before, "background touch ignores annoyance")
+		check(game.annoyance < before, "background touch reduces annoyance")
+		before = game.annoyance
 		var mouse := InputEventMouseButton.new()
 		mouse.position = game.body_position + Vector2(0, -70)
 		mouse.button_index = MOUSE_BUTTON_LEFT

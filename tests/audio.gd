@@ -158,13 +158,15 @@ func run() -> void:
 	check(not audio.play_event("dont.voice"), "paused cue suppressed")
 	paused = false
 	check(audio.slots.is_empty(), "tree resume silent")
-	# User-side miss/startup event layer never increases annoyance or duplicates contacts.
+	# A miss calms the blob and plays only user feedback.
 	reset(game)
 	audio.tick(1)
+	game.annoyance = 10.0
 	var annoyance_before_miss: float = game.annoyance
 	game._handle_player_touch(Vector2(2, 2))
 	check(audio.trace.count("user.tap_miss") == 1, "background miss plays one user SFX")
-	check(game.annoyance == annoyance_before_miss and game.reaction == 0, "miss does not touch blob")
+	var reduction: float = annoyance_before_miss - game.annoyance
+	check(reduction >= 0.9 and reduction <= 1.8 and game.reaction == 0, "miss reduces annoyance without starting a reaction")
 	audio.tick(1)
 	check(audio.play_event("user.game_start"), "startup sample import and playback work")
 	check(audio.slots.size() <= 3, "bounded preview role count")

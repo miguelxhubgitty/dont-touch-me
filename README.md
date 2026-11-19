@@ -6,7 +6,7 @@ A tiny offline comedy about a blob and its personal space, built with Godot 4.7.
 
 ## Open and play
 
-Import `project.godot` in Godot 4.7.2 stable and press **F5**. Click or tap the blob to see a reaction. Background taps make a sound and leave annoyance unchanged. Repeated pokes escalate the blob's responses. Leave it alone to relax and sleep after 18 seconds, then tap it to wake it.
+Import `project.godot` in Godot 4.7.2 stable and press **F5**. Click or tap the blob to see a reaction. Successful pokes build annoyance with diminishing gains during each short streak. Background taps and blocked cardboard touches lower annoyance. Leave the blob alone to relax and sleep after 18 seconds, then tap it to wake it.
 
 Use **Sound On/Off** for master mute and **Volume** for the five saved category levels. Sound starts off for a fresh profile. The main scene uses authored AnimationPlayer visuals with a procedural fallback and a 720 × 1280 portrait reference.
 

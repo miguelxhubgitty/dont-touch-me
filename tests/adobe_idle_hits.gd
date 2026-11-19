@@ -22,6 +22,8 @@ func reset(actor,t: float = .9) -> void:
 	actor.clock = t
 	actor.idle_time = 0
 	actor.annoyance = 0
+	actor.successful_poke_streak = 0
+	actor.poke_streak_started_at = 0.0
 	actor.last_reaction = 0
 	actor.elapsed = 0
 	actor.origin = actor.anchor
@@ -71,6 +73,7 @@ func pixel_distance(point: Vector2,polygon: PackedVector2Array) -> float:
 func same_state(a,b) -> void:
 	for property in ["reaction","annoyance","elapsed","idle_time","asleep","clock","body_position","body_scale","body_angle","gaze","eye_open","last_reaction","direction"]:
 		check(a.get(property) == b.get(property),"same accepted-input simulation: "+property)
+	check(a.successful_poke_streak == b.successful_poke_streak and a.poke_streak_started_at == b.poke_streak_started_at, "same gameplay poke streak")
 	check(a.rng.state == b.rng.state,"unchanged RNG consumption")
 	for property in ["active_reaction","progress","fired"]:
 		check(a.audio_manager.get(property) == b.audio_manager.get(property),"unchanged audio hook: "+property)
@@ -198,12 +201,13 @@ func run() -> void:
 		var inside := changed_edge(actor,baseline,true)
 		check(inside.is_finite(),"visible-only edge exists for "+kind+" routing")
 		for down in [true,false]:
+			var before: float = actor.annoyance
 			pointer(viewport,kind,inside,down)
 			if down:
 				check(actor.annoyance > 0 and actor.reaction != 0,kind+" routed to poke")
 				check(not actor.uses_authored_idle() and actor.reaction != 0,kind+" poke transitions out of authored idle")
 			else:
-				check(actor.annoyance <= 10,kind+" release does not poke twice")
+				check(actor.annoyance == before,kind+" release does not poke twice")
 		reset(actor)
 		reset(baseline)
 		var miss := changed_edge(actor,baseline,false)

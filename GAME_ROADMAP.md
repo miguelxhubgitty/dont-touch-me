@@ -11,11 +11,15 @@ Use [CURRENT_STATE.md](CURRENT_STATE.md) for implemented behavior, the review qu
 
 The development game supports each animation in both renderers. The idles use the shared inactivity scheduler and preserve the 18-second sleep threshold. The architecture review is the next milestone and requires its own scope.
 
+## Annoyance
+
+[Stage 1](plans/annoyance-stage-1.md) covers poke gains, rejected-touch reductions, and the gameplay streak. Changes to sleep-stage timing and inactivity decay belong to Stage 2.
+
 ## Deferred ideas
 
 - Stretch vocalization and an original humming melody. Recognizable-song interpretations are deferred.
 - Further sound polish, ambience and music. The audio buses and volume controls already exist, but future sound content needs separate review. See [PR #20](https://github.com/miguelxhubgitty/dont-touch-me/pull/20) for its independent candidate work.
-- Changes to annoyance, emotional stages, trust or petting, and auras. These are separate designs.
+- Emotional stages, trust or petting, and auras remain separate designs.
 - Interaction statistics, clothing, furniture and customization. Optional cosmetic monetization would require separate owner authorization and store review.
 
 Early plans are preserved in Git and in the [internal journal](docs/INTERNAL_DEVELOPER_JOURNAL.md). This roadmap applies to development. The frozen v0.1.0-alpha stays audio-free.
