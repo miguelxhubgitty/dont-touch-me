@@ -1,6 +1,6 @@
 # Stage 1 — Annoyance rebalancing
 
-Status: Owner-approved behavior. Implementation pseudocode awaits review.
+Status: Owner-approved pseudocode and implementation on `feature/annoyance-stage-1`.
 Base: origin/main at `33e4999800c60167ab420516b43af357d62d3f5a`.
 
 ## Current behavior and scope
@@ -18,7 +18,7 @@ touch_at(point):
 
     keep existing audio click registration
     if successful_poke_streak == 0
-        or clock - streak_started_at >= 1.8 seconds
+        or clock >= streak_started_at + 1.8 seconds
         or idle_time >= 1.8 seconds:
         successful_poke_streak = 0
         streak_started_at = clock

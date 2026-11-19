@@ -24,6 +24,8 @@ const POOLS := [
 	[Reaction.STOP, Reaction.SIGN, Reaction.BOX, Reaction.RUN],
 ]
 const SLEEP_AFTER := 18.0
+const POKE_STREAK_SECONDS := 1.8
+const POKE_STREAK_MULTIPLIERS := [1.0, 1.0, 1.0, 1.0, 0.8, 0.6, 0.4, 0.2, 0.0]
 const STRETCH_DURATION := 1.8
 const STRETCH_SCALE := Vector2(0.72, 1.45)
 const HUMMING_BEAT := 0.9
@@ -47,6 +49,8 @@ var next_idle_at := 0.0
 var active_idle := SpecialIdle.NONE
 var special_idle_started := 0.0
 var annoyance := 0.0
+var successful_poke_streak := 0
+var poke_streak_started_at := 0.0
 var idle_time := 0.0
 var asleep := false
 var reaction: int = Reaction.NONE
@@ -131,9 +135,14 @@ func _unhandled_input(event: InputEvent) -> void:
 		_handle_player_touch(event.position)
 
 func _handle_player_touch(point: Vector2) -> void:
-	# Accepted pokes already play their reaction-specific contact cue.
-	# Only background misses make a separate user sound.
-	if not touch_at(point) and _box_hit(point) == BoxHit.EXPOSED and audio_manager != null:
+	if touch_at(point):
+		return
+	var box_hit := _box_hit(point)
+	if box_hit == BoxHit.BLOCKED:
+		annoyance = clampf(annoyance - rng.randf_range(1.8, 3.6), 0.0, 100.0)
+		return
+	annoyance = clampf(annoyance - rng.randf_range(0.9, 1.8), 0.0, 100.0)
+	if box_hit == BoxHit.EXPOSED and audio_manager != null:
 		audio_manager.register_click()
 		audio_manager.play_event("user.tap_miss", audio_manager.click_attenuation_db())
 
@@ -275,10 +284,15 @@ func touch_at(point: Vector2) -> bool:
 		return false
 	if audio_manager != null:
 		audio_manager.register_click()
+	if successful_poke_streak == 0 or clock >= poke_streak_started_at + POKE_STREAK_SECONDS or idle_time >= POKE_STREAK_SECONDS:
+		successful_poke_streak = 0
+		poke_streak_started_at = clock
+	successful_poke_streak = mini(successful_poke_streak + 1, POKE_STREAK_MULTIPLIERS.size())
+	var multiplier: float = POKE_STREAK_MULTIPLIERS[successful_poke_streak - 1]
 	idle_time = 0.0
 	_reset_special_idle()
 	intro_alpha = 0.0
-	annoyance = minf(100.0, annoyance + rng.randf_range(7.0, 10.0))
+	annoyance = clampf(annoyance + rng.randf_range(1.8, 3.6) * multiplier, 0.0, 100.0)
 	touch_flash = 1.0
 	if asleep:
 		asleep = false
