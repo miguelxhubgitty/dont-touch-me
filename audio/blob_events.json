@@ -344,6 +344,38 @@
       "volume_db": -12,
       "max_seconds": 0.45
     },
+    "idle.stretch": {
+      "stream": "res://audio/animation_cues/01-vowel-lift.wav",
+      "role": "voice",
+      "marker": "start",
+      "enabled": true,
+      "volume_db": 0,
+      "max_seconds": 1.8
+    },
+    "idle.humming": {
+      "stream": "res://audio/animation_cues/01-pocket-melody.wav",
+      "role": "voice",
+      "marker": "start",
+      "enabled": true,
+      "volume_db": 0,
+      "max_seconds": 2.7
+    },
+    "recoil.voice": {
+      "stream": "res://audio/animation_cues/01-curled-eep.wav",
+      "role": "voice",
+      "marker": "start",
+      "enabled": true,
+      "volume_db": 0,
+      "max_seconds": 0.9
+    },
+    "puffer_huff.action": {
+      "stream": "res://audio/animation_cues/01-air-valve.wav",
+      "role": "action",
+      "marker": "start",
+      "enabled": true,
+      "volume_db": -3,
+      "max_seconds": 1.35
+    },
     "sleep.enter": {
       "stream": "res://audio/voice/kitten_lolamadeus_1.ogg",
       "role": "voice",

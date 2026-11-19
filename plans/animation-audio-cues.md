@@ -46,3 +46,7 @@ After approval, add only the four selected WAVs and their provenance to the deve
 - Check once-per-start dispatch for both reactions, the Puffer waveform's 0.27 s accent, and real-time audiovisual sync in a WASAPI playtest with both renderers. Check Humming against all three bobs.
 - Verify event-scoped fades, no orphaned playback or duplicate cues during rapid restarts, and silent behavior on mute, pause, focus loss and resize. Confirm interrupted cues never resume on regain/unmute. Test the existing buses, voice cooldown, click-streak gain and pitch at 1.0×.
 - Run focused, audio and animation checks, plus gameplay and workflow regressions. Use isolated player settings. Report manual mix and timing observations separately from automated results.
+
+## Implementation
+
+The four files use explicit lossless PCM import settings. The first focused run exposed Godot's compressed default, which could obscure sample-level timing. Both renderers pass the focused 116-check suite with the lossless imports. See the PR for combined regression results and the WASAPI check.
