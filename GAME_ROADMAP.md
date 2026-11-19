@@ -7,7 +7,7 @@ Use [CURRENT_STATE.md](CURRENT_STATE.md) for implemented behavior, the review qu
 1. **[Stretch](plans/stretch-idle.md)** — An occasional 1.8-second upward stretch, squint, hold and return.
 2. **[Humming](plans/humming-idle.md)** — Three 0.9-second bobs with subtle sway and relaxed eyes.
 3. **[Recoil](plans/recoil-reaction.md)** — A 0.9-second startled reaction in the lowest annoyance tier.
-4. **[Puffer-huff](plans/puffer-huff-reaction.md)** — A 1.8-second defensive inflation in the second tier, with a touchable body and attached visual-only spikes.
+4. **[Puffer-huff](plans/puffer-huff-reaction.md)** — A 1.35-second defensive inflation in the second tier, with a touchable body and attached visual-only spikes.
 
 The development game supports each animation in both renderers. The idles use the shared inactivity scheduler and preserve the 18-second sleep threshold. The architecture review is the next milestone and requires its own scope.
 

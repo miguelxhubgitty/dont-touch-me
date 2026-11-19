@@ -353,3 +353,5 @@ The [Humming refinement](../plans/humming-refinement.md) morphs the white ovals 
 ## Puffer-huff reaction — implementation review
 
 [Puffer-huff](../plans/puffer-huff-reaction.md) adds a short defensive inflation to the second tier. Its authored and fallback outlines anchor the same visual-only spike treatment. The existing transformed body determines touch acceptance.
+
+The [Puffer-huff refinement](../plans/puffer-refinement.md) adds a 0.18-second contraction and 0.09-second inflation. The inflated body holds until 0.90 seconds and recovers by 1.35 seconds. The spikes follow that motion and stay outside the hit contour.

@@ -93,6 +93,8 @@ func run() -> void:
 				var accent_time: float = {Native.Reaction.BLINK:4.0/30,Native.Reaction.SIDE_EYE:.2,Native.Reaction.SQUISH:atan(PI)/(1.5*PI)*.85,Native.Reaction.IRRITATED:7.0/30,Native.Reaction.DONT:.2,Native.Reaction.SERIOUSLY:7.0/30,Native.Reaction.SLIDE:7.0/30,Native.Reaction.JUMP:7.0/30,Native.Reaction.SHAKE:7.0/30,Native.Reaction.FLATTEN:1.65/7,Native.Reaction.TURN:1.8/14,Native.Reaction.STOP:.2,Native.Reaction.SIGN:2.0/7,Native.Reaction.BOX:2.7/7,Native.Reaction.RUN:2.6,Native.Reaction.WAKE:.4125,Native.Reaction.RECOIL:.27,Native.Reaction.PUFFER_HUFF:.72}[which]
 				fraction = accent_time/float(Native.DURATIONS[which])
 			if sample >= 7 and sample < 15: fraction = [0,.05,.1,.4,.5,2.0/3,.9,.99][sample-7]
+			if which == Native.Reaction.PUFFER_HUFF:
+				fraction = [0.09, 0.18, 0.225, 0.27, 0.45, 0.90, 1.125][sample] / 1.35
 			if new_pose and sample >= 12: fraction = [1.0/14,.5,13.0/14][sample-12]
 			if which == Native.Reaction.SHAKE and sample >= 15: fraction = shake_peak(10+sample-15)
 			if which == Native.Reaction.JUMP and sample >= 7 and sample < 15:
