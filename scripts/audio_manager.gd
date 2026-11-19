@@ -219,6 +219,20 @@ func advance_reaction(next_progress: float, moved_horizontally: bool = true) -> 
 	if current >= 1.0:
 		active_reaction = "" # Let the landing snippet finish; no future reaction cues.
 
+func play_idle_voice(id: String) -> bool:
+	if slots.has("voice"):
+		return false
+	return play_event(id, click_attenuation_db())
+
+func fade_event(id: String) -> void:
+	var role := str(events.get(id, {}).get("role", ""))
+	if not slots.has(role) or slots[role].id != id:
+		return
+	if players[role].playing:
+		_fade_role(role)
+	else:
+		stop_role(role)
+
 func play_event(id: String, attenuation_db: float = 0.0) -> bool:
 	if not events.has(id) or muted or not focused or not is_inside_tree() or get_tree().paused:
 		return false

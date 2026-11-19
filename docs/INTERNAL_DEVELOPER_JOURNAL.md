@@ -355,3 +355,7 @@ The [Humming refinement](../plans/humming-refinement.md) morphs the white ovals 
 [Puffer-huff](../plans/puffer-huff-reaction.md) adds a short defensive inflation to the second tier. Its authored and fallback outlines anchor the same visual-only spike treatment. The existing transformed body determines touch acceptance.
 
 The [Puffer-huff refinement](../plans/puffer-refinement.md) adds a 0.18-second contraction and 0.09-second inflation. The inflated body holds until 0.90 seconds and recovers by 1.35 seconds. The spikes follow that motion and stay outside the hit contour.
+
+## Animation audio cues
+
+The [approved audio plan](../plans/animation-audio-cues.md) adds four original synthesized WAVs. Stretch and Humming ask for the existing voice slot at actual idle activation. A busy slot leaves the new idle silent. Other idle exits fade only audio owned by that idle. Recoil and Puffer-huff use the existing reaction start dispatcher and click attenuation. The Puffer-huff recording starts with the contraction and places the air burst at 0.270 seconds. Its import preserves the approved PCM timing. The dedicated suite runs through both renderers and covers suppression, ownership, cooldown, routing and interruptions.

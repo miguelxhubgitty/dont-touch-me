@@ -31,6 +31,7 @@ const HUMMING_DURATION := 3.0 * HUMMING_BEAT
 const HUMMING_SQUINT_EXIT := 0.09
 
 enum SpecialIdle { NONE, STRETCH, HUMMING }
+const IDLE_VOICE_CUES := {SpecialIdle.STRETCH: "idle.stretch", SpecialIdle.HUMMING: "idle.humming"}
 const FREE_JUMP_FLIGHT := .85
 const FREE_JUMP_TRAVEL := 230.0
 const JUMP_RETURN_SPEED := FREE_JUMP_TRAVEL / FREE_JUMP_FLIGHT
@@ -206,6 +207,8 @@ func _special_idle_duration(which: SpecialIdle) -> float:
 
 func _update_special_idle() -> void:
 	if asleep or reaction != Reaction.NONE or jump_returning:
+		if audio_manager != null and active_idle != SpecialIdle.NONE:
+			audio_manager.fade_event(IDLE_VOICE_CUES[active_idle])
 		active_idle = SpecialIdle.NONE
 		return
 	if active_idle != SpecialIdle.NONE and idle_time - special_idle_started >= _special_idle_duration(active_idle):
@@ -214,6 +217,8 @@ func _update_special_idle() -> void:
 		if idle_time + _special_idle_duration(next_idle) <= SLEEP_AFTER:
 			active_idle = next_idle
 			special_idle_started = idle_time
+			if audio_manager != null:
+				audio_manager.play_idle_voice(IDLE_VOICE_CUES[active_idle])
 		next_idle = SpecialIdle.NONE
 
 func _stretch_strength() -> float:
