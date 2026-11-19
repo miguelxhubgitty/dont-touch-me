@@ -25,8 +25,7 @@ const POOLS := [
 ]
 const SLEEP_AFTER := 18.0
 const STRETCH_DURATION := 1.8
-const STRETCH_SCALE := Vector2(0.81, 1.27)
-const STRETCH_EYES := 0.27
+const STRETCH_SCALE := Vector2(0.72, 1.45)
 const HUMMING_BEAT := 0.9
 const HUMMING_DURATION := 3.0 * HUMMING_BEAT
 const HUMMING_SQUINT_EXIT := 0.09
@@ -333,7 +332,7 @@ func _update_pose() -> void:
 	if reaction == Reaction.NONE:
 		var stretch := _stretch_strength()
 		body_scale = body_scale.lerp(STRETCH_SCALE, stretch)
-		eye_open = minf(eye_open, lerpf(1.0, STRETCH_EYES, stretch))
+		eye_open = minf(eye_open, 1.0 - stretch)
 		if active_idle == SpecialIdle.HUMMING:
 			var phase := idle_time - special_idle_started
 			var beat := phase / HUMMING_BEAT
@@ -509,14 +508,15 @@ func _draw() -> void:
 	if spike_extension > 0.0:
 		_draw_puffer_spikes(outline)
 	draw_colored_polygon(outline, INK)
-	if turn_amount < 0.97:
+	if turn_amount < 0.97 and eye_open > 0.0:
 		var face_alpha := 1.0 - turn_amount
 		for side in [-1.0, 1.0]:
 			var eye := Vector2(side * 37.0 + gaze.x, -113.0 + gaze.y)
 			var opening := eye_open
 			if reaction == Reaction.SERIOUSLY and side < 0:
 				opening *= 0.5
-			_ellipse(eye, Vector2(13.5 * (1.0 - turn_amount * 0.8), maxf(2.0, 21.0 * opening)), Color(WHITE, face_alpha), self, humming_squint)
+			var minimum_height := 0.0 if active_idle == SpecialIdle.STRETCH else 2.0
+			_ellipse(eye, Vector2(13.5 * (1.0 - turn_amount * 0.8), maxf(minimum_height, 21.0 * opening)), Color(WHITE, face_alpha), self, humming_squint)
 	if turn_amount > 0.1:
 		draw_arc(Vector2(0, -105), 21, 0.35, 1.5, 20, Color(0.30, 0.30, 0.31, turn_amount * 0.45), 2.0, true)
 	if touch_flash > 0.0:

@@ -20,9 +20,14 @@ func run() -> void:
 		actor.advance(0.81)
 		var scale_value: Vector2 = actor.breathing.scale if authored else actor.body_scale
 		if not scale_value.is_equal_approx(actor.STRETCH_SCALE): failures += 1
-		if actor.eye_open > actor.STRETCH_EYES: failures += 1
+		if not scale_value.is_equal_approx(Vector2(0.72, 1.45)): failures += 1
+		if actor.eye_open != 0.0 or (authored and actor.eyes.visible): failures += 1
 		var anchor: Vector2 = actor.anchor
 		if actor.body_position != anchor: failures += 1
+		var stretched_top := anchor + Vector2(0, -262)
+		if not actor.contains_touch(stretched_top) or actor.contains_touch(anchor + Vector2(0, 4)): failures += 1
+		actor.advance(0.45)
+		if actor.eye_open <= 0.0 or actor.eye_open >= 1.0 or (authored and not actor.eyes.visible): failures += 1
 		actor._handle_player_touch(Vector2(2, 2))
 		if actor.active_idle != actor.SpecialIdle.STRETCH or actor.special_idle_started != start or actor.reaction != actor.Reaction.NONE: failures += 1
 		if not actor.touch_at(anchor + Vector2(0, -225)) or actor.active_idle != actor.SpecialIdle.NONE:
