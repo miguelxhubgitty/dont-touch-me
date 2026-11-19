@@ -338,9 +338,13 @@ Godot 4.7.2 passed all 22 applicable suites after two test fixtures were correct
 
 The [approved Stretch plan](../plans/stretch-idle.md) adds an occasional silent stretch at existing idle-clock time. Native breathing and the procedural pose share the stretch envelope and preserve their respective moving hit outlines. The reserved Humming selection still shows normal breathing in this branch. The focused fixture exercises both rendering paths, interruption and sleep.
 
+The [Stretch refinement](../plans/stretch-refinement.md) exaggerates the grounded silhouette and closes both eyes completely at the hold. Both renderers still use their transformed outlines for pokes.
+
 ## Humming idle — implementation review
 
 [Humming](../plans/humming-idle.md) now uses the reserved idle choice. Both renderers sample three silent bobs from the shared inactivity clock and keep the existing sleep and poke rules.
+
+The [Humming refinement](../plans/humming-refinement.md) morphs the white ovals into shallow arches over the three existing bobs. A short blend restores the ordinary eye shape after an interruption.
 
 ## Recoil reaction — implementation review
 

@@ -21,8 +21,9 @@ func run() -> void:
 		for beat in range(3):
 			actor.advance(0.45)
 			if actor.body_position.y >= anchor.y or actor.body_position.x != anchor.x: failures += 1
-			if actor.eye_open >= 1.0 or actor.body_angle * (-1 if beat == 1 else 1) <= 0.0: failures += 1
+			if actor.humming_squint <= 0.0 or actor.body_angle * (-1 if beat == 1 else 1) <= 0.0: failures += 1
 			if authored and not is_equal_approx(actor.breathing.rotation, actor.body_angle): failures += 1
+			if authored and ((actor.left_eye.polygon == actor.oval_eye) or (actor.right_eye.polygon != actor.left_eye.polygon)): failures += 1
 			if not actor.contains_touch(actor.body_position + Vector2(0, -70)): failures += 1
 			actor.advance(0.45)
 			if not actor.body_position.is_equal_approx(anchor): failures += 1
@@ -40,6 +41,14 @@ func run() -> void:
 		if actor.active_idle != actor.SpecialIdle.HUMMING: failures += 1
 		if not actor.touch_at(actor.body_position + Vector2(0, -70)) or actor.active_idle != actor.SpecialIdle.NONE:
 			failures += 1
+		var arch: Vector2 = actor._soft_squint_point(Vector2.ZERO, 1.0)
+		var edge: Vector2 = actor._soft_squint_point(Vector2.RIGHT, 1.0)
+		if not arch.is_equal_approx(Vector2(0.0, -0.18)) or edge != Vector2.RIGHT: failures += 1
+		if actor.humming_squint <= 0.0: failures += 1
+		actor.advance(0.045)
+		if actor.humming_squint <= 0.0 or actor.humming_squint >= 1.0: failures += 1
+		actor.advance(0.046)
+		if actor.humming_squint != 0.0 or (authored and actor.left_eye.polygon != actor.oval_eye): failures += 1
 		actor.free()
 	print("Humming idle failures: ", failures)
 	quit(0 if failures == 0 else 1)
