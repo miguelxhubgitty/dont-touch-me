@@ -359,3 +359,13 @@ The [Puffer-huff refinement](../plans/puffer-refinement.md) adds a 0.18-second c
 ## Animation audio cues
 
 The [approved audio plan](../plans/animation-audio-cues.md) adds four original synthesized WAVs. Stretch and Humming ask for the existing voice slot at actual idle activation. A busy slot leaves the new idle silent. Other idle exits fade only audio owned by that idle. Recoil and Puffer-huff use the existing reaction start dispatcher and click attenuation. The Puffer-huff recording starts with the contraction and places the air burst at 0.270 seconds. Its import preserves the approved PCM timing. The dedicated suite runs through both renderers and covers suppression, ownership, cooldown, routing and interruptions.
+
+## Annoyance Stage 1 — November 19, 2026
+
+The [approved Stage 1 plan](../plans/annoyance-stage-1.md) gates annoyance gain on successful pokes. In `scripts/blob.gd`, `touch_at()` uses the controller clock and the existing time since the last accepted poke. It starts a fresh streak when either reaches 1.8 seconds from its respective poke. The first four pokes earn the full 1.8–3.6 point roll, then gains fall to 80%, 60%, 40%, 20%, and zero. The ninth and subsequent pokes still follow the established reaction rules. BOX and RUN retain their protection against restarts.
+
+The rejected-input branch in `_handle_player_touch()` subtracts 1.8–3.6 points for cardboard and 0.9–1.8 for a miss. Those events leave the successful-poke streak and inactivity clock alone. Genuine misses retain their user audio; cardboard stays silent. The audio streak still uses its own 0.45-second interval. The existing tier cutoffs, sleep threshold, and passive decay apply throughout.
+
+The standard fast suite now includes `tests/annoyance_stage_1.gd`. Deterministic checks cover both renderers, exact and near-boundary expiry, reductions through viewport input, clamping, zero-gain reactions, protected reactions, audio independence, and all-tier access. The authored and procedural comparison resets and compares the new streak fields so both simulations start with the same gameplay state.
+
+Verification at runtime commit `0bc52ca` with comparison fixture `20c794b`. Godot 4.7.2 passed all 34 suites, using WASAPI for audio and the graphical renderer for the rendered checks. Stage 1 passed 470 checks and the rendered-edge audit passed 212 cases. The local workflow passed 19 checks. Python reported 32 passed and one skipped. The runner reported outstanding resources during automated shutdown in the behavior, Stage 1, Adobe next-reactions, and Adobe wake suites. This run did not assess normal-game shutdown or physical touch.
