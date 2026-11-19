@@ -344,6 +344,8 @@ The [Stretch refinement](../plans/stretch-refinement.md) exaggerates the grounde
 
 [Humming](../plans/humming-idle.md) now uses the reserved idle choice. Both renderers sample three silent bobs from the shared inactivity clock and keep the existing sleep and poke rules.
 
+The [Humming refinement](../plans/humming-refinement.md) morphs the white ovals into shallow arches over the three existing bobs. A short blend restores the ordinary eye shape after an interruption.
+
 ## Recoil reaction — implementation review
 
 [Recoil](../plans/recoil-reaction.md) enters the lowest annoyance tier. Near a boundary the horizontal movement is reduced while the hop and startled eyes remain. The body returns to its starting anchor. Authored scale tracks and procedural poses use the existing reaction clock.

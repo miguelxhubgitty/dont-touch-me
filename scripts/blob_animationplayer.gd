@@ -37,8 +37,10 @@ var visual_reaction := Reaction.NONE
 var reaction_templates: Dictionary = {}
 var pending_entry: Dictionary = {}
 var bubble_drawer: Node2D
-var left_eye: Node2D
-var right_eye: Node2D
+var left_eye: Polygon2D
+var right_eye: Polygon2D
+var oval_eye := PackedVector2Array()
+var eyes_morphed := false
 var turn_details: TurnDetails
 var props: Props
 
@@ -72,6 +74,7 @@ func _ready() -> void:
 	eyes = visual.get_node("Breathing/Eyes")
 	left_eye = eyes.get_node("Left")
 	right_eye = eyes.get_node("Right")
+	oval_eye = left_eye.polygon
 	turn_details = TurnDetails.new()
 	turn_details.actor = self
 	breathing.add_child(turn_details)
@@ -225,12 +228,27 @@ func _update_pose() -> void:
 			eyes.scale.y = eye_open
 		else:
 			eyes.scale.y = maxf(2.0/21,eye_open)
+	_update_humming_eyes()
 	props.visible = uses_authored_visual() and (sign_amount > 0 or box_amount > 0)
 	if props.visible:
 		props.queue_redraw()
 	if bubble_drawer != null:
 		bubble_drawer.visible = uses_authored_visual()
 		bubble_drawer.queue_redraw()
+
+func _update_humming_eyes() -> void:
+	if humming_squint > 0.0:
+		var shape := PackedVector2Array()
+		var radius := Vector2(13.5, 21.0)
+		for point in oval_eye:
+			shape.append(_soft_squint_point(point / radius, humming_squint) * radius)
+		left_eye.polygon = shape
+		right_eye.polygon = shape
+		eyes_morphed = true
+	elif eyes_morphed:
+		left_eye.polygon = oval_eye
+		right_eye.polygon = oval_eye
+		eyes_morphed = false
 
 func _draw() -> void:
 	if visual == null or not uses_authored_visual() or font == null:
