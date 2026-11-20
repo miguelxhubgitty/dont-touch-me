@@ -2,12 +2,13 @@
 
 ## Google Play
 
-- [ ] Sign in to or create and verify the appropriate Play Console developer account; complete identity/organization verification and any registration payment yourself. Confirm ownership of `com.littlebutterflyproductions.donttouchme` and whether version code 1 has already been uploaded.
+- [ ] Open the existing `com.wandiel.donttouchme` app in Play Console. Confirm the highest version code in App bundle explorer and across tracks. Set a greater code before preparing the update. Code 4 is the local candidate above the verified code-3 artifact.
 - [ ] Confirm publisher/legal identity, name/content rights, audience, countries and pricing. Use support@wandiel.com for customer support/review contact and hello@wandiel.com for business enquiries. Approve the privacy, Data safety and content-rating answers in the prepared documents. Use the published privacy URL: https://miguelxhubgitty.github.io/dont-touch-me/privacy.html and support URL: https://miguelxhubgitty.github.io/dont-touch-me/.
-- [ ] Generate or provide your authorized production upload key and protect its backups/password using [PRODUCTION_SIGNING.md](PRODUCTION_SIGNING.md). Sign a copy of the existing unsigned AAB, verify its certificate, configure Play App Signing and validate the signed bundle. Do not use the Android Debug key. A version-code change needs a later build only if the account's upload history requires it.
+- [ ] Compare the earlier upload signer with the current **Upload key certificate** in Play Console. After approval, use that existing authorized key and keep the original unsigned AAB intact. Follow [PRODUCTION_SIGNING.md](PRODUCTION_SIGNING.md).
+- [ ] Carry forward a reviewed in-app Privacy Policy control on Android and test native touch and browser return. The published-line Alpha has an Android-only button. Current `main` has no equivalent control.
 - [ ] Test the game on physical Android phones/tablets, including all reactions, touch precision, safe areas, app switching/lock, performance and update/signing behavior. An Android 9 BlueStacks session passed at two display profiles; newer Android versions and physical devices still need testing. Resolve any device findings before production.
-- [ ] Create the Play app record and internal-testing release. Upload the release-signed AAB, copy fields from STORE_LISTING.md, upload the prepared Play icon/feature graphic/five phone screenshots, enter the public support/privacy URLs and support@wandiel.com, and complete app-access, ads, Data safety, rating and target-audience forms. Review Play's device/16 KB compatibility and pre-launch reports for the delivered build.
-- [ ] Complete the account's required closed testing and production-access application. For new personal accounts subject to the current rule, maintain 12 opted-in testers continuously for 14 days. Respond to review questions, choose countries/price/rollout, submit for review and make the final publish decision yourself.
+- [ ] After upload authorization, use the existing app's internal testing track to test the update. Review Play's SDK, generated APK, 16 KB compatibility and pre-launch reports. Verify installation and upgrade on a 16 KB Android configuration and on a representative physical device.
+- [ ] Confirm current store assets and declarations against the update. Submit for review and approve rollout separately.
 
 ## Apple App Store
 

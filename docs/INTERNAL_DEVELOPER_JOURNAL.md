@@ -395,3 +395,7 @@ Verification at `b00058e`. The standard Godot run passed 36 suites with WASAPI a
 The Stage 4 PR uses the enabled event map to verify the release's approved audio. It leaves cue playback, timing, levels and source files intact. The manager still loads present disabled clips for editor audition and accepts their absence in exported packs. Release validation also checks the generated Godot and CureJe notices and fingerprints audio and scene content. A stale validation or raw export receipt requires a new check before packaging.
 
 Disposable Godot 4.7.2 resource ZIPs reduced the Windows payload from 31 to 18 audio streams. Windows and both Android presets retained all 18 approved compiled stream hashes byte for byte. Each contained one complete CureJe MIT notice. See the [Stage 4 audio export plan](../plans/stage-4-audio-export-hygiene.md) for removed assets, source verification and platform limitations.
+
+## Stage 4 — Android package identity
+
+The identity reconciliation retains PR #15's separation of Android and Apple identifiers. Both Android presets use the existing WANDIEL Play identity. The Google Play update's catalog and presets agree on provisional code 4, above the verified signed code-3 bundle. The release tool validates the actual unsigned AAB and rejects Android exports under the frozen Alpha version. See the [Android identity notes](../release/ANDROID_IDENTITY.md) for privacy-control parity, signing and device checks still required before a release.

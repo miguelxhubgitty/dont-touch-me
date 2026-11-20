@@ -30,6 +30,7 @@ Stretch ([#31](https://github.com/miguelxhubgitty/dont-touch-me/pull/31)), Hummi
 
 ## Evidence and release boundary
 
+- [Android identity reconciliation](release/ANDROID_IDENTITY.md) targets the existing WANDIEL Play app. Version code 4 is provisional until Play Console's upload history is checked. The published-line privacy control needs a separate approved port before an update can ship.
 - [Stage 4 audio export hygiene](plans/stage-4-audio-export-hygiene.md) is in review. It preserves the current enabled cues and adds an approved-stream manifest, a generated MIT notice and export/receipt checks.
 - Rapid automated audio shutdown has intermittently reported outstanding playback resources. A normal WASAPI window close after a tap exited cleanly in a prior check, which does not rule out every active-audio shutdown case. Compare exact conditions before labeling a warning harmless.
 - Desktop and synthetic viewport tests cover the development tree. Physical Android/iOS touch timing, audio latency, focus/background behavior and device performance still need direct testing. Browser autoplay and mobile audio also need real-browser checks against a separately approved web build.
