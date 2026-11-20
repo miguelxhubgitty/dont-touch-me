@@ -49,6 +49,10 @@ const IDLE_WEIGHTS := [
 ]
 const IDLE_HANDOFF_SECONDS := 0.27
 const YAWN_PINK := Color("D98E9A")
+const STARTLED_OPEN := 0.036
+const STARTLED_SHUT := 0.072
+const STARTLED_END := 0.18
+const STARTLED_WIDE := 1.35
 const IDLE_VOICE_CUES := {SpecialIdle.STRETCH: "idle.stretch", SpecialIdle.HUMMING: "idle.humming"}
 const FREE_JUMP_FLIGHT := .85
 const FREE_JUMP_TRAVEL := 230.0
@@ -70,6 +74,8 @@ var idle_handoff: Dictionary = {}
 var idle_scale_offset := Vector2.ZERO
 var idle_scale_factor := Vector2.ONE
 var yawn_mouth := PackedVector2Array()
+var startled_mouth := PackedVector2Array()
+var startled_entry_eye := 0.0
 var annoyance := 0.0
 var successful_poke_streak := 0
 var poke_streak_started_at := 0.0
@@ -382,6 +388,10 @@ func touch_at(point: Vector2) -> bool:
 	return true
 
 func begin_reaction(which: int, touch: Vector2) -> void:
+	startled_mouth.clear()
+	if active_idle == SpecialIdle.YAWN and which != Reaction.WAKE:
+		startled_mouth = yawn_mouth.duplicate()
+		startled_entry_eye = _displayed_yawn_aperture()
 	active_idle = SpecialIdle.NONE
 	idle_handoff.clear()
 	if which == Reaction.WAKE:
@@ -414,6 +424,19 @@ func begin_reaction(which: int, touch: Vector2) -> void:
 func _ease(value: float) -> float:
 	var t := clampf(value, 0.0, 1.0)
 	return t * t * (3.0 - 2.0 * t)
+
+func _displayed_yawn_aperture() -> float:
+	return maxf(2.0 / 21.0, eye_open)
+
+func _startled_active() -> bool:
+	return reaction != Reaction.NONE and elapsed < STARTLED_END and not startled_mouth.is_empty()
+
+func _startled_aperture(target: float) -> float:
+	if elapsed < STARTLED_OPEN:
+		return lerpf(startled_entry_eye, STARTLED_WIDE, _ease(elapsed / STARTLED_OPEN))
+	if elapsed < STARTLED_SHUT:
+		return STARTLED_WIDE * (1.0 - _ease((elapsed - STARTLED_OPEN) / (STARTLED_SHUT - STARTLED_OPEN)))
+	return target * _ease((elapsed - STARTLED_SHUT) / (STARTLED_END - STARTLED_SHUT))
 
 func _sample_idle_keys(keys: Array, time: float, rest_eye: float) -> Vector4:
 	for i in range(1, keys.size()):
@@ -509,6 +532,13 @@ func _update_pose() -> void:
 	bubble = ""
 	bubble_alpha = 0.0
 	yawn_mouth.clear()
+	if _startled_active():
+		if elapsed < STARTLED_OPEN:
+			var weight := 1.0 - _ease(elapsed / STARTLED_OPEN)
+			for point in startled_mouth:
+				yawn_mouth.append(Vector2(point.x, -66.0 + (point.y + 66.0) * weight))
+	else:
+		startled_mouth.clear()
 	idle_scale_offset = Vector2.ZERO
 	idle_scale_factor = Vector2.ONE
 	if reaction == Reaction.NONE:
@@ -671,7 +701,7 @@ func _soft_squint_point(unit_point: Vector2, strength: float) -> Vector2:
 	var arch_y := -0.18 * (1.0 - unit_point.x * unit_point.x)
 	return Vector2(unit_point.x, lerpf(unit_point.y, arch_y + 0.13 * unit_point.y, strength))
 
-func _ellipse(center: Vector2, radius: Vector2, color: Color, canvas: CanvasItem = null, squint := 0.0) -> void:
+func _ellipse(center: Vector2, radius: Vector2, color: Color, canvas: CanvasItem = null, squint := 0.0, fringe := 0.0) -> void:
 	if canvas == null:
 		canvas = self
 	var points := PackedVector2Array()
@@ -682,6 +712,15 @@ func _ellipse(center: Vector2, radius: Vector2, color: Color, canvas: CanvasItem
 			point = _soft_squint_point(point, squint)
 		points.append(center + point * radius)
 	canvas.draw_colored_polygon(points, color)
+	if fringe > 0.0:
+		points.append(points[0])
+		canvas.draw_polyline(points, color, fringe, true)
+
+func _sleep_eye_fringe() -> float:
+	var viewport_transform := get_viewport().get_stretch_transform() * get_global_transform_with_canvas()
+	var body_transform := Transform2D(body_angle, _fallback_body_scale(), 0.0, body_position)
+	var screen := viewport_transform * body_transform
+	return 0.5 / maxf(0.01, screen.y.length())
 
 func _text_center(text: String, center: Vector2, size: int, color: Color, canvas: CanvasItem = null) -> void:
 	if canvas == null:
@@ -706,15 +745,22 @@ func _draw() -> void:
 	draw_colored_polygon(outline, INK)
 	if not yawn_mouth.is_empty():
 		draw_colored_polygon(yawn_mouth, YAWN_PINK)
-	if turn_amount < 0.97 and eye_open > 0.0:
+	var startled := _startled_active()
+	if turn_amount < 0.97 and (eye_open > 0.0 or startled):
 		var face_alpha := 1.0 - turn_amount
+		var fringe := _sleep_eye_fringe() if asleep else 0.0
 		for side in [-1.0, 1.0]:
 			var eye := Vector2(side * 37.0 + gaze.x, -113.0 + gaze.y)
 			var opening := eye_open
 			if reaction == Reaction.SERIOUSLY and side < 0:
 				opening *= 0.5
 			var minimum_height := 0.0 if active_idle == SpecialIdle.STRETCH else 2.0
-			_ellipse(eye, Vector2(13.5 * (1.0 - turn_amount * 0.8), maxf(minimum_height, 21.0 * opening)), Color(WHITE, face_alpha), self, humming_squint)
+			var radius_y := maxf(minimum_height, 21.0 * opening)
+			if startled:
+				radius_y = 21.0 * _startled_aperture(radius_y / 21.0)
+				if radius_y <= 0.0:
+					continue
+			_ellipse(eye, Vector2(13.5 * (1.0 - turn_amount * 0.8), radius_y), Color(WHITE, face_alpha), self, humming_squint, fringe)
 	if turn_amount > 0.1:
 		draw_arc(Vector2(0, -105), 21, 0.35, 1.5, 20, Color(0.30, 0.30, 0.31, turn_amount * 0.45), 2.0, true)
 	if touch_flash > 0.0:
