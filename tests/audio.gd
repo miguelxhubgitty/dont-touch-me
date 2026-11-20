@@ -17,7 +17,8 @@ func reset(game) -> void:
 	game.idle_time = 0
 	# These fixtures exercise reaction cues. The idle scheduler has its own suite.
 	game.active_idle = Blob.SpecialIdle.NONE
-	game.next_idle = Blob.SpecialIdle.NONE
+	game._reset_special_idle()
+	game.next_idle_at = INF
 	game.reaction = 0
 	game.anchor = Vector2(360, 742.4)
 	game._update_pose()

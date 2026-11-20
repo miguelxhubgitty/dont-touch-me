@@ -99,11 +99,13 @@ func run() -> void:
 	game.reaction = Blob.Reaction.NONE
 	game.asleep = false
 	game.idle_time = 0
+	game._reset_special_idle()
+	game.next_idle_at = INF
 	game.annoyance = 100
-	game.advance(2.4)
+	game.advance(2.9)
 	check(game.annoyance == 100, "decay grace period")
 	game.advance(0.2)
-	check(game.annoyance < 100 and game.annoyance > 98, "gradual decay")
+	check(is_equal_approx(game.annoyance, 99.9955), "integrated decay crosses grace boundary")
 	game.idle_time = Blob.SLEEP_AFTER - 0.1
 	game.advance(0.05)
 	check(not game.asleep, "not asleep too early")

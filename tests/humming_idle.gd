@@ -1,4 +1,5 @@
 extends SceneTree
+const IdleFixture = preload("res://tests/idle_fixture.gd")
 
 func _initialize() -> void:
 	run.call_deferred()
@@ -11,8 +12,7 @@ func run() -> void:
 		root.add_child(actor)
 		actor.set_process(false)
 		actor.audio_manager.muted = true
-		actor.next_idle = actor.SpecialIdle.HUMMING
-		actor.next_idle_at = 9.0
+		IdleFixture.arm(actor, actor.SpecialIdle.HUMMING, 9.0)
 		actor.advance(8.99)
 		if actor.active_idle != actor.SpecialIdle.NONE: failures += 1
 		actor.advance(0.02)
@@ -28,13 +28,13 @@ func run() -> void:
 			actor.advance(0.45)
 			if not actor.body_position.is_equal_approx(anchor): failures += 1
 		actor.advance(0.01)
-		if actor.active_idle != actor.SpecialIdle.NONE or actor.next_idle != actor.SpecialIdle.NONE: failures += 1
+		if actor.active_idle != actor.SpecialIdle.NONE or actor.next_idle_at <= actor.idle_time: failures += 1
 		actor.advance(18.0 - actor.idle_time)
 		if not actor.asleep: failures += 1
 		actor.asleep = false
 		actor.idle_time = 0.0
-		actor.next_idle = actor.SpecialIdle.HUMMING
-		actor.next_idle_at = 9.0
+		actor._reset_special_idle()
+		IdleFixture.arm(actor, actor.SpecialIdle.HUMMING, 9.0)
 		actor.advance(9.0)
 		actor.advance(0.9)
 		actor._handle_player_touch(Vector2(2, 2))
