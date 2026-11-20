@@ -1,6 +1,6 @@
 # Stage 2 — Inactivity behavior and annoyance decay
 
-Status pending owner approval of the implementation pseudocode and proposed tuning. Baseline is GitHub main at `9408fdd0fec03b290ca19a32f75954a4b3e98816`, with Stage 1 merged through PR #39.
+Owner approved the pseudocode and tuning. Implementation is on `feature/idle-stage-2`. Baseline is GitHub main at `9408fdd0fec03b290ca19a32f75954a4b3e98816`, with Stage 1 merged through PR #39.
 
 ## Approved behavior and current code
 
@@ -114,4 +114,4 @@ Thresholds never interrupt a clip, including Humming crossing 18 seconds. Actual
 - Test a poke in each new clip, including immediately before real sleep, during sleeping and during Sleep Twitch. Verify only actual sleep enters WAKE. Test continuous BOX/RUN protection, resize cancellation, focus changes and mute. Assert Humming and Stretch play once, finish normally across thresholds, and fade correctly when interrupted. A miss must not fade either cue. Test single sleep-entry dispatch even when playback is suppressed.
 - Run the full standard Godot, audio, animation, rendered-edge and workflow suite. Include normal-scene mouse checks and report physical touch separately if unavailable. Update the roadmap, current-state documentation and internal journal after implementation and validation. Keep frozen Alpha records intact.
 
-Owner decisions remaining are the starting weights and cooldowns, the 0.27-second handoff blend, and whether the four new clips should be silent for the first implementation. The plan recommends approving those defaults together and tuning them only after viewing the integrated idle sequence.
+The approved initial weights and cooldowns appear above. The handoff blend runs for up to 0.27 seconds where the pose changes. Settling and awake share a pose and breathing phase. The four new clips are silent.

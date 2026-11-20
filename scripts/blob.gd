@@ -282,12 +282,14 @@ func _update_special_idle() -> void:
 		active_idle = SpecialIdle.NONE
 		if latest != IdleStage.ASLEEP or idle_stage == IdleStage.ASLEEP:
 			_schedule_next_idle(latest)
-	elif latest != idle_stage:
+	elif latest != idle_stage and latest != IdleStage.AWAKE:
 		_update_pose() # Sample the outgoing base pose with current head/body transforms.
 	if latest != idle_stage:
-		idle_handoff = {"scale": body_scale, "display_scale": _displayed_idle_scale(), "position": body_position,
-			"angle": body_angle, "eye": eye_open, "gaze": gaze}
-		idle_handoff_started = idle_time
+		# Settling and awake share the same resting pose and breathing phase.
+		if latest != IdleStage.AWAKE:
+			idle_handoff = {"scale": body_scale, "display_scale": _displayed_idle_scale(), "position": body_position,
+				"angle": body_angle, "eye": eye_open, "gaze": gaze}
+			idle_handoff_started = idle_time
 		idle_stage = latest
 		if latest == IdleStage.ASLEEP:
 			if not asleep and audio_manager != null:
