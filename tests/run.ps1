@@ -20,7 +20,7 @@ if ($LASTEXITCODE -ne 0 -or $version -notmatch '^4\.7\.2\.stable(\.|$)') {
 }
 
 $root = Split-Path -Parent $PSScriptRoot
-$fast = @('behavior', 'annoyance_stage_1')
+$fast = @('behavior', 'annoyance_stage_1', 'idle_stage_2')
 $audio = @('audio', 'audio_mute', 'audio_click_attenuation', 'audio_interruption_fades',
     'audio_volume_balance', 'audio_preview_menu_test', 'audio_voice_timing',
     'audio_variation', 'audio_volume_controls', 'animation_audio_cues')

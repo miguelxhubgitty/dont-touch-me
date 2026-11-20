@@ -1,6 +1,7 @@
 extends SceneTree
 
 const Game = preload("res://main.tscn")
+const IdleFixture = preload("res://tests/idle_fixture.gd")
 var checks := 0
 var failures := 0
 
@@ -20,7 +21,8 @@ func reset(game) -> void:
 	game.audio_manager.set_focused(true)
 	game.audio_manager.trace.clear()
 	game.active_idle = game.SpecialIdle.NONE
-	game.next_idle = game.SpecialIdle.NONE
+	game._reset_special_idle()
+	game.next_idle_at = INF
 	game.idle_time = 0.0
 	game.asleep = false
 	game.jump_returning = false
@@ -30,8 +32,9 @@ func reset(game) -> void:
 	game._update_pose()
 
 func schedule_idle(game, which: int) -> void:
-	game.next_idle = which
-	game.next_idle_at = 0.09
+	game.idle_time = maxf(game.idle_time, 4.5)
+	game.idle_stage = game._stage_for(game.idle_time)
+	IdleFixture.arm(game, which, game.idle_time + 0.09)
 
 func check_idles(game) -> void:
 	var audio = game.audio_manager
@@ -41,7 +44,7 @@ func check_idles(game) -> void:
 		schedule_idle(game, idle)
 		game.advance(0.08)
 		check(not audio.trace.has(event), "selection alone is silent " + event)
-		game.advance(0.01)
+		game.advance(0.011)
 		check(game.active_idle == idle and audio.trace.count(event) == 1, "cue starts with visual idle " + event)
 		check(audio.players.voice.bus == &"CharacterVoice" and audio.players.voice.pitch_scale == 1.0, "idle bus and original pitch")
 		var voice: AudioStreamPlayer = audio.players.voice
@@ -72,7 +75,7 @@ func check_idles(game) -> void:
 	reset(game)
 	schedule_idle(game, game.SpecialIdle.STRETCH)
 	game.advance(0.09)
-	game.asleep = true
+	game.jump_returning = true
 	game._update_special_idle()
 	check(audio.fades.has("voice") and not audio.slots.has("voice"), "other idle interruption fades its owned slot")
 	game.advance(0.036)
@@ -82,7 +85,11 @@ func check_idles(game) -> void:
 	game.idle_time = 16.5
 	schedule_idle(game, game.SpecialIdle.HUMMING)
 	game.advance(0.09)
-	check(game.active_idle == game.SpecialIdle.NONE and audio.trace.is_empty(), "insufficient time before sleep is silent")
+	check(game.active_idle == game.SpecialIdle.HUMMING and audio.trace.count("idle.humming") == 1, "late Humming starts with its cue")
+	game.advance(1.5)
+	check(not game.asleep and audio.slots.voice.id == "idle.humming", "18-second threshold leaves Humming audio untouched")
+	game.advance(1.21)
+	check(game.asleep and game.active_idle == game.SpecialIdle.NONE and audio.trace.count("sleep.enter") == 1, "sleep cue fires once at the actual handoff")
 
 func check_reactions(game) -> void:
 	var audio = game.audio_manager

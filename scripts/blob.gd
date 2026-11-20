@@ -32,7 +32,23 @@ const HUMMING_BEAT := 0.9
 const HUMMING_DURATION := 3.0 * HUMMING_BEAT
 const HUMMING_SQUINT_EXIT := 0.09
 
-enum SpecialIdle { NONE, STRETCH, HUMMING }
+enum SpecialIdle { NONE, STRETCH, HUMMING, YAWN, MICROSLEEP, FIGHTING_SLEEP, SLEEP_TWITCH }
+enum IdleStage { SETTLING, AWAKE, SLEEPY, FALLING_ASLEEP, ASLEEP }
+const IDLE_DURATIONS := {
+	SpecialIdle.STRETCH: STRETCH_DURATION, SpecialIdle.HUMMING: HUMMING_DURATION,
+	SpecialIdle.YAWN: 1.98, SpecialIdle.MICROSLEEP: 1.35,
+	SpecialIdle.FIGHTING_SLEEP: 2.43, SpecialIdle.SLEEP_TWITCH: 0.54,
+}
+# Columns follow SpecialIdle, with NONE continuing the base pose.
+const IDLE_WEIGHTS := [
+	[100, 0, 0, 0, 0, 0, 0],
+	[20, 40, 40, 0, 0, 0, 0],
+	[25, 15, 15, 25, 20, 0, 0],
+	[20, 0, 15, 20, 20, 25, 0],
+	[80, 0, 0, 0, 0, 0, 20],
+]
+const IDLE_HANDOFF_SECONDS := 0.27
+const YAWN_PINK := Color("D98E9A")
 const IDLE_VOICE_CUES := {SpecialIdle.STRETCH: "idle.stretch", SpecialIdle.HUMMING: "idle.humming"}
 const FREE_JUMP_FLIGHT := .85
 const FREE_JUMP_TRAVEL := 230.0
@@ -44,10 +60,16 @@ var jump_return_target := Vector2.ZERO
 
 var rng := RandomNumberGenerator.new()
 var idle_rng := RandomNumberGenerator.new()
-var next_idle := SpecialIdle.NONE
 var next_idle_at := 0.0
 var active_idle := SpecialIdle.NONE
+var last_special_idle := SpecialIdle.NONE
+var idle_stage := IdleStage.SETTLING
 var special_idle_started := 0.0
+var idle_handoff_started := -1.0
+var idle_handoff: Dictionary = {}
+var idle_scale_offset := Vector2.ZERO
+var idle_scale_factor := Vector2.ONE
+var yawn_mouth := PackedVector2Array()
 var annoyance := 0.0
 var successful_poke_streak := 0
 var poke_streak_started_at := 0.0
@@ -114,7 +136,9 @@ func _resize() -> void:
 	origin = anchor
 	destination = anchor
 	reaction = Reaction.NONE
-	active_idle = SpecialIdle.NONE
+	if active_idle != SpecialIdle.NONE:
+		_interrupt_special_idle()
+	idle_handoff.clear()
 	_update_pose()
 
 func _notification(what: int) -> void:
@@ -159,11 +183,11 @@ func advance(delta: float) -> void:
 		audio_manager.tick(delta)
 	humming_squint = move_toward(humming_squint, 0.0, delta / HUMMING_SQUINT_EXIT)
 	clock += delta
+	var previous_idle := idle_time
 	idle_time += delta
 	intro_alpha = move_toward(intro_alpha, 0.0, delta * 0.1 if idle_time > 5.0 else 0.0)
 	touch_flash = maxf(0.0, touch_flash - delta * 5.0)
-	if idle_time > 2.5:
-		annoyance = maxf(0.0, annoyance - delta * 4.0)
+	annoyance = clampf(annoyance - (_decay_at(idle_time) - _decay_at(previous_idle)), 0.0, 100.0)
 	if reaction != Reaction.NONE:
 		elapsed += delta
 		if audio_manager != null:
@@ -180,10 +204,6 @@ func advance(delta: float) -> void:
 		anchor.x = move_toward(anchor.x,jump_return_target.x,JUMP_RETURN_SPEED*return_delta)
 		destination = anchor
 		if anchor.x == jump_return_target.x: jump_returning = false
-	if idle_time >= SLEEP_AFTER and reaction == Reaction.NONE and not jump_returning:
-		if not asleep and audio_manager != null:
-			audio_manager.play_event("sleep.enter")
-		asleep = true
 	_update_special_idle()
 	blink_timer -= delta
 	blink_remaining = maxf(0.0, blink_remaining - delta)
@@ -199,36 +219,94 @@ func advance(delta: float) -> void:
 		audio_manager.play_event("jump.land", audio_manager.reaction_attenuation_db)
 	queue_redraw()
 
+func _decay_at(time: float) -> float:
+	var after_grace := maxf(0.0, time - 3.0)
+	return 0.45 * after_grace * after_grace
+
+func _stage_for(time: float) -> IdleStage:
+	if time >= SLEEP_AFTER: return IdleStage.ASLEEP
+	if time >= 12.0: return IdleStage.FALLING_ASLEEP
+	if time >= 9.0: return IdleStage.SLEEPY
+	if time >= 3.0: return IdleStage.AWAKE
+	return IdleStage.SETTLING
+
 func _reset_special_idle() -> void:
 	active_idle = SpecialIdle.NONE
-	var roll := idle_rng.randf()
-	if roll < 0.2:
-		next_idle = SpecialIdle.NONE
-	elif roll < 0.6:
-		next_idle = SpecialIdle.STRETCH
-		next_idle_at = 4.5 + idle_rng.randf_range(0.0, 1.8)
-	else:
-		next_idle = SpecialIdle.HUMMING
-		next_idle_at = 9.0 + idle_rng.randf_range(0.0, 1.8)
+	last_special_idle = SpecialIdle.NONE
+	idle_stage = IdleStage.SETTLING
+	next_idle_at = 4.5
+	idle_handoff.clear()
 
-func _special_idle_duration(which: SpecialIdle) -> float:
-	return STRETCH_DURATION if which == SpecialIdle.STRETCH else HUMMING_DURATION
+func _schedule_next_idle(stage: IdleStage) -> void:
+	var cooldown := idle_rng.randf_range(3.6, 5.4) if stage == IdleStage.ASLEEP else idle_rng.randf_range(0.9, 1.8)
+	next_idle_at = idle_time + cooldown
+
+func _interrupt_special_idle() -> void:
+	if audio_manager != null and IDLE_VOICE_CUES.has(active_idle):
+		audio_manager.fade_event(IDLE_VOICE_CUES[active_idle])
+	active_idle = SpecialIdle.NONE
+	_schedule_next_idle(idle_stage)
+
+func _idle_choice(stage: IdleStage, roll: int) -> SpecialIdle:
+	var weights: Array = IDLE_WEIGHTS[stage]
+	for choice in range(weights.size()):
+		roll -= int(weights[choice])
+		if roll < 0:
+			if stage != IdleStage.ASLEEP and choice == last_special_idle:
+				return SpecialIdle.NONE
+			return choice as SpecialIdle
+	return SpecialIdle.NONE
+
+func _displayed_idle_scale() -> Vector2:
+	return _fallback_body_scale()
+
+func _fallback_body_scale() -> Vector2:
+	return body_scale
+
+func _idle_handoff_weight() -> float:
+	return 0.0 if idle_handoff.is_empty() else 1.0 - _ease((idle_time - idle_handoff_started) / IDLE_HANDOFF_SECONDS)
 
 func _update_special_idle() -> void:
-	if asleep or reaction != Reaction.NONE or jump_returning:
-		if audio_manager != null and active_idle != SpecialIdle.NONE:
-			audio_manager.fade_event(IDLE_VOICE_CUES[active_idle])
-		active_idle = SpecialIdle.NONE
+	if reaction != Reaction.NONE or jump_returning:
+		if active_idle != SpecialIdle.NONE:
+			_interrupt_special_idle()
 		return
-	if active_idle != SpecialIdle.NONE and idle_time - special_idle_started >= _special_idle_duration(active_idle):
+	var latest := _stage_for(idle_time)
+	# A fixture or caller can restore an already sleeping pose.
+	if asleep:
+		latest = IdleStage.ASLEEP
+	if active_idle != SpecialIdle.NONE:
+		if idle_time < special_idle_started + float(IDLE_DURATIONS[active_idle]):
+			return
+		_update_pose() # Sample the terminal pose before the old stage is released.
 		active_idle = SpecialIdle.NONE
-	if next_idle != SpecialIdle.NONE and idle_time >= next_idle_at:
-		if idle_time + _special_idle_duration(next_idle) <= SLEEP_AFTER:
-			active_idle = next_idle
-			special_idle_started = idle_time
-			if audio_manager != null:
-				audio_manager.play_idle_voice(IDLE_VOICE_CUES[active_idle])
-		next_idle = SpecialIdle.NONE
+		if latest != IdleStage.ASLEEP or idle_stage == IdleStage.ASLEEP:
+			_schedule_next_idle(latest)
+	elif latest != idle_stage and latest != IdleStage.AWAKE:
+		_update_pose() # Sample the outgoing base pose with current head/body transforms.
+	if latest != idle_stage:
+		# Settling and awake share the same resting pose and breathing phase.
+		if latest != IdleStage.AWAKE:
+			idle_handoff = {"scale": body_scale, "display_scale": _displayed_idle_scale(), "position": body_position,
+				"angle": body_angle, "eye": eye_open, "gaze": gaze}
+			idle_handoff_started = idle_time
+		idle_stage = latest
+		if latest == IdleStage.ASLEEP:
+			if not asleep and audio_manager != null:
+				audio_manager.play_event("sleep.enter")
+			asleep = true
+			_schedule_next_idle(latest)
+	if latest == IdleStage.SETTLING or idle_time < next_idle_at:
+		return
+	var choice := _idle_choice(latest, idle_rng.randi_range(0, 99))
+	if choice == SpecialIdle.NONE:
+		_schedule_next_idle(latest)
+		return
+	active_idle = choice
+	last_special_idle = choice
+	special_idle_started = idle_time
+	if audio_manager != null and IDLE_VOICE_CUES.has(choice):
+		audio_manager.play_idle_voice(IDLE_VOICE_CUES[choice])
 
 func _stretch_strength() -> float:
 	if active_idle != SpecialIdle.STRETCH:
@@ -275,7 +353,7 @@ func contains_touch(point: Vector2) -> bool:
 	var prop_hit := _box_hit(point)
 	if prop_hit != BoxHit.EXPOSED:
 		return prop_hit == BoxHit.PEEK
-	var local := (point - body_position).rotated(-body_angle) / body_scale
+	var local := (point - body_position).rotated(-body_angle) / _fallback_body_scale()
 	var polygon := _silhouette()
 	return Geometry2D.is_point_in_polygon(local, polygon)
 
@@ -289,23 +367,25 @@ func touch_at(point: Vector2) -> bool:
 		poke_streak_started_at = clock
 	successful_poke_streak = mini(successful_poke_streak + 1, POKE_STREAK_MULTIPLIERS.size())
 	var multiplier: float = POKE_STREAK_MULTIPLIERS[successful_poke_streak - 1]
-	idle_time = 0.0
-	_reset_special_idle()
 	intro_alpha = 0.0
 	annoyance = clampf(annoyance + rng.randf_range(1.8, 3.6) * multiplier, 0.0, 100.0)
 	touch_flash = 1.0
 	if asleep:
-		asleep = false
 		begin_reaction(Reaction.WAKE, point)
 	elif reaction != Reaction.RUN and reaction != Reaction.BOX:
 		# Escapes finish on schedule even under frantic tapping.
 		begin_reaction(choose_reaction(), point)
+	idle_time = 0.0
+	_reset_special_idle()
 	if audio_manager != null:
 		audio_manager.contact(reaction)
 	return true
 
 func begin_reaction(which: int, touch: Vector2) -> void:
 	active_idle = SpecialIdle.NONE
+	idle_handoff.clear()
+	if which == Reaction.WAKE:
+		asleep = false
 	jump_returning = false
 	origin = Vector2(body_position.x if which == Reaction.RECOIL or (which == Reaction.JUMP and _free_jump_enabled()) else clampf(body_position.x, 190.0, last_size.x - 190.0), anchor.y)
 	anchor = origin
@@ -335,6 +415,86 @@ func _ease(value: float) -> float:
 	var t := clampf(value, 0.0, 1.0)
 	return t * t * (3.0 - 2.0 * t)
 
+func _sample_idle_keys(keys: Array, time: float, rest_eye: float) -> Vector4:
+	for i in range(1, keys.size()):
+		if time <= float(keys[i][0]):
+			var a: Array = keys[i - 1]
+			var b: Array = keys[i]
+			var first := Vector4(rest_eye if a[1] < 0.0 else a[1], a[2], a[3], a[4])
+			var last := Vector4(rest_eye if b[1] < 0.0 else b[1], b[2], b[3], b[4])
+			return first.lerp(last, _ease((time - float(a[0])) / (float(b[0]) - float(a[0]))))
+	return Vector4(rest_eye, 0.0, 0.0, 0.0)
+
+func _set_yawn_mouth(opening: float) -> void:
+	const HALF_WIDTH := 29.0 * 0.85 * 0.9
+	const CIRCLE_HANDLE := 0.55228475
+	var height := lerpf(0.8, 36.5 * 0.85, opening) * 0.9
+	var inset := HALF_WIDTH * 0.24 * (1.0 - opening)
+	var tangent := height * lerpf(0.38, CIRCLE_HANDLE, opening)
+	var corner := Vector2(HALF_WIDTH, 0.0)
+	var peak := Vector2(0.0, height)
+	var quarter := PackedVector2Array()
+	for i in range(25):
+		quarter.append(corner.bezier_interpolate(Vector2(HALF_WIDTH - inset, tangent),
+			Vector2(HALF_WIDTH * CIRCLE_HANDLE, height), peak, i / 24.0))
+	for i in range(24): yawn_mouth.append(quarter[i] + Vector2(0, -66))
+	for i in range(24, 0, -1): yawn_mouth.append(quarter[i] * Vector2(-1, 1) + Vector2(0, -66))
+	for i in range(24): yawn_mouth.append(-quarter[i] + Vector2(0, -66))
+	for i in range(24, 0, -1): yawn_mouth.append(quarter[i] * Vector2(1, -1) + Vector2(0, -66))
+
+func _apply_stage_idle_pose() -> void:
+	if asleep:
+		gaze = Vector2.ZERO
+	elif idle_stage == IdleStage.SLEEPY:
+		eye_open = minf(eye_open, 0.64)
+		gaze *= 0.55
+	elif idle_stage == IdleStage.FALLING_ASLEEP:
+		eye_open = minf(eye_open, 0.42)
+		gaze *= 0.25
+		idle_scale_offset += Vector2(0.009, -0.018)
+
+	if active_idle == SpecialIdle.NONE:
+		return
+	var duration := float(IDLE_DURATIONS[active_idle])
+	var time := clampf(idle_time - special_idle_started, 0.0, duration)
+	var rest_eye := 0.42 if idle_stage == IdleStage.FALLING_ASLEEP else 0.64
+	var pose := Vector4(rest_eye, 0.0, 0.0, 0.0)
+	match active_idle:
+		SpecialIdle.YAWN:
+			pose = _sample_idle_keys([[0.,-1.,0.,0.,0.],[.27,.50,.025,0.,0.],
+				[.63,.10,.105,0.,1.],[1.17,.10,.105,0.,1.],[1.44,.16,.045,0.,.42],
+				[1.71,.13,-.025,0.,0.],[duration,-1.,0.,0.,0.]], time, rest_eye)
+			_set_yawn_mouth(pose.w)
+			if time >= 0.63 and time < 1.13:
+				var phase := (time - 0.63) / 0.5
+				var weight := pow(sin(PI * phase), 2.0)
+				var beat := sin(TAU * 5.0 * phase) * weight
+				var flex := cos(TAU * 5.0 * phase) * weight
+				body_position.x += 3.4 * beat
+				body_angle += 0.018 * beat
+				idle_scale_factor = Vector2(1.0 + 0.018 * flex, 1.0 - 0.026 * flex)
+		SpecialIdle.MICROSLEEP:
+			pose = _sample_idle_keys([[0.,-1.,0.,0.,0.],[.27,.26,-.025,2.,.02],
+				[.54,.095,-.085,7.,.07],[.81,.095,-.085,7.,.07],[.90,1.08,.035,-4.,-.023],
+				[1.08,.78,.004,0.,.01],[duration,-1.,0.,0.,0.]], time, rest_eye)
+		SpecialIdle.FIGHTING_SLEEP:
+			var finish := 0.095 if special_idle_started + duration >= SLEEP_AFTER else rest_eye
+			pose = _sample_idle_keys([[0.,-1.,0.,0.,0.],[.45,.18,-.045,3.,-.04],
+				[.72,.095,-.09,6.,-.09],[.81,.96,.023,-3.,.020],[1.08,.68,0.,0.,0.],
+				[1.44,.18,-.049,4.,.043],[1.71,.095,-.09,7.,.085],[1.80,.78,.018,-2.,-.01],
+				[2.07,.30,-.018,1.,0.],[duration,finish,0.,0.,0.]], time, rest_eye)
+		SpecialIdle.SLEEP_TWITCH:
+			pose = _sample_idle_keys([[0.,.07,0.,0.,0.],[.09,.07,.037,-2.,.031],
+				[.18,.07,-.017,1.,-.016],[.27,.07,.008,0.,.008],[duration,.07,0.,0.,0.]], time, 0.07)
+			body_position.x += pose.z * 0.8
+		_:
+			return
+	eye_open = pose.x
+	if active_idle != SpecialIdle.YAWN:
+		body_angle += pose.w
+	body_position.y += pose.z
+	idle_scale_offset += Vector2(-pose.y * 0.58, pose.y)
+
 func _update_pose() -> void:
 	body_position = anchor
 	var breath := sin(clock * (1.6 if asleep else 2.3))
@@ -348,18 +508,31 @@ func _update_pose() -> void:
 	box_amount = 0.0
 	bubble = ""
 	bubble_alpha = 0.0
+	yawn_mouth.clear()
+	idle_scale_offset = Vector2.ZERO
+	idle_scale_factor = Vector2.ONE
 	if reaction == Reaction.NONE:
+		if not jump_returning:
+			_apply_stage_idle_pose()
+		body_scale = (body_scale + idle_scale_offset) * idle_scale_factor
 		var stretch := _stretch_strength()
 		body_scale = body_scale.lerp(STRETCH_SCALE, stretch)
 		eye_open = minf(eye_open, 1.0 - stretch)
 		if active_idle == SpecialIdle.HUMMING:
-			var phase := idle_time - special_idle_started
+			var phase := clampf(idle_time - special_idle_started, 0.0, HUMMING_DURATION)
 			var beat := phase / HUMMING_BEAT
 			var strength := _ease(beat) * _ease(3.0 - beat)
 			var bob := sin(PI * beat)
 			body_position.y -= 9.0 * strength * bob * bob
 			body_angle = 0.018 * strength * bob
 			humming_squint = strength
+		var handoff := _idle_handoff_weight()
+		if handoff > 0.0:
+			body_scale = body_scale.lerp(idle_handoff.scale, handoff)
+			body_position = body_position.lerp(idle_handoff.position, handoff)
+			body_angle = lerpf(body_angle, idle_handoff.angle, handoff)
+			eye_open = lerpf(eye_open, idle_handoff.eye, handoff)
+			gaze = gaze.lerp(idle_handoff.gaze, handoff)
 		return
 	var t := clampf(elapsed / float(DURATIONS[reaction]), 0.0, 1.0)
 	var envelope := sin(PI * t)
@@ -526,11 +699,13 @@ func _draw() -> void:
 		_text_center("(especially the little one)", Vector2(last_size.x * 0.5, last_size.y * 0.84), 19, Color(MUTED, intro_alpha * 0.8))
 	var height := maxf(0.0, anchor.y - body_position.y)
 	_ellipse(Vector2(body_position.x, anchor.y + 5), Vector2(111.0 - minf(height * 0.2, 45), 13), Color(0.35, 0.31, 0.24, 0.075))
-	draw_set_transform(body_position, body_angle, body_scale)
+	draw_set_transform(body_position, body_angle, _fallback_body_scale())
 	var outline := _silhouette()
 	if spike_extension > 0.0:
 		_draw_puffer_spikes(outline)
 	draw_colored_polygon(outline, INK)
+	if not yawn_mouth.is_empty():
+		draw_colored_polygon(yawn_mouth, YAWN_PINK)
 	if turn_amount < 0.97 and eye_open > 0.0:
 		var face_alpha := 1.0 - turn_amount
 		for side in [-1.0, 1.0]:

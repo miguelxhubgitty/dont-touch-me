@@ -13,11 +13,11 @@ The development game supports each animation in both renderers. The idles use th
 
 ## Annoyance
 
-[Stage 1](plans/annoyance-stage-1.md) covers poke gains, rejected-touch reductions, and the gameplay streak. Changes to sleep-stage timing and inactivity decay belong to Stage 2.
+[Stage 1](plans/annoyance-stage-1.md) covers poke gains, rejected-touch reductions, and the gameplay streak. [Stage 2](plans/idle-stage-2.md) covers inactivity stages, new idle clips, and exact integration of time-based annoyance decay.
 
 ## Deferred ideas
 
-- Stretch vocalization and an original humming melody. Recognizable-song interpretations are deferred.
+- Recognizable-song interpretations. Stretch and Humming already have their original cues.
 - Further sound polish, ambience and music. The audio buses and volume controls already exist, but future sound content needs separate review. See [PR #20](https://github.com/miguelxhubgitty/dont-touch-me/pull/20) for its independent candidate work.
 - Emotional stages, trust or petting, and auras remain separate designs.
 - Interaction statistics, clothing, furniture and customization. Optional cosmetic monetization would require separate owner authorization and store review.

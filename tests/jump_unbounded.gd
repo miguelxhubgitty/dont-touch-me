@@ -26,6 +26,7 @@ func reset(game,x: float) -> void:
 	game.elapsed = 0
 	game.clock = 0
 	game.idle_time = 0
+	game._reset_special_idle()
 	game.annoyance = 0
 	game.blink_timer = 2.5
 	game.gaze_timer = 1

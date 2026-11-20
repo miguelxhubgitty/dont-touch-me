@@ -39,6 +39,7 @@ var pending_entry: Dictionary = {}
 var bubble_drawer: Node2D
 var left_eye: Polygon2D
 var right_eye: Polygon2D
+var mouth: Polygon2D
 var oval_eye := PackedVector2Array()
 var eyes_morphed := false
 var turn_details: TurnDetails
@@ -75,6 +76,10 @@ func _ready() -> void:
 	left_eye = eyes.get_node("Left")
 	right_eye = eyes.get_node("Right")
 	oval_eye = left_eye.polygon
+	mouth = Polygon2D.new()
+	mouth.color = YAWN_PINK
+	mouth.hide()
+	breathing.add_child(mouth)
 	turn_details = TurnDetails.new()
 	turn_details.actor = self
 	breathing.add_child(turn_details)
@@ -94,10 +99,21 @@ func uses_authored_reaction() -> bool:
 func uses_authored_visual() -> bool:
 	return uses_authored_idle() or uses_authored_reaction()
 
+func _displayed_idle_scale() -> Vector2:
+	return breathing.scale if uses_authored_idle() and visual != null else _fallback_body_scale()
+
+func _fallback_body_scale() -> Vector2:
+	var handoff := _idle_handoff_weight() if asleep and reaction == Reaction.NONE else 0.0
+	if handoff > 0.0:
+		var correction: Vector2 = idle_handoff.display_scale - idle_handoff.scale
+		return body_scale + correction * handoff
+	return body_scale
+
 func _entry_pose() -> Dictionary:
 	if visual != null and visual.visible:
 		return {"sx":breathing.scale.x,"sy":breathing.scale.y,"roll":breathing.rotation,"eye":eyes.scale.y,"left":eyes.scale.y*left_eye.scale.y,"right":eyes.scale.y*right_eye.scale.y,"gx":eyes.position.x,"gy":eyes.position.y}
-	return {"sx":body_scale.x,"sy":body_scale.y,"roll":body_angle,"eye":maxf(2.0/21,eye_open),"left":maxf(2.0/21,eye_open*(.5 if reaction == Reaction.SERIOUSLY else 1)),"right":maxf(2.0/21,eye_open),"gx":gaze.x,"gy":-113+gaze.y}
+	var fallback_scale := _fallback_body_scale()
+	return {"sx":fallback_scale.x,"sy":fallback_scale.y,"roll":body_angle,"eye":maxf(2.0/21,eye_open),"left":maxf(2.0/21,eye_open*(.5 if reaction == Reaction.SERIOUSLY else 1)),"right":maxf(2.0/21,eye_open),"gx":gaze.x,"gy":-113+gaze.y}
 
 func begin_reaction(which: int,touch: Vector2) -> void:
 	pending_entry = _entry_pose()
@@ -221,6 +237,10 @@ func _update_pose() -> void:
 		if player.current_animation != "breathe": player.play("breathe")
 		player.seek(fposmod(clock,3),true)
 		breathing.scale = breathing.scale.lerp(STRETCH_SCALE, _stretch_strength())
+		breathing.scale = (breathing.scale + idle_scale_offset) * idle_scale_factor
+		var handoff := _idle_handoff_weight()
+		if handoff > 0.0:
+			breathing.scale = breathing.scale.lerp(idle_handoff.display_scale, handoff)
 		breathing.rotation = body_angle
 		eyes.position = Vector2(gaze.x,-113+gaze.y)
 		if active_idle == SpecialIdle.STRETCH:
@@ -229,6 +249,9 @@ func _update_pose() -> void:
 		else:
 			eyes.scale.y = maxf(2.0/21,eye_open)
 	_update_humming_eyes()
+	mouth.visible = not yawn_mouth.is_empty()
+	if mouth.visible:
+		mouth.polygon = yawn_mouth
 	props.visible = uses_authored_visual() and (sign_amount > 0 or box_amount > 0)
 	if props.visible:
 		props.queue_redraw()

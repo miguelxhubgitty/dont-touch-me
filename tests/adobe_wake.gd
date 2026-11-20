@@ -44,7 +44,8 @@ func run() -> void:
 					route_poke(views[i],Vector2(10,10),use_touch)
 					check(actor.asleep and actor.reaction == Original.Reaction.NONE,"background miss does not wake")
 				check(not native.uses_authored_visual(),"procedural sleeper remains visible")
-				var sleeping_scale: Vector2 = native.body_scale
+				# During sleep entry the fallback body still blends from the authored pose.
+				var sleeping_scale: Vector2 = native._fallback_body_scale()
 				for i in range(actors.size()):
 					route_poke(views[i],actors[i].body_position+Vector2(side*20,-70),use_touch)
 				compare(native,source)
