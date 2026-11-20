@@ -379,3 +379,13 @@ The normal scene uses its authored renderer for awake poses and the existing pro
 The controller subtracts the difference of cumulative loss at the two ends of each frame. This charges the exact loss for time spent beyond the 3-second grace period. Stage 1 inputs, streak windows, reaction pools and audio attenuation remain in force. Tests compare the same elapsed intervals split into different step sizes, exercise all pools and handoffs, and check both renderers and audio behavior.
 
 Verification at `8954313`. Godot 4.7.2 passed all 35 suites with WASAPI audio, including 149 focused Stage 2 checks, 470 Stage 1 checks, 120 animation-audio checks and 212 rendered reaction-edge cases. The local workflow passed 19 checks. Python passed 32 tests with one skipped. The normal-scene mouse smoke check used a synthetic pointer and the desktop visual comparison used 96 Yawn frames per renderer. Seven automated suites reported shutdown resources. A normal WASAPI game session exited cleanly. Physical touch remains unverified.
+
+## Stage 3 sleeping-eye and Yawn polish
+
+The [Stage 3 plan](../plans/animation-polish-stage-3.md) preserves the sleeping eyes. Both renderer settings use the same procedural face during sleep. Only the closed eye contour gets a screen-scaled antialiased edge, including during Sleep Twitch. In the 360-pixel comparison, the worst frame-to-frame coverage change fell from 6.00 to 2.19 pixel-equivalents in both settings. The before/after frames match outside the eye region.
+
+On an actual Yawn interruption, the existing reaction starts at the poke. The face eases wide as the retained pink mouth shuts in 0.036 seconds, clears the eyes by 0.072 seconds, and reopens into the live reaction face by 0.18 seconds. The interpolation uses the reaction clock. Body motion and hit geometry stay in the existing reaction path, and the normal reaction handles audio. Resizing or starting another reaction clears the prior overlay. WAKE retains its immediate surprise.
+
+The focused tests compare motion, hit results and audio with the same reaction without the overlay. The graphical sleep test draws steady sleep and Twitch at 288, 360 and 720 pixels in both renderer settings.
+
+Verification at `b00058e`. The standard Godot run passed 36 suites with WASAPI audio, including 350 focused Stage 3 checks. The separately run graphical sleep-eye suite also passed and is now registered in the animation runner. The typography workflow passed 19 checks. Python passed 32 with one skipped. Seven automated suites reported resource warnings at shutdown. A normal sound-enabled WASAPI session exited with code 0 and no warnings. Physical touch was not tested.

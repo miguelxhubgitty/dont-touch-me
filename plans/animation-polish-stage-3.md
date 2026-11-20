@@ -1,6 +1,6 @@
 # Stage 3 — Sleep-eye rendering and animation handoffs
 
-Status: diagnosis and pseudocode for owner approval. Baseline: GitHub `origin/main` at `a0e5e5f`, including merged Stage 2 PR #40. The approval branch contains planning documentation only.
+Status: owner-approved and implemented on `feature/stage-3-animation-polish`. Baseline: GitHub `origin/main` at `a0e5e5f`, including merged Stage 2 PR #40.
 
 ## Reproduction and findings
 
@@ -77,4 +77,4 @@ The comparison shows the previous 0.09-second transition and the new sequence fo
 - Recheck Stretch and Humming completion, Humming beyond 18 seconds, Fighting Sleep into full sleep, normal reaction exits and WAKE. Run the full Godot regression suite with existing WASAPI and rendered-edge coverage. Report physical-device coverage separately.
 - Keep Stage 1 point and streak rules, Stage 2 clocks and probabilities, approved animation/audio files, and frozen releases intact.
 
-Owner approval requested for the two scoped defaults: keep the sleeping eyes and smooth their coverage, and use the Yawn-only startled blink sequence and proposed aperture shown in the new audition.
+The owner approved keeping the sleeping eyes with softened coverage and using the revised Yawn-only startled blink. Production uses an antialiased contour around the existing filled eye. The runtime comparison is separate from the pre-approval mockups and uses the same captured scenes from the baseline and feature branch.
