@@ -55,6 +55,7 @@ class PackagingTests(unittest.TestCase):
         self.release.out.mkdir(parents=True)
         self.release.catalog={'version':'0.1.0-alpha','licenses':['NOTICE.txt'],'publisher':{'email':'contact@example.invalid'},'pricing':{'model':'free'}}
         self.release.current_validation=lambda:None
+        self.release.runtime_hash=lambda:dist.sha(self.root/'NOTICE.txt')
         self.release.write_manifest=lambda:None
         self.release.receipts={'artifacts':{}}
     def tearDown(self):
@@ -65,7 +66,7 @@ class PackagingTests(unittest.TestCase):
         raw=self.release.out/key/('raw-'+key)
         raw.mkdir(parents=True)
         for name,content in files.items(): (raw/name).write_bytes(content)
-        self.release.receipts['artifacts'][key]={'status':'built','raw_files':{p.relative_to(self.release.out).as_posix():dist.sha(p) for p in raw.iterdir()}}
+        self.release.receipts['artifacts'][key]={'status':'built','runtime_fingerprint':self.release.runtime_hash(),'audio_pack':{'pack_sha256':'fixture'},'raw_files':{p.relative_to(self.release.out).as_posix():dist.sha(p) for p in raw.iterdir()}}
         return raw
     def test_web_root_and_no_duplicate_package(self):
         self.add('web',{'index.html':b'<canvas></canvas>','index.wasm':b'\0asm'})
@@ -105,13 +106,14 @@ class PackagingTests(unittest.TestCase):
             self.assertEqual(z.getinfo(executable.filename).external_attr,executable.external_attr)
             self.assertEqual(z.read('Game.app/Contents/_CodeSignature/CodeResources'),b'resource seal fixture')
             self.assertIn('LICENSES/NOTICE.txt',z.namelist())
-    def test_changed_notices_repackage_without_export(self):
+    def test_changed_notices_require_new_export(self):
         self.add('windows',{'DontTouchMe.exe':b'MZ fixture'})
         self.release.package()
         old=self.release.receipts['artifacts']['windows']['package_sha256']
         (self.root/'NOTICE.txt').write_text('updated license')
-        self.release.package()
-        self.assertNotEqual(old,self.release.receipts['artifacts']['windows']['package_sha256'])
+        with self.assertRaisesRegex(RuntimeError, 'current audio pack audit'):
+            self.release.package()
+        self.assertEqual(old,self.release.receipts['artifacts']['windows']['package_sha256'])
     def test_failed_exports_not_packaged(self):
         self.release.receipts['artifacts']['ios']={'status':'unavailable'}
         self.release.package()

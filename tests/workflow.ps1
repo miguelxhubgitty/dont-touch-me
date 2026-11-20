@@ -57,6 +57,7 @@ try {
         Invoke-Git -Arguments @('add', 'scripts/blob.gd', 'project.godot', 'export_presets.cfg')
         Invoke-Git -Arguments @('commit', '--quiet', '-m', 'Fixture: simulate future gameplay and version changes')
         $projectHash = (Get-FileHash -LiteralPath $project).Hash
+        $audioExclusions = @([IO.File]::ReadAllLines($presets) | Where-Object { $_ -match '^exclude_filter=' })
         $beforeIndex = Invoke-Git -Arguments @('write-tree')
         & ./release/tools/apply_aesthetics.ps1 -AestheticRef $aesthetic -CheckOnly
         Assert-Workflow ((Invoke-Git -Arguments @('write-tree')) -eq $beforeIndex) 'CheckOnly preserves index'
@@ -68,6 +69,12 @@ try {
         Assert-Workflow ((Get-FileHash -LiteralPath $project).Hash -eq $projectHash) 'Project metadata is not overwritten'
         Assert-Workflow ([IO.File]::ReadAllText($presets).Contains('version/code=987654')) 'New export version survives'
         Assert-Workflow ([IO.File]::ReadAllText($presets).Contains('assets/fonts/OFL-Space-Grotesk.txt')) 'Font license reaches exports'
+        $appliedPresets = [IO.File]::ReadAllText($presets)
+        $appliedExclusions = @([IO.File]::ReadAllLines($presets) | Where-Object { $_ -match '^exclude_filter=' })
+        Assert-Workflow (($audioExclusions -join "`n") -ceq ($appliedExclusions -join "`n")) 'Current export exclusions survive typography integration'
+        if (Test-Path -LiteralPath 'release/audio-manifest.json') {
+            Assert-Workflow ($appliedPresets.Contains('audio/blob_events.json')) 'Runtime event map remains included'
+        }
         Assert-Workflow (-not (Invoke-Git -Arguments @('diff', '--name-only', 'HEAD', '--', 'release/assets', 'release/assets-inventory.json'))) 'No old captures/manifests copied or regenerated'
         Assert-Workflow (-not (Invoke-Git -Arguments @('diff', '--name-only', $aesthetic, '--', 'assets/fonts', 'assets/typography', 'scripts/typography.gd'))) 'Approved font, phrase and runtime resources preserved'
         Invoke-Git -Arguments @('diff', '--cached', '--check')

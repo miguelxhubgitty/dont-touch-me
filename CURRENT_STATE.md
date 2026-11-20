@@ -30,6 +30,7 @@ Stretch ([#31](https://github.com/miguelxhubgitty/dont-touch-me/pull/31)), Hummi
 
 ## Evidence and release boundary
 
+- [Stage 4 audio export hygiene](plans/stage-4-audio-export-hygiene.md) is in review. It preserves the current enabled cues and adds an approved-stream manifest, a generated MIT notice and export/receipt checks.
 - Rapid automated audio shutdown has intermittently reported outstanding playback resources. A normal WASAPI window close after a tap exited cleanly in a prior check, which does not rule out every active-audio shutdown case. Compare exact conditions before labeling a warning harmless.
 - Desktop and synthetic viewport tests cover the development tree. Physical Android/iOS touch timing, audio latency, focus/background behavior and device performance still need direct testing. Browser autoplay and mobile audio also need real-browser checks against a separately approved web build.
 - The published **v0.1.0-alpha** uses its frozen, audio-free runtime. Its 24-second sleep threshold, procedural presentation and approved release typography belong to that historical source. Use the [release manifest](release/distribution/manifest-v0.1.0-alpha.json) for provenance and the [distribution registry](release/distribution/platforms.json) for recorded destination status. A merged development PR does not update a public package.
