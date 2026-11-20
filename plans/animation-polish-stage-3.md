@@ -28,37 +28,53 @@ draw procedural face:
     keep same body breathing, Sleep Twitch and hit transform
 ```
 
-## Option B — Preserve the outgoing pose briefly on actual Yawn interrupts (recommended)
+## Option B — Startled blink on an accepted Yawn poke
 
-After an accepted poke interrupts Yawn, carry the displayed Yawn mouth forward for up to 0.09 seconds while it closes vertically. Let the selected reaction and all its audio start immediately. In the procedural path only, blend from the outgoing rendered position, angle, scale and eye pose toward the reaction pose over that same short interval. Evaluate each blend against the live intended reaction pose at that elapsed time. Use the already sampled entry keys for the authored body and eyes. The transition mockup shows this specific interruption only. Keep the mouth attached to the same body transform throughout.
+Replace the earlier 0.09-second body-and-mouth blend with a 0.18-second face-only overlay. The reaction, its movement, hit geometry and audio start through the normal path at the poke. The overlay uses the displayed Yawn eyes and mouth as its first sample. It does not blend or write a new body pose.
 
-The brief overlap means the mouth may be visible for a few frames of the reaction. If that reads as two expressions competing, keep the body blend and retain the hard cut for the mouth. Scope the first implementation to the demonstrated Yawn interruption. Ordinary Stage 2 clip completion, authored track timing, reaction asset keys, and WAKE stay as approved.
+| Time after the poke | Eyes | Mouth |
+| --- | --- | --- |
+| 0–0.036 s | Interpolate from the Yawn aperture to a wide startled expression | Close the current pink shape vertically to zero over the same interval, then hide it |
+| 0.036–0.072 s | Close both eyes completely in a quick clearing blink | Hidden |
+| 0.072–0.180 s | Reopen into the live focused reaction expression | Hidden |
 
-```text
-on accepted poke while Yawn is active:
-    snapshot outgoing displayed pose and current local mouth
-    start the selected reaction and audio immediately using the existing path
-    remember the snapshot and reaction instance for its entry
+The audition uses smoothstep with the requested phase boundaries, a wide aperture of 1.35 times the normal eye height, and no extra closed-eye hold. Evaluate the visible eye aperture continuously, including below the usual procedural minimum; complete closure means zero visible area. Preserve the reaction's eye placement and sample its current expression for the final reopening target. Use the same normalized timing in both renderers. At exactly 0.18 seconds the overlay contributes nothing, so the normal authored or procedural eye pose continues from the same value. Keep WAKE and non-Yawn entries as sampled on main.
 
-while this reaction instance is in its first 0.09 seconds:
-    weight = 1 - smoothstep(0, 0.09, reaction_elapsed)
-    render the existing mouth vertically closing by weight in body space
-    if using procedural renderer:
-        blend displayed pose from outgoing snapshot to today's sampled reaction pose
-        use this displayed body transform in hit testing
+~~~text
+on accepted Yawn poke:
+    snapshot displayed eye apertures and the pink mouth in body-local coordinates
+    activate the selected reaction and audio immediately
+    associate a face overlay with this reaction instance
 
-when weight expires, another reaction starts, or resize cancels:
-    clear the temporary state
+while overlay belongs to current reaction:
+    t = current reaction elapsed seconds
+    live_target = sampled reaction eye apertures
+    if t < 0.036:
+        eyes = ease from outgoing aperture to wide at t
+        mouth = outgoing mouth with eased vertical closure at t
+    else if t < 0.072:
+        eyes = ease from wide to fully shut at t
+        mouth = hidden
+    else if t < 0.180:
+        eyes = ease from fully shut to live_target at t
+        mouth = hidden
+    else:
+        clear overlay and use the live reaction face
+    draw the face using the existing body transform
 
-when eligibility thresholds change:
-    keep current Stage 2 clip completion and handoff rules
-```
+on a newly accepted reaction or resize:
+    discard overlay from the previous reaction
+on a miss or an inactivity threshold:
+    keep existing Stage 2 behavior
+~~~
+
+The comparison shows the previous 0.09-second transition and the new sequence for the same Yawn poke in both settings. The test-only scene samples real geometry and reaction activation at 120 Hz for the new version. The review GIF slows both versions equally so the three phases remain readable. The previous mockup used a body blend in procedural mode, so the silhouette can move differently. This audition leaves normal body motion in control and changes only the face.
 
 ## Verification after approval
 
 - Record steady sleep and Sleep Twitch at half-scale, normal logical scale and a narrow viewport in both settings. Compare white coverage change, eye centroid movement and emitted color. Confirm eye movement follows breathing without altering the body silhouette or hit boundaries. Check settling into sleep and the original immediate WAKE expression.
-- Verify the observed Yawn interruption with mouse and synthetic touch in both settings. Compare first displayed pose, intervening frames, and the first frame at or beyond 0.09 seconds with the unmodified reaction. Check fresh pokes during the blend, misses, resize, mute, and reaction audio timing. Confirm collision geometry follows the blended visible body.
+- Verify the observed Yawn interruption with mouse and synthetic touch in both settings. Sample all three phase boundaries and the live reaction pose at 0.18 seconds. Confirm the mouth closes by 0.036 seconds, the eyes fully close by 0.072 seconds, and the face matches the live reaction on release. Compare movement, hit-test results and audio dispatch against an unmodified reaction. Check fresh pokes during the overlay, misses, resize and mute.
 - Recheck Stretch and Humming completion, Humming beyond 18 seconds, Fighting Sleep into full sleep, normal reaction exits and WAKE. Run the full Godot regression suite with existing WASAPI and rendered-edge coverage. Report physical-device coverage separately.
 - Keep Stage 1 point and streak rules, Stage 2 clocks and probabilities, approved animation/audio files, and frozen releases intact.
 
-Owner approval requested for the two scoped defaults: keep the sleeping eyes and smooth their coverage, and add the 0.09-second Yawn-only interruption bridge shown in the mockup.
+Owner approval requested for the two scoped defaults: keep the sleeping eyes and smooth their coverage, and use the Yawn-only startled blink sequence and proposed aperture shown in the new audition.
