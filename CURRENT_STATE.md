@@ -25,7 +25,7 @@ GitHub snapshot, November 18, 2026. Recheck live PR status before acting.
 
 The global Codex instructions carry the multiples-of-nine preference for flexible design values. Existing specifications, measurements, IDs and engine versions take precedence. Merged PR #28 established the repository copy.
 
-Stretch ([#31](https://github.com/miguelxhubgitty/dont-touch-me/pull/31)), Humming ([#34](https://github.com/miguelxhubgitty/dont-touch-me/pull/34)), Recoil ([#32](https://github.com/miguelxhubgitty/dont-touch-me/pull/32)) and Puffer-huff ([#33](https://github.com/miguelxhubgitty/dont-touch-me/pull/33)) complete the animation milestone. The architecture review follows this work. The stretch vocalization, humming melody, recognizable-song ideas, new annoyance mechanics, emotional stages, trust and auras are deferred.
+Stretch ([#31](https://github.com/miguelxhubgitty/dont-touch-me/pull/31)), Humming ([#34](https://github.com/miguelxhubgitty/dont-touch-me/pull/34)), Recoil ([#32](https://github.com/miguelxhubgitty/dont-touch-me/pull/32)) and Puffer-huff ([#33](https://github.com/miguelxhubgitty/dont-touch-me/pull/33)) complete the animation milestone. Their cues landed in [#38](https://github.com/miguelxhubgitty/dont-touch-me/pull/38). Recognizable-song ideas, emotional stages beyond inactivity, trust and auras are deferred.
 
 ## Evidence and release boundary
 

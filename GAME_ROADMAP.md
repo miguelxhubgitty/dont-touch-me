@@ -17,7 +17,7 @@ The development game supports each animation in both renderers. The idles use th
 
 ## Deferred ideas
 
-- Stretch vocalization and an original humming melody. Recognizable-song interpretations are deferred.
+- Recognizable-song interpretations. Stretch and Humming already have their original cues.
 - Further sound polish, ambience and music. The audio buses and volume controls already exist, but future sound content needs separate review. See [PR #20](https://github.com/miguelxhubgitty/dont-touch-me/pull/20) for its independent candidate work.
 - Emotional stages, trust or petting, and auras remain separate designs.
 - Interaction statistics, clothing, furniture and customization. Optional cosmetic monetization would require separate owner authorization and store review.
