@@ -102,6 +102,11 @@ func uses_authored_visual() -> bool:
 func _displayed_idle_scale() -> Vector2:
 	return breathing.scale if uses_authored_idle() and visual != null else _fallback_body_scale()
 
+func _displayed_yawn_aperture() -> float:
+	if uses_authored_idle() and visual != null:
+		return eyes.scale.y
+	return super._displayed_yawn_aperture()
+
 func _fallback_body_scale() -> Vector2:
 	var handoff := _idle_handoff_weight() if asleep and reaction == Reaction.NONE else 0.0
 	if handoff > 0.0:
@@ -201,6 +206,8 @@ func _update_pose() -> void:
 		return
 	left_eye.scale = Vector2.ONE
 	right_eye.scale = Vector2.ONE
+	left_eye.show()
+	right_eye.show()
 	eyes.visible = true
 	eyes.modulate = Color.WHITE
 	turn_details.visible = uses_authored_reaction() and reaction == Reaction.TURN
@@ -249,6 +256,14 @@ func _update_pose() -> void:
 		else:
 			eyes.scale.y = maxf(2.0/21,eye_open)
 	_update_humming_eyes()
+	if uses_authored_reaction() and _startled_active():
+		var left := _startled_aperture(eyes.scale.y * left_eye.scale.y)
+		var right := _startled_aperture(eyes.scale.y * right_eye.scale.y)
+		eyes.scale.y = 1.0
+		left_eye.visible = left > 0.0
+		right_eye.visible = right > 0.0
+		left_eye.scale.y = maxf(0.001, left)
+		right_eye.scale.y = maxf(0.001, right)
 	mouth.visible = not yawn_mouth.is_empty()
 	if mouth.visible:
 		mouth.polygon = yawn_mouth
