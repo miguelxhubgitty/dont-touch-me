@@ -21,6 +21,25 @@ class CatalogTests(unittest.TestCase):
         dist.check_catalog(self.catalog,self.registry)
         self.assertEqual(len(self.registry['platforms']),25)
         self.assertTrue(all(p['publication']['live_url'] is None for p in self.registry['platforms'] if p['publication']['status']!='published'))
+
+    def test_android_identity_and_version_are_independent_of_apple(self):
+        self.assertEqual(self.catalog['application_id'], 'com.littlebutterflyproductions.donttouchme')
+        self.assertEqual(self.catalog['macos_build_version'], 2)
+        presets = (ROOT / 'export_presets.cfg').read_text()
+        dist.check_android_presets(presets, self.catalog)
+        for old in (presets.replace('com.wandiel.donttouchme', self.catalog['application_id'], 1),
+                    presets.replace(f'version/code={self.catalog["android_version_code"]}', 'version/code=3', 1)):
+            with self.assertRaisesRegex(ValueError, 'identity/version code mismatch'):
+                dist.check_android_presets(old, self.catalog)
+
+    def test_catalog_rejects_old_android_identity_and_reused_code(self):
+        for field, bad, message in [
+            ('android_application_id', self.catalog['application_id'], 'Android application ID'),
+            ('android_version_code', 3, 'must exceed'),
+        ]:
+            changed = {**self.catalog, field: bad}
+            with self.subTest(field=field), self.assertRaisesRegex(ValueError, message):
+                dist.check_catalog(changed, self.registry)
     def test_monetization_rejected(self):
         self.catalog['pricing']['payments']=True
         with self.assertRaises(ValueError): dist.check_catalog(self.catalog,self.registry)
@@ -130,6 +149,33 @@ class PackagingTests(unittest.TestCase):
         dist.save(self.release.out/'validation.json',{'runtime_fingerprint':'runtime','asset_input':{},'shared_fingerprints':{'screenshot.png':'original'}})
         with patch.object(dist,'asset_input',return_value={}):
             dist.Release.current_validation(self.release)
+
+class AndroidBundleTests(unittest.TestCase):
+    def test_android_export_cannot_rebuild_frozen_alpha(self):
+        runner = dist.Release.__new__(dist.Release)
+        runner.catalog = dist.load(dist.CATALOG)
+        runner.catalog['version'] = dist.load(ROOT / 'release/distribution/manifest-v0.1.0-alpha.json')['release_version'].removeprefix('v')
+        with patch.object(dist, 'clean_tree'), self.assertRaisesRegex(ValueError, 'Alpha is frozen'):
+            runner.export(['android-aab'])
+
+    def test_bundle_metadata(self):
+        catalog = dist.load(dist.CATALOG)
+        package = catalog['android_application_id']
+        code = str(catalog['android_version_code'])
+        manifest = f'''<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+            package="{package}" android:versionName="{catalog['version']}"
+            android:versionCode="{code}"><uses-sdk android:targetSdkVersion="36"/></manifest>'''
+        config = '{"optimizations":{"uncompressNativeLibraries":{"enabled":true,"alignment":"PAGE_ALIGNMENT_16K"}}}'
+        self.assertEqual(dist.check_bundle_metadata(manifest, config, catalog)['target_sdk'], 36)
+        for rejected_manifest, rejected_config, message in [
+            (manifest.replace(package, catalog['application_id']), config, 'package ID mismatch'),
+            (manifest.replace(f'versionCode="{code}"', 'versionCode="3"'), config, 'version mismatch'),
+            (manifest.replace('targetSdkVersion="36"', 'targetSdkVersion="35"'), config, 'target SDK'),
+            (manifest, config.replace('16K', '4K'), '16 KB APK alignment'),
+        ]:
+            with self.subTest(message=message), self.assertRaisesRegex(RuntimeError, message):
+                dist.check_bundle_metadata(rejected_manifest, rejected_config, catalog)
+
 
 class MacOSSigningTests(unittest.TestCase):
     def test_sync_migrates_only_disabled_macos_signing(self):

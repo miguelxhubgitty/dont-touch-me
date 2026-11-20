@@ -15,6 +15,7 @@ import sys
 import tarfile
 import tempfile
 import threading
+import xml.etree.ElementTree as ET
 import zipfile
 from datetime import datetime, timezone
 from pathlib import Path
@@ -40,6 +41,10 @@ AUDIO_MAP = 'audio/blob_events.json'
 NOTICES = 'THIRD_PARTY_NOTICES.txt'
 AUDIO_SOURCE_EXTENSIONS = {'.wav', '.ogg', '.mp3', '.flac', '.aif', '.aiff', '.opus', '.m4a'}
 AUDIO_IMPORT_EXTENSIONS = {'.sample', '.oggvorbisstr', '.mp3str', '.wavstr'}
+PLAY_ANDROID_ID = 'com.wandiel.donttouchme'
+LAST_VERIFIED_PLAY_ARTIFACT_CODE = 3
+PLAY_MIN_TARGET_SDK = 36
+ANDROID_NS = '{http://schemas.android.com/apk/res/android}'
 
 def macos_signing_defaults(text):
     """Migrate disabled macOS signing without changing other targets or custom signers."""
@@ -199,6 +204,11 @@ def stamp():
 
 def check_catalog(catalog=None, registry=None):
     c, r = catalog or load(CATALOG), registry or load(REGISTRY)
+    if c.get('android_application_id') != PLAY_ANDROID_ID:
+        raise ValueError('Android application ID must match the existing Google Play app')
+    code = c.get('android_version_code')
+    if type(code) is not int or code <= LAST_VERIFIED_PLAY_ARTIFACT_CODE:
+        raise ValueError('Android version code must exceed the verified code-3 artifact')
     if not re.fullmatch(r'\d+\.\d+\.\d+(?:-[a-zA-Z0-9.-]+)?', c['version']):
         raise ValueError('Invalid release version')
     if c['pricing'] != {'model':'free','payments':False,'donations':False,'in_app_purchases':False,'currency_integration':False}:
@@ -224,6 +234,38 @@ def check_catalog(catalog=None, registry=None):
             raise ValueError(f'Missing shared material: {path}')
     return c, r
 
+def check_android_presets(text, catalog):
+    presets = configparser.ConfigParser(interpolation=None)
+    presets.read_string(text)
+    android = [section for section in presets if presets[section].get('platform') == '"Android"']
+    if not android:
+        raise ValueError('Android export presets are missing')
+    for section in android:
+        options = section + '.options'
+        package = presets.get(options, 'package/unique_name', fallback='')
+        code = presets.get(options, 'version/code', fallback='')
+        if package != f'"{catalog["android_application_id"]}"' or code != str(catalog['android_version_code']):
+            raise ValueError(f'Android identity/version code mismatch in {section}; run release sync.')
+
+
+def check_bundle_metadata(manifest, config, catalog):
+    root = ET.fromstring(manifest)
+    if root.get('package') != catalog['android_application_id']:
+        raise RuntimeError('AAB package ID mismatch')
+    if (root.get(ANDROID_NS + 'versionCode') != str(catalog['android_version_code'])
+            or root.get(ANDROID_NS + 'versionName') != catalog['version']):
+        raise RuntimeError('AAB version mismatch')
+    sdk = root.find('uses-sdk')
+    target = int(sdk.get(ANDROID_NS + 'targetSdkVersion', '0')) if sdk is not None else 0
+    if target < PLAY_MIN_TARGET_SDK:
+        raise RuntimeError('AAB target SDK below the Play requirement')
+    native = json.loads(config).get('optimizations', {}).get('uncompressNativeLibraries', {})
+    if native.get('alignment') != 'PAGE_ALIGNMENT_16K':
+        raise RuntimeError('AAB does not request 16 KB APK alignment')
+    return {'package_id': root.get('package'), 'version_code': catalog['android_version_code'],
+            'target_sdk': target, 'bundle_alignment': 'PAGE_ALIGNMENT_16K'}
+
+
 def sync():
     require_release()
     c, _ = check_catalog()
@@ -236,6 +278,7 @@ def sync():
     project.write_text(re.sub(r'(?m)^config/version="[^"]+"', f'config/version="{c["version"]}"', project.read_text()), encoding='utf-8')
     presets = ROOT / 'export_presets.cfg'
     text = presets.read_text()
+    text = re.sub(r'(?m)^package/unique_name="[^"]+"$', f'package/unique_name="{c["android_application_id"]}"', text)
     text = re.sub(r'(?m)^version/name="[^"]+"', f'version/name="{c["version"]}"', text)
     text = re.sub(r'(?m)^version/code=\d+', f'version/code={c["android_version_code"]}', text)
     text = re.sub(r'(?m)^application/(file_version|product_version)="[^"]+"', lambda m: f'application/{m[1]}="{c["windows_version"]}"', text)
@@ -243,7 +286,7 @@ def sync():
     additions = [
         ('Web','Web','variant/extensions_support=false\nvariant/thread_support=false\nvram_texture_compression/for_desktop=true\nvram_texture_compression/for_mobile=true\nhtml/canvas_resize_policy=2\nhtml/focus_canvas_on_start=true\nprogressive_web_app/enabled=false\n'),
         ('Linux','Linux','binary_format/architecture="x86_64"\nbinary_format/embed_pck=true\ndebug/export_console_wrapper=0\n'),
-        ('macOS','macOS',f'application/bundle_identifier="{c["application_id"]}"\napplication/short_version="{c["native_version"]}"\napplication/version="{c["android_version_code"]}"\napplication/icon="res://assets/icon_ios.png"\nbinary_format/architecture="universal"\ncodesign/codesign=1\nnotarization/notarization=0\n'),
+        ('macOS','macOS',f'application/bundle_identifier="{c["application_id"]}"\napplication/short_version="{c["native_version"]}"\napplication/version="{c["macos_build_version"]}"\napplication/icon="res://assets/icon_ios.png"\nbinary_format/architecture="universal"\ncodesign/codesign=1\nnotarization/notarization=0\n'),
     ]
     for name, target, options in additions:
         if f'name="{name}"' not in text:
@@ -251,7 +294,8 @@ def sync():
             text += f'\n[preset.{index}]\nname="{name}"\nplatform="{target}"\n' + common + f'\n[preset.{index}.options]\n' + options
     # Ensure future syncs update existing macOS numeric versions too.
     text = re.sub(r'(?m)^application/short_version="[^"]+"', f'application/short_version="{c["native_version"]}"', text)
-    text = re.sub(r'(?m)^application/version="[^"]+"', f'application/version="{c["android_version_code"]}"', text)
+    text = re.sub(r'(?m)^application/version="[^"]+"', f'application/version="{c["macos_build_version"]}"', text)
+    check_android_presets(text, c)
     presets.write_text(audio_export_filters(macos_signing_defaults(text)), encoding='utf-8')
     print('Synchronized alpha metadata and six native/Web export presets; no images generated.')
 
@@ -295,6 +339,7 @@ class Release:
                 self.settings[match[1]] = json.loads(match[2])
         self.sdk = Path(os.environ.get('ANDROID_HOME', self.settings.get('android_sdk_path','__missing_sdk__')))
         self.jdk = Path(os.environ.get('JAVA_HOME', self.settings.get('java_sdk_path','__missing_jdk__')))
+        self.bundletool = Path(os.environ.get('BUNDLETOOL', '__missing_bundletool__'))
         self.templates = Path(os.environ.get('GODOT_TEMPLATES', str(data_root/'export_templates'/self.catalog['engine'])))
         if self.godot and Path(self.godot).is_file():
             version=subprocess.check_output([self.godot,'--version'],text=True).strip()
@@ -332,6 +377,7 @@ class Release:
                 if not (self.sdk / 'platform-tools').is_dir(): missing.append('Android SDK/platform-tools')
                 if not (self.jdk / 'bin' / ('java.exe' if os.name == 'nt' else 'java')).is_file(): missing.append('JDK 17')
                 if key == 'android-apk' and not Path(self.settings.get('debug_keystore','__missing__')).is_file(): missing.append('existing debug keystore')
+                if key == 'android-aab' and not self.bundletool.is_file(): missing.append('Bundletool JAR (set BUNDLETOOL)')
             if key == 'ios': missing += ['macOS/Xcode export host, Apple Team ID, provisioning and authorized signing; no iOS preset fabricated']
             result[key] = {'export_possible': not missing, 'missing':missing, 'preset':preset}
         save(self.out / 'prerequisites.json', result)
@@ -344,6 +390,7 @@ class Release:
         self.engine('--editor','--import','--quit', label='import')
         approved_audio()
         presets = (ROOT / 'export_presets.cfg').read_text(encoding='utf-8')
+        check_android_presets(presets, self.catalog)
         if audio_export_filters(presets) != presets:
             raise RuntimeError('Audio export filters are stale; run sync.')
         self.engine('--script', 'release/tools/generate_notices.gd', '--', '--check', label='test-notices')
@@ -390,6 +437,11 @@ class Release:
 
     def export(self, keys):
         clean_tree()
+        if any(key.startswith('android-') for key in keys):
+            frozen = load(ROOT / 'release/distribution/manifest-v0.1.0-alpha.json')['release_version']
+            if self.catalog['version'] == frozen.removeprefix('v'):
+                raise ValueError('Choose a new release version before exporting an Android update; the Alpha is frozen.')
+            check_android_presets((ROOT / 'export_presets.cfg').read_text(encoding='utf-8'), self.catalog)
         self.current_validation()
         runtime = self.runtime_hash()
         availability = self.doctor()
@@ -469,7 +521,18 @@ class Release:
                 self.run([tools/('zipalign.exe' if os.name=='nt' else 'zipalign'),'-c','-P','16','4',path], 'apk-alignment')
                 _,badging=self.run([tools/('aapt2.exe' if os.name=='nt' else 'aapt2'),'dump','badging',path], 'apk-metadata')
                 if f"versionName='{self.catalog['version']}'" not in badging or f"versionCode='{self.catalog['android_version_code']}'" not in badging: raise RuntimeError('APK version mismatch')
+                if f"package: name='{self.catalog['android_application_id']}'" not in badging:
+                    raise RuntimeError('APK package ID mismatch')
                 checks['signing'] = 'debug APK signature verified; not production signing'
+            else:
+                java = self.jdk/'bin'/('java.exe' if os.name=='nt' else 'java')
+                command = [java, '-jar', self.bundletool]
+                bundle = '--bundle=' + str(path)
+                self.run([*command, 'validate', bundle], 'aab-validation')
+                _, manifest = self.run([*command, 'dump', 'manifest', bundle], 'aab-manifest')
+                _, config = self.run([*command, 'dump', 'config', bundle], 'aab-config')
+                checks.update(check_bundle_metadata(manifest, config, self.catalog))
+                checks['signing'] = 'unsigned; upload certificate not checked'
             checks['runtime'] = 'not run on current Android device; static package checks only'
         return checks
 
