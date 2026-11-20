@@ -35,6 +35,11 @@ TARGETS = {
 FORMATS = {'windows': ['windows-zip','windows-directory'], 'web': ['web-zip','web-directory'],
            'android-apk': ['android-debug-apk'], 'android-aab': [], 'linux': ['linux-zip','linux-directory'], 'macos': ['macos-zip','macos-app'], 'ios': []}
 MACOS_RECIPE = 'sealed-adhoc-v1'
+AUDIO_MANIFEST = 'release/audio-manifest.json'
+AUDIO_MAP = 'audio/blob_events.json'
+NOTICES = 'THIRD_PARTY_NOTICES.txt'
+AUDIO_SOURCE_EXTENSIONS = {'.wav', '.ogg', '.mp3', '.flac', '.aif', '.aiff', '.opus', '.m4a'}
+AUDIO_IMPORT_EXTENSIONS = {'.sample', '.oggvorbisstr', '.mp3str', '.wavstr'}
 
 def macos_signing_defaults(text):
     """Migrate disabled macOS signing without changing other targets or custom signers."""
@@ -107,6 +112,71 @@ def sha(path, normalized=False):
         for block in iter(lambda: stream.read(1024 * 1024), b''):
             h.update(block)
     return h.hexdigest()
+
+def approved_audio():
+    manifest = load(ROOT / AUDIO_MANIFEST)
+    events = load(ROOT / AUDIO_MAP)['events']
+    active = {cue['stream'].removeprefix('res://') for cue in events.values() if cue['enabled']}
+    streams = manifest['streams']
+    if manifest['version'] != 1 or active != streams.keys():
+        raise RuntimeError(f'Audio approval mismatch: unapproved {sorted(active - streams.keys())}; inactive {sorted(streams.keys() - active)}')
+    notice = (ROOT / NOTICES).read_text(encoding='utf-8')
+    for path, record in streams.items():
+        if not path.startswith('audio/') or Path(path).as_posix() != path or '..' in Path(path).parts:
+            raise RuntimeError('Invalid approved audio path: ' + path)
+        license_id = record['license']
+        if license_id not in {'original', 'CC0-1.0', 'MIT'}:
+            raise RuntimeError('Unapproved audio license: ' + path)
+        if not (ROOT / record['provenance']).is_file() or (license_id != 'original' and not record.get('source')):
+            raise RuntimeError('Missing audio provenance: ' + path)
+        if sha(ROOT / path) != record['sha256']:
+            raise RuntimeError('Approved audio checksum mismatch: ' + path)
+        if license_id == 'MIT':
+            required = (ROOT / record['notice']).read_text(encoding='utf-8').strip()
+            if not required or notice.count(required) != 1:
+                raise RuntimeError('Missing or repeated required audio notice: ' + path)
+    return streams
+
+def audio_export_filters(text):
+    streams = approved_audio()
+    excludes = {'audio/candidate_pack/*', 'audio/prototypes/*'}
+    for path in (ROOT / 'audio').rglob('*'):
+        relative = path.relative_to(ROOT).as_posix()
+        if path.suffix.lower() in AUDIO_SOURCE_EXTENSIONS and relative not in streams:
+            if not any(relative.startswith(folder[:-1]) for folder in excludes if folder.endswith('*')):
+                excludes.update((relative, relative + '.import'))
+    def update(match):
+        existing = [path for path in match[2].split(',') if path and not path.startswith('audio/')]
+        audio = [AUDIO_MAP] if match[1] == 'include' else sorted(excludes)
+        return f'{match[1]}_filter="{",".join(existing + audio)}"'
+    return re.sub(r'(?m)^(include|exclude)_filter="([^"]*)"$', update, text)
+
+def inspect_audio_pack(path):
+    streams = approved_audio()
+    with zipfile.ZipFile(path) as pack:
+        names = set(pack.namelist())
+        if len(names) != len(pack.namelist()):
+            raise RuntimeError('Duplicate entries in resource pack.')
+        for name in (AUDIO_MAP, NOTICES):
+            if name not in names or pack.read(name).replace(b'\r\n', b'\n') != (ROOT / name).read_bytes().replace(b'\r\n', b'\n'):
+                raise RuntimeError('Missing or stale packaged file: ' + name)
+        expected = {AUDIO_MAP}
+        payloads = {}
+        for stream in streams:
+            sidecar = stream + '.import'
+            if sidecar not in names:
+                raise RuntimeError('Missing packaged audio import: ' + sidecar)
+            remap = re.search(rb'(?m)^path="res://([^"]+)"$', pack.read(sidecar))
+            payload = remap[1].decode('utf-8') if remap else ''
+            if (not payload.startswith('.godot/imported/') or payload not in names
+                    or Path(payload).suffix not in AUDIO_IMPORT_EXTENSIONS or not pack.getinfo(payload).file_size):
+                raise RuntimeError('Missing packaged audio payload: ' + stream)
+            expected.update((sidecar, payload))
+            payloads[stream] = hashlib.sha256(pack.read(payload)).hexdigest()
+        actual = {name for name in names if name.startswith('audio/') or Path(name).suffix.lower() in AUDIO_SOURCE_EXTENSIONS | AUDIO_IMPORT_EXTENSIONS}
+        if actual - expected:
+            raise RuntimeError('Unexpected packaged audio: ' + ', '.join(sorted(actual - expected)))
+        return {'pack_sha256': sha(path), 'stream_payload_sha256': payloads, 'notices_sha256': sha(ROOT / NOTICES, normalized=True)}
 
 def git(*args):
     return subprocess.check_output(['git', *args], cwd=ROOT, text=True).strip()
@@ -182,7 +252,7 @@ def sync():
     # Ensure future syncs update existing macOS numeric versions too.
     text = re.sub(r'(?m)^application/short_version="[^"]+"', f'application/short_version="{c["native_version"]}"', text)
     text = re.sub(r'(?m)^application/version="[^"]+"', f'application/version="{c["android_version_code"]}"', text)
-    presets.write_text(macos_signing_defaults(text), encoding='utf-8')
+    presets.write_text(audio_export_filters(macos_signing_defaults(text)), encoding='utf-8')
     print('Synchronized alpha metadata and six native/Web export presets; no images generated.')
 
 def inventory_refresh():
@@ -272,6 +342,11 @@ class Release:
         if load(ROOT / 'release/listing.json') != self.catalog['store_text']:
             raise RuntimeError('Generated listing is stale; run sync.')
         self.engine('--editor','--import','--quit', label='import')
+        approved_audio()
+        presets = (ROOT / 'export_presets.cfg').read_text(encoding='utf-8')
+        if audio_export_filters(presets) != presets:
+            raise RuntimeError('Audio export filters are stale; run sync.')
+        self.engine('--script', 'release/tools/generate_notices.gd', '--', '--check', label='test-notices')
         for suite in ['behavior','release','fingerprints','typography']:
             self.engine('--script', f'tests/{suite}.gd', label='test-' + suite)
         self.engine('--script','release/tools/validate_package.gd', label='test-package')
@@ -298,7 +373,9 @@ class Release:
         print('Final store captures generated once; inventory refreshed.')
 
     def runtime_hash(self):
-        paths = [p for p in git('ls-files').splitlines() if p in ['main.tscn','project.godot','export_presets.cfg','icon.svg','THIRD_PARTY_NOTICES.txt'] or p.startswith(('assets/','scripts/'))]
+        inputs = {'main.tscn', 'project.godot', 'export_presets.cfg', 'icon.svg', NOTICES, AUDIO_MANIFEST,
+                  'release/tools/generate_notices.gd', 'release/tools/release.py'}
+        paths = [p for p in git('ls-files').splitlines() if p in inputs or p.startswith(('assets/', 'scripts/', 'audio/', 'scenes/', 'release/licenses/'))]
         return hashlib.sha256(json.dumps({p:sha(ROOT/p,True) for p in paths},sort_keys=True).encode()).hexdigest()
 
     def current_validation(self):
@@ -314,6 +391,7 @@ class Release:
     def export(self, keys):
         clean_tree()
         self.current_validation()
+        runtime = self.runtime_hash()
         availability = self.doctor()
         for key in keys:
             target = TARGETS[key]
@@ -326,11 +404,15 @@ class Release:
             raw = self.out / folder / ('raw-' + key)
             raw.mkdir(parents=True, exist_ok=True)
             destination = raw / target[2]
-            fingerprint = hashlib.sha256((self.runtime_hash()+key+sha(self.godot)+sha(self.templates/target[1])+(MACOS_RECIPE if key=='macos' else '')).encode()).hexdigest()
-            if old.get('export_fingerprint') == fingerprint and old.get('raw_files') and all((self.out/p).is_file() and sha(self.out/p)==h for p,h in old['raw_files'].items()):
+            fingerprint = hashlib.sha256((runtime+key+sha(self.godot)+sha(self.templates/target[1])+(MACOS_RECIPE if key=='macos' else '')).encode()).hexdigest()
+            if old.get('export_fingerprint') == fingerprint and old.get('runtime_fingerprint') == runtime and old.get('audio_pack') and old.get('raw_files') and all((self.out/p).is_file() and sha(self.out/p)==h for p,h in old['raw_files'].items()):
                 print(key + ': reusing validated existing export')
                 continue
             try:
+                with tempfile.TemporaryDirectory(prefix='audio-pack-', dir=self.out) as temporary:
+                    audio_pack = Path(temporary) / 'resources.zip'
+                    self.engine('--export-pack', target[0], str(audio_pack), label='audio-pack-' + key)
+                    audio_audit = inspect_audio_pack(audio_pack)
                 command = ['--export-debug' if target[3] else '--export-release', target[0], str(destination)]
                 if key == 'android-aab' and not (ROOT / 'android/build').is_dir():
                     command.insert(0, '--install-android-build-template')
@@ -338,6 +420,7 @@ class Release:
                 validation = self.inspect(key, destination)
                 self.receipts['artifacts'][key] = {'status':'built','source_commit':git('rev-parse','HEAD'),'built_at':stamp(),'export_fingerprint':fingerprint,'raw_files':{p.relative_to(self.out).as_posix():sha(p) for p in raw.rglob('*') if p.is_file()},'validation':validation,'signing': validation.get('signing','ad-hoc or stronger; verify on macOS') if key=='macos' else 'debug key only' if key=='android-apk' else 'unsigned' if key in ['windows','android-aab'] else 'not applicable','formats':FORMATS[key]}
                 print(key + ': exported and inspected')
+                self.receipts['artifacts'][key].update(runtime_fingerprint=runtime, audio_pack=audio_audit)
             except (RuntimeError, subprocess.TimeoutExpired, OSError, zipfile.BadZipFile) as error:
                 self.receipts['artifacts'][key] = {'status':'failed','error':str(error),'formats':[]}
                 print(key + ': FAILED — see logs')
@@ -394,6 +477,8 @@ class Release:
         self.current_validation()
         for key, record in self.receipts['artifacts'].items():
             if record['status'] != 'built': continue
+            if record.get('runtime_fingerprint') != self.runtime_hash() or not record.get('audio_pack'):
+                raise RuntimeError('Raw export receipt needs a current audio pack audit: ' + key)
             raw = self.out / ('android' if key.startswith('android') else key) / ('raw-' + key)
             if any(not (self.out/p).exists() or sha(self.out/p)!=h for p,h in record['raw_files'].items()):
                 raise RuntimeError('Raw export changed: ' + key)

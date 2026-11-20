@@ -49,7 +49,7 @@ try {
     # release/assets folders: those would overwrite current gameplay/metadata.
     $paths = @(
         'scripts/blob.gd', 'scripts/typography.gd', 'scripts/typography.gd.uid',
-        'assets/fonts', 'assets/typography', 'export_presets.cfg',
+        'assets/fonts', 'assets/typography',
         'tests/release.gd', 'tests/typography.gd', 'tests/typography.gd.uid',
         'release/tools/generate_assets.gd', 'release/tools/generate_typography.gd'
     )
@@ -68,6 +68,21 @@ try {
         [IO.File]::AppendAllText($patchPath, [IO.File]::ReadAllText($controllerPatch))
     }
     if ((Get-Item -LiteralPath $patchPath).Length -eq 0) { throw 'No aesthetic changes found.' }
+    # Add the reviewed font notice to current filters without applying old export presets.
+    $presetPath = Join-Path $repoRoot 'export_presets.cfg'
+    $presets = [IO.File]::ReadAllText($presetPath)
+    $includePattern = '(?m)^include_filter="([^"\r\n]*)"'
+    $presetCount = [regex]::Matches($presets, '(?m)^\[preset\.\d+\]\r?$').Count
+    if ($presetCount -eq 0 -or [regex]::Matches($presets, $includePattern).Count -ne $presetCount) {
+        throw 'Expected one resource include filter per export preset.'
+    }
+    $fontNotice = 'assets/fonts/OFL-Space-Grotesk.txt'
+    $updatedPresets = [regex]::Replace($presets, $includePattern, {
+        param($match)
+        $filters = @($match.Groups[1].Value -split ',' | Where-Object { $_ })
+        if ($fontNotice -notin $filters) { $filters += $fontNotice }
+        return 'include_filter="' + ($filters -join ',') + '"'
+    })
     # git apply --3way --check can return 0 even when the merge would conflict.
     # Actually merge into a temporary index instead, leaving the real index and
     # working files untouched on a failed preflight.
@@ -86,6 +101,10 @@ try {
         return
     }
     $null = Invoke-CheckedGit -Arguments @('apply', '--3way', $patchPath)
+    if ($updatedPresets -cne $presets) {
+        [IO.File]::WriteAllText($presetPath, $updatedPresets)
+        $null = Invoke-CheckedGit -Arguments @('add', '--', 'export_presets.cfg')
+    }
     Write-Output "Applied typography from $tip to $branch; changes are staged for review."
     Write-Output 'No images were regenerated. Review git diff --cached, preserve current gameplay, then commit.'
     Write-Output 'Store captures/manifests remain historical until the single finalization pass. See BRANCH_WORKFLOW.md.'

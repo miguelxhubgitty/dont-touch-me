@@ -389,3 +389,9 @@ On an actual Yawn interruption, the existing reaction starts at the poke. The fa
 The focused tests compare motion, hit results and audio with the same reaction without the overlay. The graphical sleep test draws steady sleep and Twitch at 288, 360 and 720 pixels in both renderer settings.
 
 Verification at `b00058e`. The standard Godot run passed 36 suites with WASAPI audio, including 350 focused Stage 3 checks. The separately run graphical sleep-eye suite also passed and is now registered in the animation runner. The typography workflow passed 19 checks. Python passed 32 with one skipped. Seven automated suites reported resource warnings at shutdown. A normal sound-enabled WASAPI session exited with code 0 and no warnings. Physical touch was not tested.
+
+## Stage 4 — Audio export hygiene
+
+The Stage 4 PR uses the enabled event map to verify the release's approved audio. It leaves cue playback, timing, levels and source files intact. The manager still loads present disabled clips for editor audition and accepts their absence in exported packs. Release validation also checks the generated Godot and CureJe notices and fingerprints audio and scene content. A stale validation or raw export receipt requires a new check before packaging.
+
+Disposable Godot 4.7.2 resource ZIPs reduced the Windows payload from 31 to 18 audio streams. Windows and both Android presets retained all 18 approved compiled stream hashes byte for byte. Each contained one complete CureJe MIT notice. See the [Stage 4 audio export plan](../plans/stage-4-audio-export-hygiene.md) for removed assets, source verification and platform limitations.

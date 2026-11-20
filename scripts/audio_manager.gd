@@ -59,6 +59,9 @@ func _ready() -> void:
 			cue.enabled = false
 			continue
 		if not streams.has(path):
+			# Release packs omit dormant streams. Present candidates still load in development.
+			if not cue.enabled and not ResourceLoader.exists(path):
+				continue
 			var resource = load(path) if path.begins_with("res://audio/") and ResourceLoader.exists(path) else null
 			streams[path] = resource if resource is AudioStream else null
 			if streams[path] == null:

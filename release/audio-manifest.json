@@ -1,0 +1,101 @@
+{
+  "version": 1,
+  "streams": {
+    "audio/animation_cues/01-air-valve.wav": {
+      "sha256": "9ebd441843aea0c9e0a812f0859390d2df6723836d8f90e795e31fbfb9d9aaef",
+      "license": "original",
+      "provenance": "audio/animation_cues/SOURCES.md"
+    },
+    "audio/animation_cues/01-curled-eep.wav": {
+      "sha256": "ef7ddc0517344a0a2934e0900ca4017d80c13e3e5dfee7b7e6163232d4bd9f5b",
+      "license": "original",
+      "provenance": "audio/animation_cues/SOURCES.md"
+    },
+    "audio/animation_cues/01-pocket-melody.wav": {
+      "sha256": "489fdb64300e37b14439484d225edb657d9fa169f0d02fcdf50b0152336f0521",
+      "license": "original",
+      "provenance": "audio/animation_cues/SOURCES.md"
+    },
+    "audio/animation_cues/01-vowel-lift.wav": {
+      "sha256": "197d75ac65f2b02ce28c07f116bb6ac497f6cf70dfa570416575413ac51d5810",
+      "license": "original",
+      "provenance": "audio/animation_cues/SOURCES.md"
+    },
+    "audio/candidate_sfx/character/box_lower.wav": {
+      "sha256": "8de2f1c91f374bbc7a2fb30b871ceb046dc9cfb39fdbe6a711f7fcd5949c4e00",
+      "license": "original",
+      "provenance": "audio/candidate_pack/SOURCE_REGISTRY.md"
+    },
+    "audio/candidate_sfx/character/box_raise.wav": {
+      "sha256": "2335c1d0b15f7518f446356c8d308bdac854546efa4d864a61fc2f230162d415",
+      "license": "original",
+      "provenance": "audio/candidate_pack/SOURCE_REGISTRY.md"
+    },
+    "audio/candidate_sfx/character/jump_land.wav": {
+      "sha256": "24e68ab395a52c5f65fae515bea4197dd9dc0775a13f1421ce9c40ccff40f13b",
+      "license": "original",
+      "provenance": "audio/candidate_pack/SOURCE_REGISTRY.md"
+    },
+    "audio/candidate_sfx/character/run_depart.wav": {
+      "sha256": "5478935fa39e46378acb4b4e5aafb9efa96e60b92279a1b8c40fe6f8c90eceab",
+      "license": "original",
+      "provenance": "audio/candidate_pack/SOURCE_REGISTRY.md"
+    },
+    "audio/candidate_sfx/character/sign_raise.wav": {
+      "sha256": "39eba30b0db0fdcc30ba81e419da8688e3eb4530f724f123f1c7eb7606272975",
+      "license": "original",
+      "provenance": "audio/candidate_pack/SOURCE_REGISTRY.md"
+    },
+    "audio/candidate_sfx/character/slide.wav": {
+      "sha256": "ebcad89c03aff0c7716e6af04bf97cac796dad14237a3e47350876eb3cc12b49",
+      "license": "original",
+      "provenance": "audio/candidate_pack/SOURCE_REGISTRY.md"
+    },
+    "audio/candidate_sfx/user/game_start.wav": {
+      "sha256": "f4850e312b792c20317b7f05a2d7b286caf0769c3e8b2e19404895bbe204be26",
+      "license": "original",
+      "provenance": "audio/candidate_pack/SOURCE_REGISTRY.md"
+    },
+    "audio/candidate_sfx/user/tap_miss.wav": {
+      "sha256": "a11df4c3981db77a02701d430ef7fd2327550fca3bc965736e7eead605df7fa3",
+      "license": "original",
+      "provenance": "audio/candidate_pack/SOURCE_REGISTRY.md"
+    },
+    "audio/candidate_sfx/user/tap_success.wav": {
+      "sha256": "8e6799fe1671c260b18714e80909a9a0cf9145efbadcaf19c7fbaa4209c47217",
+      "license": "original",
+      "provenance": "audio/candidate_pack/SOURCE_REGISTRY.md"
+    },
+    "audio/voice/kitten_lolamadeus_1.ogg": {
+      "sha256": "f222fa755f03a2e046e206eedb12b26a9daa020f433001fc91768198f18114a3",
+      "license": "CC0-1.0",
+      "provenance": "audio/candidate_pack/SOURCE_REGISTRY.md",
+      "source": "https://freesound.org/people/lolamadeus/sounds/196251/"
+    },
+    "audio/voice/puppy_chihuahua_whine.wav": {
+      "sha256": "13b092e91103153c8a7acad49a24bb8247d9585d551ebc9a2600e7019ce9e743",
+      "license": "CC0-1.0",
+      "provenance": "audio/candidate_pack/SOURCE_REGISTRY.md",
+      "source": "https://freesound.org/people/AustinXYZ/sounds/350593/"
+    },
+    "audio/voice/puppy_real_1.ogg": {
+      "sha256": "0c687d34d27530bd67a70db4757e5542e648c0431eb066efbd72bf884acb62b5",
+      "license": "CC0-1.0",
+      "provenance": "audio/candidate_pack/SOURCE_REGISTRY.md",
+      "source": "https://commons.wikimedia.org/wiki/File:Puppy_at_a_night.ogg"
+    },
+    "audio/voice/robot_fupicat_notification.mp3": {
+      "sha256": "9330e97bac7d5127265264ea5bbb5be5e9d39cbec2b4ffed46b3542bde83f798",
+      "license": "CC0-1.0",
+      "provenance": "audio/candidate_pack/SOURCE_REGISTRY.md",
+      "source": "https://freesound.org/people/Fupicat/sounds/538149/"
+    },
+    "audio/voice/robot_servo_mit.wav": {
+      "sha256": "d8a037969e1ed9a48b5c9d9cca56f49a1afbcaa9d565267317444daffa81c7fd",
+      "license": "MIT",
+      "provenance": "audio/candidate_pack/SOURCE_REGISTRY.md",
+      "source": "https://github.com/CureJe/sedentary-reminder/blob/main/assets/audio/README.md",
+      "notice": "release/licenses/cureje-mit.txt"
+    }
+  }
+}
