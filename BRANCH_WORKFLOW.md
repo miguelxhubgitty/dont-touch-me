@@ -63,8 +63,15 @@ Run behavior, release, fingerprint and typography suites after integration. If d
 
 Use a Windows authoring machine with a licensed installed Ink Free font and a working real Godot renderer. Update release version/build numbers, listing/privacy/support metadata and intended targets before capturing. Keep application identifiers stable unless an explicit migration is required.
 
+### Release typography standard
+
+1. During normal gameplay development, use the existing Godot fallback font. Defer production phrase rendering and expensive artwork generation until gameplay and dialogue are frozen.
+2. After the freeze, apply the approved release presentation and inspect the original Ink Free artwork and reusable cache. Compare the native pixel dimensions of the visible lettering to its maximum intended logical display dimensions on both axes. Exclude transparent margins when calculating effective density. Reuse current artwork that already meets or exceeds 4× on both axes and passes fullscreen inspection.
+3. Render only outdated or insufficient phrases, at a native minimum of 4× their intended logical width and height, using the existing `--finalize-release` workflow. Keep the licensed Ink Free font on the authoring machine and deliver complete-phrase images. Preserve the original typography without font substitution or artificial upscaling. Trim excess transparent margins while retaining safe edge padding, baseline and alignment. Keep texture dimensions and decoded memory proportional to the intended display size.
+4. Import the artwork and check actual 3840 × 2160 fullscreen at native display resolution. Inspect the largest text placements and representative phrases for sharpness, clipping and edge artifacts. Check Godot texture import settings, runtime filtering and viewport/UI scaling. Record the resolution and findings, then export and smoke-test the release. If the fullscreen check is unavailable, record 4K sharpness as unverified.
+
 ```powershell
-# These two commands need a real renderer, not --headless.
+# Run the typography generator only when the phrase audit calls for new renders. Both generators require a real renderer.
 godot --path . --script release/tools/generate_typography.gd -- --finalize-release
 godot --headless --path . --editor --import --quit
 godot --path . --script release/tools/generate_assets.gd -- --finalize-release
@@ -76,7 +83,7 @@ godot --headless --path . --script tests/typography.gd
 godot --headless --path . --script release/tools/validate_package.gd
 ```
 
-Stop on any failure. The first generator renders complete handwritten phrases; the second captures actual current gameplay and fingerprints its source plus typography. Both require the explicit authoring flag. Reuse cached phrases when wording/font treatment is unchanged; no need to regenerate them merely because unrelated gameplay changed. Refresh store captures once for the final gameplay revision. A genuine late visual/text change requires a new finalization pass; never pretend stale assets match.
+Stop on any failure. The first generator renders complete handwritten phrases; the second captures actual current gameplay and fingerprints its source plus typography. Both require the explicit authoring flag. Keep cached phrase images whose wording, treatment and effective density still meet the release typography standard. Refresh store captures once for the final gameplay revision. A genuine late visual/text change requires a new finalization pass; never pretend stale assets match.
 
 Refresh `release/assets-inventory.json` **after** captures and metadata are final. Preserve the previous inventory under `release/history/` when establishing a new release. For each existing inventory entry, recompute SHA-256 using its declared mode (`utf8-lf` = UTF-8 text with CRLF converted to LF; `binary` = raw bytes), reconcile new/removed files, then run `pwsh -File release/tools/verify_inventory.ps1`. Do not rewrite historical reports or claim native iOS captures from Windows renders.
 
