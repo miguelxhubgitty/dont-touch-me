@@ -17,13 +17,15 @@ func initialize(audio_manager: Node) -> void:
 func _gui_input(event: InputEvent) -> void:
 	if event is InputEventScreenTouch:
 		accept_event()
-		if event.pressed and touch_index == -1:
+		if event.device == InputEvent.DEVICE_ID_EMULATION:
+			return
+		if event.pressed and not event.canceled and touch_index == -1:
 			touch_index = event.index
 		elif not event.pressed and event.index == touch_index:
 			touch_index = -1
 			if not event.canceled and Rect2(Vector2.ZERO, size).has_point(event.position):
 				_toggle_sound()
-	elif event is InputEventScreenDrag:
+	elif event is InputEventScreenDrag or (event is InputEventMouse and event.device == InputEvent.DEVICE_ID_EMULATION):
 		accept_event()
 
 func _notification(what: int) -> void:

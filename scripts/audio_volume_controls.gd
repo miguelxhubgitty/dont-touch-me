@@ -13,6 +13,9 @@ var settings := ConfigFile.new()
 var panel: PanelContainer
 var sliders: Dictionary = {}
 var dragging := false
+var touch_slider: HSlider
+var touch_index := -1
+var touch_start_value := 0.0
 
 func initialize() -> void:
 	settings.load(settings_path)
@@ -23,6 +26,7 @@ func initialize() -> void:
 	panel.hide()
 	add_child(panel)
 	panel.gui_input.connect(_consume_touch.bind(panel))
+	panel.visibility_changed.connect(_panel_visibility_changed)
 
 	var options := VBoxContainer.new()
 	panel.add_child(options)
@@ -52,22 +56,48 @@ func _toggle_panel() -> void:
 	panel.visible = not panel.visible
 
 func _volume_button_input(event: InputEvent) -> void:
-	if event is InputEventScreenTouch:
-		accept_event()
-		if event.pressed:
-			_toggle_panel()
+	_consume_touch(event, self)
+	if event is InputEventScreenTouch and event.pressed and not event.canceled and event.device != InputEvent.DEVICE_ID_EMULATION:
+		_toggle_panel()
 
 func _consume_touch(event: InputEvent, control: Control) -> void:
-	if event is InputEventScreenTouch or event is InputEventScreenDrag:
+	if event is InputEventScreenTouch or event is InputEventScreenDrag or (event is InputEventMouse and event.device == InputEvent.DEVICE_ID_EMULATION):
 		control.accept_event()
 
 func _slider_touch(event: InputEvent, slider: HSlider) -> void:
+	_consume_touch(event, slider)
+	if event.device == InputEvent.DEVICE_ID_EMULATION:
+		return
 	if event is InputEventScreenTouch:
-		slider.accept_event()
-		if event.pressed:
-			slider.value = 100.0 * clampf(event.position.x / slider.size.x, 0.0, 1.0)
-	elif event is InputEventScreenDrag:
-		slider.accept_event()
+		if event.pressed and not event.canceled and touch_slider == null and not dragging:
+			touch_slider = slider
+			touch_index = event.index
+			touch_start_value = slider.value
+			_set_touch_value(slider, event.position.x)
+		elif (event.canceled or not event.pressed) and slider == touch_slider and event.index == touch_index:
+			_finish_touch()
+	elif event is InputEventScreenDrag and slider == touch_slider and event.index == touch_index:
+		_set_touch_value(slider, event.position.x)
+
+func _set_touch_value(slider: HSlider, x: float) -> void:
+	slider.value = slider.max_value * clampf(x / slider.size.x, 0.0, 1.0)
+
+func _finish_touch() -> void:
+	if touch_slider == null:
+		return
+	var changed := touch_slider.value != touch_start_value
+	touch_slider = null
+	touch_index = -1
+	if changed:
+		_save()
+
+func _panel_visibility_changed() -> void:
+	if not panel.is_visible_in_tree():
+		_finish_touch()
+
+func _notification(what: int) -> void:
+	if what == NOTIFICATION_APPLICATION_FOCUS_OUT:
+		_finish_touch()
 
 func _apply_volume(value: float, bus: String) -> void:
 	var index := AudioServer.get_bus_index(bus)
@@ -84,7 +114,7 @@ func _save_after_drag(changed: bool) -> void:
 		_save()
 
 func _save_when_not_dragging(_value: float) -> void:
-	if not dragging:
+	if not dragging and touch_slider == null:
 		_save()
 
 func _save() -> void:

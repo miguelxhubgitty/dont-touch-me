@@ -60,6 +60,14 @@ func run() -> void:
 	check(not manager.muted, "touch press waits for release")
 	touch(viewport, point, false)
 	check(manager.muted and manager.slots.is_empty(), "touch toggles once and stops active sound")
+	for down in [true, false]:
+		var mirrored := InputEventMouseButton.new()
+		mirrored.button_index = MOUSE_BUTTON_LEFT
+		mirrored.position = point
+		mirrored.pressed = down
+		mirrored.device = InputEvent.DEVICE_ID_EMULATION
+		viewport.push_input(mirrored, true)
+	check(manager.muted, "emulated mouse does not repeat native activation")
 	for player in manager.players.values():
 		check(not player.playing, "player stopped immediately")
 	touch(viewport, point, true)
