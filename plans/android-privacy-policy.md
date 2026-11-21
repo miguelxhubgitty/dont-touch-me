@@ -1,6 +1,6 @@
 # Stage 4 Android Privacy Policy restoration
 
-Status: approved for implementation and testing. Based on `origin/main` at `e76ab1f`.
+Status: implemented on the feature branch for review. Based on `origin/main` at `e76ab1f`.
 
 ## Historical and current behavior
 
@@ -40,3 +40,7 @@ open_policy:
 - Run a focused Godot test with the real main scene. Assert that the control is hidden in a normal desktop run and that the platform gate excludes iOS. Exercise the Android GUI path with synthetic touch in the local harness and replace only the browser launch in that test. Assert one request per tap and no change in annoyance, reaction, inactivity, click tracking or audio trace. Verify that a touch immediately outside still reaches gameplay.
 - Test original placement without insets, then synthetic bottom/right and asymmetric safe rectangles with portrait, wide and landscape viewport sizes. Include viewport scaling, translation within the window, and nonzero window positions. Keep the authored orientation unchanged. Check that opening and closing the existing volume panel still works.
 - Run relevant gameplay and audio checks. Verify the HTTP policy page. Where a test device is available, check native Android visibility, system navigation/cutouts, browser open, and return to the game. A synthetic layout or browser stub only verifies the local code path.
+
+## Verification
+
+Godot 4.7.2 passed all 16 focused checks, all five fast suites, and all ten WASAPI audio suites. The fast suites retained their existing test-shutdown diagnostics. A disposable Android resource ZIP included the runtime scene and privacy script, passed the approved audio pack audit with 18 streams, and excluded the test scripts. The privacy URL returned HTTP 200 with the expected page title. No Android device was attached. Real system safe areas, native browser handoff, and return-to-game behavior remain device checks.

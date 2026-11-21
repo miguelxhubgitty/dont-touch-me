@@ -399,3 +399,7 @@ Disposable Godot 4.7.2 resource ZIPs reduced the Windows payload from 31 to 18 a
 ## Stage 4 — Android package identity
 
 The identity reconciliation retains PR #15's separation of Android and Apple identifiers. Both Android presets use the existing WANDIEL Play identity. The Google Play update's catalog and presets agree on provisional code 4, above the verified signed code-3 bundle. The release tool validates the actual unsigned AAB and rejects Android exports under the frozen Alpha version. See the [Android identity notes](../release/ANDROID_IDENTITY.md) for privacy-control parity, signing and device checks still required before a release.
+
+## Stage 4 — Android Privacy Policy restoration
+
+The restored PrivacyHUD is Android-only and retains the code-3 flat label and bottom-right placement. Its control consumes native touch press, drag, and release, and rejects synthesized pointer events before they can also activate the Button. The game still receives touches outside the HUD through its existing input path. The control converts Android's display-relative safe area into HUD coordinates and refreshes on viewport changes and focus return. The focused tests inject touch and mouse events into the actual main scene, stub the browser handoff, and check scaling and nonzero window and content offsets. Native browser launch and Android system insets still need device verification. See the [plan and acceptance checks](../plans/android-privacy-policy.md).
