@@ -1,6 +1,6 @@
 # Stage 4 — Mobile touch and safe areas
 
-Phase 1 audit and proposal. Baseline `origin/main` at `afd7bfc`. Awaiting implementation approval.
+Approved and implemented on the feature branch. Baseline `origin/main` at `afd7bfc`.
 
 ## Confirmed findings
 
@@ -74,6 +74,6 @@ Measure full panel bounds after its container minimum size is known. Keep the cu
 
 ## Limits
 
-The probe and proposed regressions validate synthetic Godot events and geometry. Android's actual insets, gesture navigation, cutouts, OS cancellation, and background/foreground input delivery still need a device. The audit changes no production code, project settings, or release artifacts.
+Godot 4.7.2 passed the focused volume, mute and privacy checks, all five fast suites, and all ten WASAPI audio suites. The fast runner reported existing test-shutdown diagnostics. The probe and regressions validate synthetic Godot events and geometry. Android's actual insets, gesture navigation, cutouts, OS cancellation, and background/foreground input delivery still need a device. Extremely constrained rectangles that cannot fit the current controls remain a separate layout decision. No project settings or release artifacts changed.
 
 References: [Godot Control input routing](https://docs.godotengine.org/en/stable/classes/class_control.html) · [Godot Viewport touch routing](https://github.com/godotengine/godot/blob/master/scene/main/viewport.cpp) · [Godot DisplayServer safe area](https://docs.godotengine.org/en/stable/classes/class_displayserver.html#class-displayserver-method-get-display-safe-area) · [Android 16 edge-to-edge](https://developer.android.com/about/versions/16/behavior-changes-16#edge-to-edge)

@@ -1,4 +1,4 @@
-[gd_scene load_steps=6 format=3]
+[gd_scene load_steps=7 format=3]
 
 [ext_resource type="Script" path="res://scripts/blob_animationplayer.gd" id="1"]
 
@@ -6,6 +6,7 @@
 
 [ext_resource type="Script" path="res://scripts/audio_volume_controls.gd" id="3"]
 [ext_resource type="Script" path="res://scripts/privacy_policy_button.gd" id="4"]
+[ext_resource type="Script" path="res://scripts/sound_hud_layout.gd" id="5"]
 
 [sub_resource type="StyleBoxFlat" id="SoundButtonNormal"]
 bg_color = Color(0.91, 0.89, 0.85, 1)
@@ -20,6 +21,7 @@ free_jump_enabled = true
 
 
 [node name="SoundHUD" type="CanvasLayer" parent="."]
+script = ExtResource("5")
 
 [node name="SoundButton" type="Button" parent="SoundHUD"]
 anchors_preset = 1

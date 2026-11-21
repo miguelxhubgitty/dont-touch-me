@@ -1,6 +1,7 @@
 extends SceneTree
 
 const Game := preload("res://main.tscn")
+const HudSafeArea := preload("res://scripts/hud_safe_area.gd")
 
 class AndroidButton extends "res://scripts/privacy_policy_button.gd":
 	var requests := 0
@@ -63,7 +64,7 @@ func run() -> void:
 	var button: AndroidButton = game.get_node("PrivacyHUD/PrivacyPolicy")
 	check(button.is_visible_in_tree() and button.flat and button.text == "Privacy Policy", "Android uses the original flat label")
 	var portrait := Rect2(0, 0, 720, 1280)
-	button._place_in_safe_area(portrait, Rect2(), Vector2.ZERO, Transform2D.IDENTITY)
+	button._place(HudSafeArea.to_viewport(portrait, Rect2(), Vector2.ZERO, Transform2D.IDENTITY))
 	check(button.get_global_rect().is_equal_approx(Rect2(496, 1198, 200, 58)), "original portrait footprint and margins")
 
 	var point := button.get_global_rect().get_center()
@@ -102,19 +103,19 @@ func run() -> void:
 
 	# Insets and origin are in physical pixels. Neither offset is in HUD units.
 	var scaled_portrait := Transform2D(0.0, Vector2(1.5, 1.5), 0.0, Vector2(30, 45))
-	button._place_in_safe_area(portrait, Rect2(180, 170, 990, 1740), Vector2(120, 80), scaled_portrait)
+	button._place(HudSafeArea.to_viewport(portrait, Rect2(180, 170, 990, 1740), Vector2(120, 80), scaled_portrait))
 	check(button.get_global_rect().is_equal_approx(Rect2(456, 1108, 200, 58)),
 		"portrait safe area converts viewport scaling and both offsets")
 	viewport.size = Vector2i(1280, 720)
 	await process_frame
 	var landscape := Rect2(0, 0, 1280, 720)
 	var scaled_landscape := Transform2D(0.0, Vector2(0.75, 0.75), 0.0, Vector2(12, 36))
-	button._place_in_safe_area(landscape, Rect2(165, 129, 858, 468), Vector2(96, 54), scaled_landscape)
+	button._place(HudSafeArea.to_viewport(landscape, Rect2(165, 129, 858, 468), Vector2(96, 54), scaled_landscape))
 	check(button.get_global_rect().is_equal_approx(Rect2(996, 594, 200, 58)),
 		"landscape asymmetric physical safe area maps to original HUD margins")
 	viewport.size = Vector2i(360, 800)
 	await process_frame
-	button._place_in_safe_area(Rect2(0, 0, 360, 800), Rect2(900, 900, 1, 1), Vector2.ZERO, Transform2D.IDENTITY)
+	button._place(HudSafeArea.to_viewport(Rect2(0, 0, 360, 800), Rect2(900, 900, 1, 1), Vector2.ZERO, Transform2D.IDENTITY))
 	check(button.get_global_rect().is_equal_approx(Rect2(136, 718, 200, 58)),
 		"an unavailable safe area falls back to the visible narrow viewport")
 	viewport.free()

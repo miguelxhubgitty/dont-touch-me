@@ -1,5 +1,6 @@
 extends Button
 
+const HudSafeArea := preload("res://scripts/hud_safe_area.gd")
 const POLICY_URL := "https://miguelxhubgitty.github.io/dont-touch-me/privacy.html"
 const RELEASE_FONT := "res://assets/fonts/SpaceGrotesk.ttf"
 const MARGIN := Vector2(24, 24)
@@ -22,19 +23,10 @@ func _notification(what: int) -> void:
 		_refresh_position()
 
 func _refresh_position() -> void:
-	var viewport := get_viewport()
-	_place_in_safe_area(viewport.get_visible_rect(), Rect2(DisplayServer.get_display_safe_area()),
-		Vector2(get_window().position), viewport.get_final_transform())
+	_place(HudSafeArea.from_window(get_viewport(), get_window()))
 
-func _place_in_safe_area(visible_rect: Rect2, display_safe_area: Rect2, window_origin: Vector2,
-		viewport_to_window: Transform2D) -> void:
-	# Android reports physical display pixels. get_final_transform() includes
-	# viewport scaling and the content offset within the client area.
-	var safe_in_window := Rect2(display_safe_area.position - window_origin, display_safe_area.size)
-	var safe_in_viewport := visible_rect.intersection(viewport_to_window.affine_inverse() * safe_in_window)
-	if not safe_in_viewport.has_area():
-		safe_in_viewport = visible_rect
-	position = (safe_in_viewport.end - MARGIN - size).max(safe_in_viewport.position)
+func _place(safe_rect: Rect2) -> void:
+	position = (safe_rect.end - MARGIN - size).max(safe_rect.position)
 
 func _gui_input(event: InputEvent) -> void:
 	if event is InputEventScreenTouch:
