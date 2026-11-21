@@ -3,7 +3,10 @@ extends Button
 const POLICY_URL := "https://miguelxhubgitty.github.io/dont-touch-me/privacy.html"
 const MARGIN := Vector2(24, 24)
 
+var active_touch := -1
+
 func _ready() -> void:
+	set_process_input(false)
 	if not _is_ios():
 		return
 	pressed.connect(_open_policy)
@@ -15,7 +18,9 @@ func _is_ios() -> bool:
 	return OS.has_feature("ios")
 
 func _notification(what: int) -> void:
-	if what == NOTIFICATION_APPLICATION_FOCUS_IN and is_node_ready() and is_visible_in_tree():
+	if what == NOTIFICATION_APPLICATION_FOCUS_OUT:
+		_clear_touch()
+	elif what == NOTIFICATION_APPLICATION_FOCUS_IN and is_node_ready() and is_visible_in_tree():
 		_refresh_position()
 
 func _refresh_position() -> void:
@@ -31,10 +36,24 @@ func _place(visible_rect: Rect2, display_safe_area: Rect2, window_origin: Vector
 		available = visible_rect
 	position = (available.end - MARGIN - size).max(available.position)
 
+func _input(event: InputEvent) -> void:
+	# A mirrored touch may end GUI capture before the real release arrives.
+	if event is InputEventScreenTouch and event.index == active_touch and event.device != InputEvent.DEVICE_ID_EMULATION:
+		if not event.pressed or event.canceled:
+			_clear_touch()
+
+func _clear_touch() -> void:
+	active_touch = -1
+	set_process_input(false)
+
 func _gui_input(event: InputEvent) -> void:
 	if event is InputEventScreenTouch:
 		accept_event()
-		if event.pressed and not event.canceled and event.device != InputEvent.DEVICE_ID_EMULATION:
+		if event.device == InputEvent.DEVICE_ID_EMULATION:
+			return
+		if event.pressed and not event.canceled and active_touch == -1:
+			active_touch = event.index
+			set_process_input(true)
 			_open_policy()
 	elif event is InputEventScreenDrag or (event is InputEventMouse and event.device == InputEvent.DEVICE_ID_EMULATION):
 		accept_event()

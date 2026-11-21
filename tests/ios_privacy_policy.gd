@@ -23,10 +23,13 @@ func check(ok: bool, message: String) -> void:
 		failures += 1
 		printerr("FAIL: " + message)
 
-func touch(viewport: Viewport, point: Vector2, down: bool) -> void:
+func touch(viewport: Viewport, point: Vector2, down: bool, device := 0, canceled := false, index := 0) -> void:
 	var event := InputEventScreenTouch.new()
 	event.position = point
 	event.pressed = down
+	event.device = device
+	event.canceled = canceled
+	event.index = index
 	viewport.push_input(event, true)
 
 func run() -> void:
@@ -58,6 +61,11 @@ func run() -> void:
 	game.idle_time = 1.8
 	touch(viewport, point, true)
 	check(viewport.is_input_handled() and button.requests == 1, "native press is consumed and opens once")
+	touch(viewport, point, true)
+	check(viewport.is_input_handled() and button.requests == 1, "repeated press for a held finger cannot reopen")
+	touch(viewport, point, true, 0, false, 1)
+	touch(viewport, point, false, 0, false, 1)
+	check(button.requests == 1, "a second finger cannot open or release the active gesture")
 	for down in [true, false]:
 		var mirrored := InputEventMouseButton.new()
 		mirrored.position = point
@@ -65,15 +73,28 @@ func run() -> void:
 		mirrored.pressed = down
 		mirrored.device = InputEvent.DEVICE_ID_EMULATION
 		viewport.push_input(mirrored, true)
-	touch(viewport, point, false)
+		check(viewport.is_input_handled(), "emulated mouse event is consumed by the button")
+	touch(viewport, point, true, InputEvent.DEVICE_ID_EMULATION)
+	touch(viewport, point, false, InputEvent.DEVICE_ID_EMULATION)
+	touch(viewport, point, false, 0, true)
 	check(button.requests == 1, "mirrored mouse and release do not open a second time")
+	touch(viewport, point, false)
+	check(button.requests == 1, "release alone cannot open the policy")
+	touch(viewport, point, true)
+	check(button.requests == 2, "a new tap with the same finger index opens once")
+	button.notification(Node.NOTIFICATION_APPLICATION_FOCUS_OUT)
+	touch(viewport, point, false)
+	check(button.requests == 2, "focus loss and a late release cannot reopen the policy")
+	touch(viewport, point, true)
+	touch(viewport, point, false)
+	check(button.requests == 3, "the button accepts a fresh tap after returning")
 	check(game.annoyance == 9.0 and game.idle_time == 1.8 and game.reaction == 0,
 		"privacy gesture leaves gameplay state alone")
 	var blob_point: Vector2 = game.body_position + Vector2(0, -60)
 	check(game.contains_touch(blob_point), "gameplay probe is inside the frozen hit silhouette")
 	touch(viewport, blob_point, true)
 	touch(viewport, blob_point, false)
-	check(game.reaction != 0 and game.idle_time == 0.0 and button.requests == 1,
+	check(game.reaction != 0 and game.idle_time == 0.0 and button.requests == 3,
 		"tap on the original blob still reaches gameplay")
 	viewport.free()
 	print("iOS privacy checks: %d; failures: %d" % [checks, failures])
