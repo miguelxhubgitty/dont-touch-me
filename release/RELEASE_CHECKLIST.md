@@ -1,5 +1,9 @@
 # Only the owner's remaining tasks — version 1.0
 
+## Organization identity (November 11, 2026)
+
+D&B confirmed an existing D-U-N-S match for **ONE TRU THING ONLY LLC** in a resolved November 10, 2026 inquiry. Its revised data was expected to propagate within 24–48 hours; actual downstream visibility and the reported legal-form classification still need checking. **WANDIEL** is the brand; the LLC remains the legal entity until a formal rename is completed. Neither Apple nor Google organization enrollment is confirmed by the D&B response. The detailed resolution record is private and must not be copied to this public repository.
+
 ## Google Play
 
 - [ ] Open the existing `com.wandiel.donttouchme` app in Play Console. Confirm the highest version code in App bundle explorer and across tracks. Set a greater code before preparing the update. Code 4 is the local candidate above the verified code-3 artifact.
