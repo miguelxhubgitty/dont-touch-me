@@ -1,28 +1,60 @@
-# iOS handoff — Windows preparation complete, native build pending
+# iPhone Alpha handoff
 
-No iOS archive, certificate, provisioning profile, or device result is claimed. The game uses GDScript, Godot's Compatibility renderer, procedural 2D drawing, a portrait expanding canvas, and native touch events. These are supported by Godot's iOS exporter; this is design compatibility, not a completed iOS test.
+The iOS candidate starts from historical runtime commit `9788e0343cb888a31ea9092f7409e2455a961261`. It keeps the audio-free Alpha, its approved visuals, and the existing Android presets. The additions are a project-only iOS preset and an iOS-only Privacy Policy control. The frozen tag and published builds are independent of this worktree.
 
-## Prepared files
+| Setting | Prepared value |
+| --- | --- |
+| Godot preset | iOS Alpha |
+| Bundle ID | `com.littlebutterflyproductions.donttouchme`, confirm on the approved Apple team |
+| Marketing version / build | `0.1.0` / `1`, provisional until App Store Connect history is checked |
+| Device family | iPhone only, arm64, original portrait setting |
+| Minimum deployment target | iOS 14.0, verify against the chosen Xcode/toolchain |
+| App Store icon | Existing opaque `assets/icon_ios.png` (1024 × 1024) |
+| Privacy / support | [Privacy Policy](https://miguelxhubgitty.github.io/dont-touch-me/privacy.html) and [Support](https://miguelxhubgitty.github.io/dont-touch-me/) |
+| Team and signing | Intentionally unset in Git |
 
-- Source project: `project.godot`, `main.tscn`, `scripts/blob.gd`; exactly 16 existing reactions.
-- Opaque icon: project `assets/icon_ios.png`, and `release/assets/icons/ios/AppIcon.appiconset/`.
-- Warm launch background and engine splash-image setting in `project.godot`.
-- Apple-sized reference captures and their limitations: `release/assets/README.md`.
-- Listing and privacy drafts in `release/`; engine/license acknowledgments in `THIRD_PARTY_NOTICES.txt`.
+## 1. Transfer and check the Mac
 
-## Export/build steps on a Mac
+Unzip the source handoff into a new folder, or clone the review branch if you need Git history.
 
-1. Install Godot **4.7.2 stable**, matching export templates, and supported Xcode/macOS. Current submission rules require Xcode 26+ with iOS 26+ SDK, and an app deployment target of iOS 13+; recheck [Apple requirements](https://developer.apple.com/news/upcoming-requirements/) before publishing.
-2. Clone the repository and import `project.godot`. Run the behavior/release suites with the Mac Godot executable, then launch the scene normally.
-3. Sign in to Xcode with the owner's Apple Account. A free Personal Team can be used for limited personal device testing; App Store/TestFlight distribution requires a developer-program team. Obtain the real Team ID; do not invent one or commit local signing files.
-4. In Godot **Project > Export**, add an **iOS** preset. Enter the Team ID, intended unique bundle ID `com.littlebutterflyproductions.donttouchme` (registration remains unverified), version `1.0.0`, build `1`, portrait orientation, and chosen iPhone/iPad families. Set minimum OS compatible with both Godot and Apple's current requirements. Set the App Store 1024-pixel icon to `res://assets/icon_ios.png`. Verify that all generated icon slots resolve correctly.
-5. Include `THIRD_PARTY_NOTICES.txt` in the export; exclude `release/*`, `docs/*`, `tests/*`, `test-output/*`, `builds/*`, and Markdown. Do not ship release-package tooling or promotional graphics in the game. The application does not need extra network/privacy capabilities.
-6. Export to a clean **ignored** `builds/ios/` folder, using an Xcode project filename without spaces, such as `DontTouchMe`. Open the generated `.xcodeproj` in Xcode.
-7. Set the actual signing team, automatic/manual provisioning, application version/build, deployment target, and device families. Inspect Info.plist, entitlements, embedded frameworks, and PrivacyInfo.xcprivacy. Resolve required-reason API and SDK manifest/signature requirements against the actual engine archive.
-8. Build and run on iPhone. Test touch hitboxes, rapid input, all reactions, rotation/resize behavior allowed by the platform, safe areas, sleep/wake, app switching, lock/unlock, memory, frame pacing, and logs. Use Simulator as an additional check; verify the prepared screenshot references or capture native replacements.
-9. For distribution, select a generic/actual iOS device destination and archive the Release configuration. Validate the archive in Xcode Organizer; upload to the matching App Store Connect app record. Increase the build number before any replacement upload.
-10. Complete TestFlight testing, metadata, screenshots, privacy policy/privacy answers, content ratings, export-compliance forms, and App Review. Store acceptance and legal declarations remain the owner's responsibility.
+```sh
+git clone --single-branch --branch release-prep/ios-alpha-0.1.0 \
+  https://github.com/miguelxhubgitty/dont-touch-me.git DontTouchMe-iOS-Alpha
+cd DontTouchMe-iOS-Alpha
+```
 
-The current Windows machine already has Godot's iOS template archive, but Xcode and the iOS SDK cannot run here. No additional Windows download removes the Mac requirement.
+Install official Godot 4.7.2 stable and its matching export templates. Open Xcode 26 or later once so its components are ready. The selected Xcode needs the iOS 26 SDK or later.
 
-References: [Godot iOS export](https://docs.godotengine.org/en/4.7/tutorials/export/exporting_for_ios.html), [Apple account/device testing](https://developer.apple.com/help/account/basics/about-your-developer-account), [build upload](https://developer.apple.com/help/app-store-connect/manage-builds/upload-builds/).
+```sh
+xcode-select -p
+xcodebuild -version
+xcrun --sdk iphoneos --show-sdk-version
+GODOT=/Applications/Godot.app/Contents/MacOS/Godot
+"$GODOT" --version
+"$GODOT" --headless --path "$PWD" --editor --import --quit
+"$GODOT" --headless --path "$PWD" --script tests/behavior.gd
+"$GODOT" --headless --path "$PWD" --script tests/ios_privacy_policy.gd
+```
+
+If Xcode's selected tools point at Command Line Tools instead of Xcode, choose the installed Xcode under **Xcode → Settings → Locations → Command Line Tools**. The Godot test substitutes the browser request and checks synthetic input. It does not prove iPhone behavior.
+
+## 2. Export the Xcode project
+
+1. Confirm the approved Developer Program team and the exact bundle record in Apple Developer and App Store Connect. Use the existing record if present. If registration or a version/build change is needed, resolve that with the owner before export. Verify that the published policy describes this candidate.
+2. Open `project.godot` in Godot. In **Project → Export → iOS Alpha**, enter the actual ten-character **App Store Team ID** locally. Leave **Export Project Only** enabled and **Export Method Release** on **App Store**. Confirm iPhone, arm64, minimum iOS, the icon, and the version/build above. Keep the Team edit and any provisioning details local.
+3. Export to a new empty directory beneath `builds/ios/`. Use `DontTouchMe` as the export filename stem. This preset should produce `DontTouchMe.xcodeproj` and resources without building or signing an archive.
+4. Open that project in Xcode. Confirm **Signing & Capabilities** and the Release target's bundle ID, iPhone device family, arm64, version/build and deployment target. Inspect the generated Info.plist and PrivacyInfo.xcprivacy, including the engine's required-reason APIs. Verify entitlement and embedded SDK requirements and decide export-compliance answers against the real build. The offline source supports a provisional **Data Not Collected** response, subject to archive review.
+
+After export on an Intel Mac, set `ARCHS[sdk=iphonesimulator*] = x86_64` in the generated project while keeping device `ARCHS = arm64`. For this permission-free Alpha, remove the empty `NSCameraUsageDescription`, `NSMicrophoneUsageDescription`, and `NSPhotoLibraryUsageDescription` keys from its generated Info.plist. Do not add invented permission purposes. These are local generated-project adjustments; keep team/signing details outside Git. Godot 4.7.2 templates require iOS 14.0 even though Apple permits deployment targets from iOS 13.0.
+
+## 3. Test and prepare the archive after authorization
+
+1. Run the candidate in an iPhone Simulator. Validate the intended typography and layout, touch, reaction variety, 24-second sleep, wake and the policy control. On a physical iPhone, also verify cutouts and the home indicator, one Safari launch, return to the game, and stability. A local physical-device run needs existing development signing and provisioning. Alternatively use authorized internal TestFlight for the first physical test.
+2. Use existing authorized distribution signing and provisioning. In **Signing & Capabilities** choose the confirmed team and existing profile/identity as appropriate. Stop if Xcode needs to create a certificate or profile and obtain approval before giving it permission. Keep keys, profiles, passwords and account data outside Git.
+3. Select **Any iOS Device (arm64)** and **Product → Archive** in Release configuration. In **Window → Organizer → Archives**, inspect the archive and run **Validate App**. Review the binary's identity, version/build, iPhone family, entitlements, privacy manifest, and embedded SDKs.
+4. Only after upload approval, use **Organizer → Distribute App → App Store Connect → Upload**. Choose ordinary App Store Connect distribution so the build can also be submitted for review. After processing, in **App Store Connect → Apps → Don't Touch Me → TestFlight → Internal Testing**, add the build to an internal group and install it on an iPhone. Complete the physical checks and capture an accepted iPhone screenshot from the candidate.
+5. With separate submission approval, attach the same verified build to the App Store version. Provide the screenshot, final metadata, privacy/support URLs, content rights and review contact. Complete the age rating, App Privacy and export compliance. Select manual release if approved, then **Add for Review → Submit for Review**.
+
+Windows verification with Godot 4.7.2 passed the gameplay, release, fingerprint, typography, package validation and synthetic privacy suites plus a 180-frame startup smoke. A disposable iOS resource ZIP contained the Alpha runtime, iOS privacy script and both notices. It contained no gameplay audio or development files. This handoff contains source, tests and export settings. Mac export, Simulator run and unsigned arm64 archive now pass; see [native Mac validation](../docs/ios/ALPHA_MAC_VALIDATION_2026-11-21.md). Business signing, physical-device testing, upload and submission remain pending.
+
+[Godot iOS exporter](https://docs.godotengine.org/en/4.7/tutorials/export/exporting_for_ios.html) · [Apple SDK requirements](https://developer.apple.com/news/upcoming-requirements/) · [TestFlight internal testing](https://developer.apple.com/help/app-store-connect/test-a-beta-version/add-internal-testers/) · [App Review submission](https://developer.apple.com/help/app-store-connect/manage-submissions-to-app-review/submit-an-app)
