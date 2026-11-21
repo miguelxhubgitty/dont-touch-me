@@ -407,3 +407,8 @@ The restored PrivacyHUD is Android-only and retains the code-3 flat label and bo
 ## Stage 4 — Mobile touch and safe areas
 
 On Android, the Sound and Volume controls share the Privacy HUD's conversion from physical display pixels to viewport coordinates. The layout applies the current insets to the HUD alone and refreshes on size changes, focus return and panel opening. It retains each control's size and the desktop layout. Native slider drags keep their original touch index, update the existing bus gain as the finger moves and save the final value once when the gesture ends. The GUI consumes those touches and ignores emulated pointer duplicates before they can trigger an extra activation. Synthetic tests cover all five sliders, edge clamping, cancellation, multiple fingers, mute, persistence and offset/scaled layouts. Actual Android insets and lifecycle delivery remain device checks. See the [audit and implementation plan](../plans/mobile-touch-safe-areas.md).
+
+
+## November 21, 2026 — Privacy policy version scope
+
+Owner authorized correcting and publishing the live privacy policy for the frozen iOS Alpha and future versions before the first internal TestFlight upload. Only the policy date/scope sentence changes: version 0.1.0 and later, unless replaced by an updated policy. Existing data-handling, platform diagnostics, children, support and change disclosures are preserved byte-for-byte. Static comparison verified the remaining policy is unchanged. No runtime, Android, release branch, tag or binary change is required; the iOS button opens the same remote URL. Publication and live verification follow the focused PR approval.
