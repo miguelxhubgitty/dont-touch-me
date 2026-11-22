@@ -424,3 +424,11 @@ The Android Volume menu can request a fixed Portrait or Landscape orientation on
 ## Manual orientation on iPhone
 
 The development-only iOS preview reuses the Android Volume menu control. Godot's fixed orientation is independent of the iPhone plist allowlist. The preview starts in fixed Portrait and widens the generated allowlist to permit the player's landscape selection. The packaging check and synthetic menu tests passed. Confirm native rotation in Simulator and on an iPhone before shipping. See the [orientation preview plan](../plans/responsive-landscape.md#iphone-manual-orientation-preview).
+
+### Settings and orientation preview (PR #52)
+
+The top-left Settings menu separates the five volume controls from mobile orientation. The orientation submenu is available on Android and the iOS development preview. It restores the saved Auto, Portrait, or Landscape choice from the existing preferences file. Auto requests sensor orientation on initialization. The shared project still starts in Portrait before the HUD applies that choice.
+
+Each submenu has a Back button. Native menu taps complete on the owning touch release. The button action is deferred so mirrored mouse input stays in the HUD when the submenu changes. Desktop still uses its existing window orientation and resize rules. The top-right sound toggle and Android Privacy Policy use their existing input paths.
+
+Synthetic tests cover menu navigation, orientation requests, preference restoration, safe-area bounds, and isolation from gameplay. Device rotation and system orientation locks still need native validation.

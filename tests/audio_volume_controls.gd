@@ -67,6 +67,9 @@ func run() -> void:
 	touch(volume_center, 0, false)
 	await process_frame
 	mouse(button.get_global_rect().get_center(), InputEvent.DEVICE_ID_EMULATION)
+	button.settings_menu.get_child(0).pressed.emit()
+	await process_frame
+	await process_frame
 	passed = passed and button.panel.visible and button.sliders.size() == 5
 	check(button.position == Vector2(20, 20) and button.panel.position == Vector2(0, 88),
 		"desktop uses the original button and panel positions")
@@ -94,7 +97,7 @@ func run() -> void:
 		i += 1
 	var first: HSlider = button.sliders["UserSFX"]
 	var second: HSlider = button.sliders["CharacterVoice"]
-	var label := button.panel.get_child(0).get_child(0) as Label
+	var label := button.volume_menu.get_child(0) as Label
 	var label_point := label.get_global_rect().get_center()
 	touch(label_point, 9, true)
 	touch(label_point, 9, false)
@@ -117,6 +120,9 @@ func run() -> void:
 	touch(at(first, 0.7), 1, false)
 	mouse(button.get_global_rect().get_center(), 0)
 	check(button.panel.visible, "real mouse still opens the panel")
+	button.settings_menu.get_child(0).pressed.emit()
+	await process_frame
+	await process_frame
 	mouse(at(first, 0.5), 0)
 	check(first.value > 0, "real mouse still adjusts a slider")
 	var mouse_value := first.value

@@ -15,14 +15,24 @@ var sliders: Dictionary = {}
 var dragging := false
 var touch_slider: HSlider
 var touch_index := -1
+var menu_touch_button: Button
+var menu_touch_index := -1
 var touch_start_value := 0.0
-var orientation_button: Button
-var landscape_selected := false
+const ORIENTATIONS := {
+	"Auto": DisplayServer.SCREEN_SENSOR,
+	"Portrait": DisplayServer.SCREEN_PORTRAIT,
+	"Landscape": DisplayServer.SCREEN_LANDSCAPE,
+}
+
+var settings_menu: VBoxContainer
+var volume_menu: VBoxContainer
+var orientation_menu: VBoxContainer
+var orientation_options := ButtonGroup.new()
 
 func initialize() -> void:
 	settings.load(settings_path)
 	pressed.connect(_toggle_panel)
-	gui_input.connect(_volume_button_input)
+	gui_input.connect(_menu_input.bind(self, _toggle_panel))
 	panel = PanelContainer.new()
 	panel.position = Vector2(0, size.y + 8)
 	panel.hide()
@@ -30,12 +40,16 @@ func initialize() -> void:
 	panel.gui_input.connect(_consume_touch.bind(panel))
 	panel.visibility_changed.connect(_panel_visibility_changed)
 
-	var options := VBoxContainer.new()
-	panel.add_child(options)
+	settings_menu = VBoxContainer.new()
+	panel.add_child(settings_menu)
+	volume_menu = VBoxContainer.new()
+	panel.add_child(volume_menu)
+	volume_menu.hide()
+	_add_menu_button(settings_menu, "Volume", _show_menu.bind(volume_menu))
 	for bus in BUSES:
 		var label := Label.new()
 		label.text = BUSES[bus]
-		options.add_child(label)
+		volume_menu.add_child(label)
 		var slider := HSlider.new()
 		slider.custom_minimum_size = Vector2(292, 42)
 		slider.max_value = 100
@@ -51,41 +65,72 @@ func initialize() -> void:
 		slider.drag_ended.connect(_save_after_drag)
 		slider.value_changed.connect(_save_when_not_dragging)
 		slider.gui_input.connect(_slider_touch.bind(slider))
-		options.add_child(slider)
+		volume_menu.add_child(slider)
 		sliders[bus] = slider
+	_add_menu_button(volume_menu, "Back", _show_menu.bind(settings_menu))
 	if _supports_manual_orientation():
-		orientation_button = Button.new()
-		orientation_button.text = "Orientation: Portrait"
-		orientation_button.custom_minimum_size.y = 48
-		orientation_button.pressed.connect(_toggle_orientation)
-		orientation_button.gui_input.connect(_orientation_input)
-		options.add_child(orientation_button)
-		if OS.has_feature("ios"):
-			_request_orientation.call_deferred(DisplayServer.SCREEN_PORTRAIT)
+		orientation_menu = VBoxContainer.new()
+		panel.add_child(orientation_menu)
+		orientation_menu.hide()
+		_add_menu_button(settings_menu, "Orientation", _show_menu.bind(orientation_menu))
+		var saved: Variant = settings.get_value("display", "orientation", "Auto")
+		if not ORIENTATIONS.has(saved):
+			saved = "Auto"
+		for choice in ORIENTATIONS:
+			var option := _add_menu_button(orientation_menu, choice, _select_orientation.bind(choice))
+			option.toggle_mode = true
+			option.button_group = orientation_options
+			option.set_pressed_no_signal(choice == saved)
+		_add_menu_button(orientation_menu, "Back", _show_menu.bind(settings_menu))
+		_request_orientation.call_deferred(ORIENTATIONS[saved])
+
+func _add_menu_button(menu: VBoxContainer, title: String, action: Callable) -> Button:
+	var button := Button.new()
+	button.text = title
+	button.custom_minimum_size.y = 45
+	button.pressed.connect(action)
+	button.gui_input.connect(_menu_input.bind(button, action))
+	menu.add_child(button)
+	return button
+
+func _show_menu(menu: VBoxContainer) -> void:
+	_finish_touch()
+	for child in panel.get_children():
+		child.visible = child == menu
+	panel.reset_size()
+	panel.reset_size.call_deferred()
 
 func _supports_manual_orientation() -> bool:
 	return OS.has_feature("android") or (OS.has_feature("ios") and OS.has_feature("manual_ios_orientation"))
 
-func _orientation_input(event: InputEvent) -> void:
-	_consume_touch(event, orientation_button)
-	if event is InputEventScreenTouch and event.pressed and not event.canceled and event.device != InputEvent.DEVICE_ID_EMULATION:
-		_toggle_orientation()
-
-func _toggle_orientation() -> void:
-	landscape_selected = not landscape_selected
-	orientation_button.text = "Orientation: Landscape" if landscape_selected else "Orientation: Portrait"
-	_request_orientation(DisplayServer.SCREEN_LANDSCAPE if landscape_selected else DisplayServer.SCREEN_PORTRAIT)
+func _select_orientation(choice: String) -> void:
+	for option in orientation_options.get_buttons():
+		option.set_pressed_no_signal(option.text == choice)
+	settings.set_value("display", "orientation", choice)
+	_save()
+	_request_orientation(ORIENTATIONS[choice])
 
 func _request_orientation(orientation: DisplayServer.ScreenOrientation) -> void:
 	DisplayServer.screen_set_orientation(orientation)
 
 func _toggle_panel() -> void:
+	if not panel.visible:
+		_show_menu(settings_menu)
 	panel.visible = not panel.visible
 
-func _volume_button_input(event: InputEvent) -> void:
-	_consume_touch(event, self)
-	if event is InputEventScreenTouch and event.pressed and not event.canceled and event.device != InputEvent.DEVICE_ID_EMULATION:
-		_toggle_panel()
+func _menu_input(event: InputEvent, button: Button, action: Callable) -> void:
+	_consume_touch(event, button)
+	if not event is InputEventScreenTouch or event.device == InputEvent.DEVICE_ID_EMULATION:
+		return
+	if event.pressed and not event.canceled and menu_touch_button == null:
+		menu_touch_button = button
+		menu_touch_index = event.index
+	elif event.index == menu_touch_index and (event.canceled or not event.pressed):
+		var activate: bool = menu_touch_button == button and not event.canceled and Rect2(Vector2.ZERO, button.size).has_point(event.position)
+		menu_touch_button = null
+		menu_touch_index = -1
+		if activate:
+			action.call_deferred()
 
 func _consume_touch(event: InputEvent, control: Control) -> void:
 	if event is InputEventScreenTouch or event is InputEventScreenDrag or (event is InputEventMouse and event.device == InputEvent.DEVICE_ID_EMULATION):
@@ -124,6 +169,8 @@ func _panel_visibility_changed() -> void:
 
 func _notification(what: int) -> void:
 	if what == NOTIFICATION_APPLICATION_FOCUS_OUT:
+		menu_touch_button = null
+		menu_touch_index = -1
 		_finish_touch()
 
 func _apply_volume(value: float, bus: String) -> void:
@@ -147,4 +194,4 @@ func _save_when_not_dragging(_value: float) -> void:
 func _save() -> void:
 	var result := settings.save(settings_path)
 	if result != OK:
-		push_warning("Could not save audio volume preferences: " + error_string(result))
+		push_warning("Could not save game settings: " + error_string(result))

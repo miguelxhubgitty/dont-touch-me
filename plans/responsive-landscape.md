@@ -71,6 +71,33 @@ Windows verification generated a project-only preview with the official template
 
 - Use the normal scene in a real root window with production stretch settings. Compare the 432 × 768 portrait baseline, a tall phone, 16:9 and tall-phone landscape, a tablet-shaped window, and a short desktop window. Supplement with synthetic scaled/offset inset rectangles for left and right notches and bottom navigation. Assert uniform scale, legible text, panel containment, and no overlapping interactive HUD bounds.
 - Exercise matching painted hitboxes and mouse/native touch in both renderers. Verify wide bounds for JUMP, RUN and RECOIL, BOX and SIGN readability, dialogue, idle/sleep/WAKE, and a HUD gesture that stays out of gameplay. Run the existing fast, audio and animation suites.
-- Select each orientation from the Volume menu during idle and active reactions. Confirm the current resize reset leaves a valid pose, reachable hitbox and usable HUD, with no late audio cue. On a device, rotate it without choosing a mode to verify that physical rotation alone does not switch modes. Check cutouts, safe areas, input and focus on Android and repeat on iOS when its implementation is validated. Desktop tests and injected events do not establish device behavior.
+- Select each orientation from Settings → Orientation during idle and active reactions. Confirm the current resize reset leaves a valid pose, reachable hitbox and usable HUD, with no late audio cue. On a device, rotate it in Auto and both fixed modes to verify sensor following and orientation locks. Check cutouts, safe areas, input and focus on Android and repeat on iOS when its implementation is validated. Desktop tests and injected events do not establish device behavior.
 
 [Godot viewport scaling and orientation](https://docs.godotengine.org/en/stable/tutorials/rendering/multiple_resolutions.html)
+
+## Settings hierarchy revision (implemented on the preview branch)
+
+PR #52 remains stacked on #51, which builds on the desktop layout work in #50. The top-left control becomes Settings. The root menu opens Volume on every platform and Orientation on Android and the iOS development preview. Each submenu has a Back button. The top-right sound toggle and Android Privacy Policy keep their existing paths.
+
+```text
+initialize:
+    load the existing preferences and configure the five existing sliders
+    on Android or preview iOS:
+        read the saved orientation choice, defaulting to Auto
+        apply the choice after HUD initialization
+
+open Settings:
+    show the root menu
+select Volume or Orientation:
+    show only the selected submenu and recalculate panel bounds
+select Back:
+    finish any active slider gesture, then show Settings
+select orientation:
+    save the selected choice in the existing preferences
+    request SCREEN_SENSOR for Auto, SCREEN_PORTRAIT for Portrait,
+        or SCREEN_LANDSCAPE for Landscape
+```
+
+Activate native menu taps after the owning finger releases inside the button. Defer the action until the current input dispatch finishes so a mirrored mouse event cannot fall through when the submenu changes. Route menu buttons through the existing native touch and emulated-mouse filtering, while keeping normal desktop Button activation and slider handling. Use the existing safe-area layout when panel dimensions change. Keep the preview-only iPhone orientation allowlist. The shared portrait startup setting stays in place, so Auto takes effect once the mobile HUD applies it.
+
+Automated checks will cover submenu navigation, five sliders, saved choices and restart, one orientation request per tap, input isolation, desktop availability, and safe-area bounds after submenu changes and resizing. Physical Android and iPhone checks must still verify device rotation in Auto, fixed modes while the handset rotates, system orientation lock behavior, cutouts, and background/resume. An iOS Simulator run can exercise the switch sequence and layout.
