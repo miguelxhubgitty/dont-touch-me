@@ -28,8 +28,8 @@ $animation = @('adobe_playable', 'adobe_simple', 'adobe_idle_hits', 'adobe_hit_o
     'adobe_reactions', 'adobe_reaction_hits', 'adobe_reaction_geometry', 'adobe_next_reactions',
     'adobe_moving_reactions', 'adobe_flatten_turn_stop', 'adobe_sign_box_run', 'adobe_wake',
     'jump_unbounded', 'adobe_unbounded_game', 'adobe_bubble_render', 'adobe_reaction_render_edges',
-    'stretch_idle', 'humming_idle', 'recoil_reaction', 'puffer_huff_reaction', 'animation_sleep_eye_render')
-$rendered = @('adobe_sign_box_run', 'adobe_bubble_render', 'adobe_reaction_render_edges', 'animation_sleep_eye_render')
+    'stretch_idle', 'humming_idle', 'recoil_reaction', 'puffer_huff_reaction', 'animation_sleep_eye_render', 'desktop_landscape')
+$rendered = @('adobe_sign_box_run', 'adobe_bubble_render', 'adobe_reaction_render_edges', 'animation_sleep_eye_render', 'desktop_landscape')
 $suites = switch ($Mode) {
     fast { $fast }
     audio { $audio }
