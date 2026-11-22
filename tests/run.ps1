@@ -23,7 +23,7 @@ $root = Split-Path -Parent $PSScriptRoot
 $fast = @('behavior', 'annoyance_stage_1', 'idle_stage_2', 'animation_polish', 'android_privacy_policy')
 $audio = @('audio', 'audio_mute', 'audio_click_attenuation', 'audio_interruption_fades',
     'audio_volume_balance', 'audio_preview_menu_test', 'audio_voice_timing',
-    'audio_variation', 'audio_volume_controls', 'animation_audio_cues')
+    'audio_variation', 'audio_volume_controls', 'animation_audio_cues', 'manual_landscape')
 $animation = @('adobe_playable', 'adobe_simple', 'adobe_idle_hits', 'adobe_hit_outline_audit',
     'adobe_reactions', 'adobe_reaction_hits', 'adobe_reaction_geometry', 'adobe_next_reactions',
     'adobe_moving_reactions', 'adobe_flatten_turn_stop', 'adobe_sign_box_run', 'adobe_wake',
