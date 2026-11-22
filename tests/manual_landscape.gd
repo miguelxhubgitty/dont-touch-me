@@ -2,7 +2,7 @@ extends SceneTree
 
 const Game := preload("res://main.tscn")
 
-class AndroidVolume extends "res://scripts/audio_volume_controls.gd":
+class PreviewVolume extends "res://scripts/audio_volume_controls.gd":
 	var requests: Array[int] = []
 
 	func _supports_manual_orientation() -> bool:
@@ -41,12 +41,12 @@ func run() -> void:
 	root.add_child(viewport)
 	var game = Game.instantiate()
 	viewport.add_child(game)
-	if not OS.has_feature("android"):
+	if OS.has_feature("pc"):
 		check(game.get_node("SoundHUD/VolumeButton").orientation_button == null, "desktop menu stays unchanged")
 	game.free()
 	game = Game.instantiate()
 	var volume = game.get_node("SoundHUD/VolumeButton")
-	volume.set_script(AndroidVolume)
+	volume.set_script(PreviewVolume)
 	viewport.add_child(game)
 	game.set_process(false)
 	game.annoyance = 9.0
@@ -63,6 +63,9 @@ func run() -> void:
 	viewport.size = Vector2i(2275, 1280)
 	await process_frame
 	game._resize()
+	var safe_area := Rect2(72, 27, 2100, 1217)
+	game.get_node("SoundHUD")._place(safe_area)
+	check(safe_area.encloses(selector.get_global_rect()), "selector fits the landscape safe area")
 	tap(viewport, selector.get_global_rect().get_center(), true)
 	check(volume.requests == [DisplayServer.SCREEN_LANDSCAPE, DisplayServer.SCREEN_PORTRAIT],
 		"the same menu selects fixed portrait after resizing")

@@ -420,3 +420,7 @@ The actual game window renders portrait, landscape and ultrawide with the same a
 ## Manual landscape preview
 
 The Android Volume menu can request a fixed Portrait or Landscape orientation on demand. The default stays portrait, and no sensor mode is enabled. The menu consumes the gesture before the existing gameplay input path. Windows rendered the same centered gameplay composition at 1920 × 1080 and 3840 × 2160. Native Android behavior remains to be checked, and iOS stays portrait pending a verified manual-only path. See [the updated plan and captures](../plans/responsive-landscape.md#stage-2--manual-mobile-orientation-and-desktop-preview).
+
+## Manual orientation on iPhone
+
+The development-only iOS preview reuses the Android Volume menu control. Godot's fixed orientation is independent of the iPhone plist allowlist. The preview starts in fixed Portrait and widens the generated allowlist to permit the player's landscape selection. The packaging check and synthetic menu tests passed. Confirm native rotation in Simulator and on an iPhone before shipping. See the [orientation preview plan](../plans/responsive-landscape.md#iphone-manual-orientation-preview).

@@ -54,6 +54,19 @@ Godot 4.7.2's Android backend forwards the orientation request to Android. Andro
 
 [1920 × 1080 capture](../docs/testing/manual-landscape/1920x1080.png) · [3840 × 2160 capture](../docs/testing/manual-landscape/3840x2160.png)
 
+## iPhone manual orientation preview
+
+This follow-up stacks on the Android selector. The Godot 4.7.2 API note mentions a sensor-mode prerequisite. The tagged iOS implementation sets the fixed orientation and asks UIKit to update geometry. Its view controller disables automatic rotation for fixed modes. Separately, the exporter writes the supported-orientation list from the portrait project setting. The preview therefore keeps the runtime project fixed to Portrait and widens only the generated iPhone Info.plist. The existing Volume button requests a single fixed orientation at a time. The preview requests the portrait lock at startup and uses the existing mobile safe-area layout.
+
+1. On Mac, open the development project with Godot 4.7.2 and matching templates. In **iOS Orientation Preview**, set the local Apple Team ID and export project-only to a disposable directory as `DontTouchMePreview`. This preset has its own preview bundle identifier.
+2. From the development checkout run `python3 release/tools/configure_ios_orientation_preview.py /path/to/DontTouchMePreview/DontTouchMePreview-Info.plist`. Repeat after every fresh export. The script accepts only the preview identifier and changes only the iPhone orientation allowlist.
+3. On an iPhone Simulator, build Debug using Xcode. Cold-launch while simulated hardware is in landscape and confirm the game starts portrait. In Volume, select Landscape and then Portrait. Between selections, rotate the simulated hardware and confirm that the game stays in the selected mode. Check the safe area, volume sliders, and touches on the blob before and after resizing.
+4. Repeat on a physical iPhone before enabling this in a shipping preset. Check cold launch with the phone held sideways, orientation lock while turning the handset, system rotation lock, background/resume and cutout clearance. Simulator results alone cannot settle all of those.
+
+[Godot 4.7.2 iOS orientation setter](https://github.com/godotengine/godot/blob/4.7.2-stable/drivers/apple_embedded/display_server_apple_embedded.mm#L614) · [Godot 4.7.2 iOS orientation masks](https://github.com/godotengine/godot/blob/4.7.2-stable/drivers/apple_embedded/godot_view_controller.mm#L288)
+
+Windows verification generated a project-only preview with the official template and confirmed that the script changes only the plist orientation array. The exported PCK reports fixed Portrait and the expected preview feature. Five fast and eleven audio suites passed, including the synthetic Portrait → Landscape → Portrait menu requests, landscape safe bounds and input isolation. Existing test-shutdown warnings recurred. No iOS Simulator or hardware run was available.
+
 ## Acceptance checks
 
 - Use the normal scene in a real root window with production stretch settings. Compare the 432 × 768 portrait baseline, a tall phone, 16:9 and tall-phone landscape, a tablet-shaped window, and a short desktop window. Supplement with synthetic scaled/offset inset rectangles for left and right notches and bottom navigation. Assert uniform scale, legible text, panel containment, and no overlapping interactive HUD bounds.

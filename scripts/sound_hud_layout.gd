@@ -9,7 +9,7 @@ const MIN_DESKTOP_HEIGHT := 540
 @onready var volume: Button = $VolumeButton
 
 func _ready() -> void:
-	if OS.has_feature("android"):
+	if _uses_safe_area():
 		_connect_layout.call_deferred()
 	elif OS.has_feature("pc") and get_viewport() is Window:
 		var window := get_window()
@@ -22,8 +22,11 @@ func _connect_layout() -> void:
 	_refresh()
 
 func _notification(what: int) -> void:
-	if what == NOTIFICATION_APPLICATION_FOCUS_IN and is_node_ready() and OS.has_feature("android"):
+	if what == NOTIFICATION_APPLICATION_FOCUS_IN and is_node_ready() and _uses_safe_area():
 		_refresh()
+
+func _uses_safe_area() -> bool:
+	return OS.has_feature("android") or (OS.has_feature("ios") and OS.has_feature("manual_ios_orientation"))
 
 func _refresh() -> void:
 	_place(HudSafeArea.from_window(get_viewport(), get_window()))

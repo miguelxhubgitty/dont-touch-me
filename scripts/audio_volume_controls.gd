@@ -60,9 +60,11 @@ func initialize() -> void:
 		orientation_button.pressed.connect(_toggle_orientation)
 		orientation_button.gui_input.connect(_orientation_input)
 		options.add_child(orientation_button)
+		if OS.has_feature("ios"):
+			_request_orientation.call_deferred(DisplayServer.SCREEN_PORTRAIT)
 
 func _supports_manual_orientation() -> bool:
-	return OS.has_feature("android")
+	return OS.has_feature("android") or (OS.has_feature("ios") and OS.has_feature("manual_ios_orientation"))
 
 func _orientation_input(event: InputEvent) -> void:
 	_consume_touch(event, orientation_button)
