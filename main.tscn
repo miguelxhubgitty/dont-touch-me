@@ -46,7 +46,7 @@ offset_bottom = 100.0
 theme_override_colors/font_color = Color(0.20, 0.19, 0.17, 1)
 theme_override_font_sizes/font_size = 24
 theme_override_styles/normal = SubResource("SoundButtonNormal")
-text = "Volume"
+text = "Settings"
 script = ExtResource("3")
 
 [node name="PrivacyHUD" type="CanvasLayer" parent="."]
