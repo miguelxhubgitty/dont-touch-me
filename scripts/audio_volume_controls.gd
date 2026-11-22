@@ -16,6 +16,8 @@ var dragging := false
 var touch_slider: HSlider
 var touch_index := -1
 var touch_start_value := 0.0
+var orientation_button: Button
+var landscape_selected := false
 
 func initialize() -> void:
 	settings.load(settings_path)
@@ -51,6 +53,29 @@ func initialize() -> void:
 		slider.gui_input.connect(_slider_touch.bind(slider))
 		options.add_child(slider)
 		sliders[bus] = slider
+	if _supports_manual_orientation():
+		orientation_button = Button.new()
+		orientation_button.text = "Orientation: Portrait"
+		orientation_button.custom_minimum_size.y = 48
+		orientation_button.pressed.connect(_toggle_orientation)
+		orientation_button.gui_input.connect(_orientation_input)
+		options.add_child(orientation_button)
+
+func _supports_manual_orientation() -> bool:
+	return OS.has_feature("android")
+
+func _orientation_input(event: InputEvent) -> void:
+	_consume_touch(event, orientation_button)
+	if event is InputEventScreenTouch and event.pressed and not event.canceled and event.device != InputEvent.DEVICE_ID_EMULATION:
+		_toggle_orientation()
+
+func _toggle_orientation() -> void:
+	landscape_selected = not landscape_selected
+	orientation_button.text = "Orientation: Landscape" if landscape_selected else "Orientation: Portrait"
+	_request_orientation(DisplayServer.SCREEN_LANDSCAPE if landscape_selected else DisplayServer.SCREEN_PORTRAIT)
+
+func _request_orientation(orientation: DisplayServer.ScreenOrientation) -> void:
+	DisplayServer.screen_set_orientation(orientation)
 
 func _toggle_panel() -> void:
 	panel.visible = not panel.visible

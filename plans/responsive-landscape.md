@@ -1,6 +1,6 @@
 # Responsive landscape on mobile and desktop
 
-Reviewed `origin/main` at `2a58cfe`. Stage 1 is implemented for review. Stage 2 remains a proposal.
+Reviewed `origin/main` at `2a58cfe`. The manual-orientation draft builds on the unmerged desktop Stage 1 branch.
 
 ## Current behavior
 
@@ -34,16 +34,30 @@ The 810 × 108 request demonstrated unreadable type and tiny input targets. A na
 
 [Short window before](../docs/testing/desktop-landscape/short-before.png) · [Same resize request after](../docs/testing/desktop-landscape/short-after.png)
 
-## Stage 2 — Enable and validate mobile rotation
+## Stage 2 — Manual mobile orientation and desktop preview
 
-After layout checks pass, enable device-driven portrait and both landscape directions for the development project. Inspect each generated Android manifest and future development iOS orientation list instead of assuming the project setting reaches both exports. Keep Android tap/drag capture, Privacy Policy behavior, app identifiers and signing settings intact. Extend safe-area handling to the existing audio HUD on mobile where the platform reports insets. Keep the frozen Alpha and its submitted iOS build outside the change.
+Desktop uses the real root window at 1920 × 1080 and 3840 × 2160. Both sizes keep the same logical viewport and centered blob. Capture native renders at both sizes. Leave the side space empty. The existing launch size stays portrait.
 
-Preserve the current reset on a logical size change for this first implementation. If rotations must preserve in-flight animations, propose that as a separate decision. It needs a state rebase design covering movement endpoints, offscreen return, timing, hit geometry and already-fired audio cues. The current tested reset should remain until that behavior is approved.
+On Android, the Volume menu includes an Orientation button that switches between fixed Portrait and Landscape. The app starts portrait, with the choice kept for the current session. Only a menu action issues a request. Native touches are consumed in the HUD, and the existing emulated-input guard applies. The existing safe-area hooks and logical resize/reset handle resulting window changes.
+
+```text
+open Volume menu:
+    show Orientation only on Android
+on native tap or regular activation:
+    consume the UI gesture and ignore mirrored pointer events
+    switch the label and request fixed Portrait or fixed Landscape
+on window resize:
+    retain existing game-state reset and HUD placement
+```
+
+Godot 4.7.2's Android backend forwards the orientation request to Android. Android 16 may disregard orientation locks on API-36 apps on displays at least 600 dp wide. Native phones still need testing. On iOS, Godot's API documents an initial sensor-mode requirement for runtime orientation. Changing the shared project setting would weaken the manual-only guarantee before the lock is applied. Keep iOS locked to portrait in this draft. Before enabling its menu, verify supported orientations, cold launch, and fixed orientation requests with an iPhone build. No release presets, frozen Alpha or submitted build are part of this experiment. [Android 16 adaptive layout rules](https://developer.android.com/about/versions/16/behavior-changes-16#adaptive-layouts) · [Godot DisplayServer API](https://docs.godotengine.org/en/4.7/classes/class_displayserver.html#class-displayserver-method-screen-set-orientation)
+
+[1920 × 1080 capture](../docs/testing/manual-landscape/1920x1080.png) · [3840 × 2160 capture](../docs/testing/manual-landscape/3840x2160.png)
 
 ## Acceptance checks
 
 - Use the normal scene in a real root window with production stretch settings. Compare the 432 × 768 portrait baseline, a tall phone, 16:9 and tall-phone landscape, a tablet-shaped window, and a short desktop window. Supplement with synthetic scaled/offset inset rectangles for left and right notches and bottom navigation. Assert uniform scale, legible text, panel containment, and no overlapping interactive HUD bounds.
 - Exercise matching painted hitboxes and mouse/native touch in both renderers. Verify wide bounds for JUMP, RUN and RECOIL, BOX and SIGN readability, dialogue, idle/sleep/WAKE, and a HUD gesture that stays out of gameplay. Run the existing fast, audio and animation suites.
-- Rotate or resize during idle and active reactions, with the volume panel open and while dragging. Confirm the current resize reset leaves a valid pose, reachable hitbox and usable HUD, with no late audio cue. Check real Android and iPhone rotation in both directions for cutouts, safe areas, native touch and focus events. Desktop tests and injected events do not establish device behavior.
+- Select each orientation from the Volume menu during idle and active reactions. Confirm the current resize reset leaves a valid pose, reachable hitbox and usable HUD, with no late audio cue. On a device, rotate it without choosing a mode to verify that physical rotation alone does not switch modes. Check cutouts, safe areas, input and focus on Android and repeat on iOS when its implementation is validated. Desktop tests and injected events do not establish device behavior.
 
 [Godot viewport scaling and orientation](https://docs.godotengine.org/en/stable/tutorials/rendering/multiple_resolutions.html)

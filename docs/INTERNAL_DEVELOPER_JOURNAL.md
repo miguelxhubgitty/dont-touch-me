@@ -416,3 +416,7 @@ Owner authorized correcting and publishing the live privacy policy for the froze
 ## Desktop landscape, Stage 1
 
 The actual game window renders portrait, landscape and ultrawide with the same aspect-preserving stretch. An extremely short desktop window reduced the HUD to unreadable size. The native desktop window now has a 540-pixel minimum height while retaining the tested portrait and wide layouts. Resize still resets active motion and restores hit geometry. See the [landscape plan and captures](../plans/responsive-landscape.md#stage-1-capture-evidence). Mobile rotation remains a later stage.
+
+## Manual landscape preview
+
+The Android Volume menu can request a fixed Portrait or Landscape orientation on demand. The default stays portrait, and no sensor mode is enabled. The menu consumes the gesture before the existing gameplay input path. Windows rendered the same centered gameplay composition at 1920 × 1080 and 3840 × 2160. Native Android behavior remains to be checked, and iOS stays portrait pending a verified manual-only path. See [the updated plan and captures](../plans/responsive-landscape.md#stage-2--manual-mobile-orientation-and-desktop-preview).
