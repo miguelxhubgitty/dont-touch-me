@@ -49,6 +49,16 @@ After export on an Intel Mac, set `ARCHS[sdk=iphonesimulator*] = x86_64` in the 
 
 ## 3. Test and prepare the archive after authorization
 
+### Verify the iPhone launch screen
+
+The Godot 4.7.2 exporter supplies its logo for `SplashImage` when the two storyboard image fields are empty, independently of `boot_splash/show_image=false`. The iOS Alpha preset assigns the same transparent PNG to both retina variants. The storyboard still uses the existing game background from `project.godot`. Generate a fresh Xcode project to pick up this change.
+
+On Windows, disposable project-only exports before and after the change confirmed that `UILaunchStoryboardName` is `Launch Screen`. The original generated `SplashImage` contains the Godot logo. In the corrected project both generated PNGs are fully transparent, the storyboard background matches the game, and the exported gameplay PCK is byte-identical. These project-only checks used a local placeholder team value and produced no signed build. All six Godot regression suites and a 180-frame desktop startup smoke test passed.
+
+On the Mac, use the fresh project to run a Debug build on a fresh iPhone Simulator. On Intel, retain the Simulator-only `x86_64` setting described in the [Mac validation notes](../docs/ios/ALPHA_MAC_VALIDATION_2026-11-21.md). From a cold launch, verify that the initial frame is a plain warm off-white, then that the blob and Privacy Policy button load normally. The corrected cold launch has yet to be verified in Simulator.
+
+### Archive and TestFlight
+
 1. Run the candidate in an iPhone Simulator. Validate the intended typography and layout, touch, reaction variety, 24-second sleep, wake and the policy control. On a physical iPhone, also verify cutouts and the home indicator, one Safari launch, return to the game, and stability. A local physical-device run needs existing development signing and provisioning. Alternatively use authorized internal TestFlight for the first physical test.
 2. Use existing authorized distribution signing and provisioning. In **Signing & Capabilities** choose the confirmed team and existing profile/identity as appropriate. Stop if Xcode needs to create a certificate or profile and obtain approval before giving it permission. Keep keys, profiles, passwords and account data outside Git.
 3. Select **Any iOS Device (arm64)** and **Product → Archive** in Release configuration. In **Window → Organizer → Archives**, inspect the archive and run **Validate App**. Review the binary's identity, version/build, iPhone family, entitlements, privacy manifest, and embedded SDKs.
