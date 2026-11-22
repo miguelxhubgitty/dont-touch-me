@@ -3,6 +3,7 @@ extends CanvasLayer
 const HudSafeArea := preload("res://scripts/hud_safe_area.gd")
 const MARGIN := 20.0
 const PANEL_GAP := 8.0
+const MIN_DESKTOP_HEIGHT := 540
 
 @onready var sound: Button = $SoundButton
 @onready var volume: Button = $VolumeButton
@@ -10,6 +11,9 @@ const PANEL_GAP := 8.0
 func _ready() -> void:
 	if OS.has_feature("android"):
 		_connect_layout.call_deferred()
+	elif OS.has_feature("pc") and get_viewport() is Window:
+		var window := get_window()
+		window.min_size.y = maxi(window.min_size.y, MIN_DESKTOP_HEIGHT)
 
 func _connect_layout() -> void:
 	get_viewport().size_changed.connect(_refresh)

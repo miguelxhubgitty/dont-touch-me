@@ -412,3 +412,7 @@ On Android, the Sound and Volume controls share the Privacy HUD's conversion fro
 ## November 21, 2026 — Privacy policy version scope
 
 Owner authorized correcting and publishing the live privacy policy for the frozen iOS Alpha and future versions before the first internal TestFlight upload. Only the policy date/scope sentence changes: version 0.1.0 and later, unless replaced by an updated policy. Existing data-handling, platform diagnostics, children, support and change disclosures are preserved byte-for-byte. Static comparison verified the remaining policy is unchanged. No runtime, Android, release branch, tag or binary change is required; the iOS button opens the same remote URL. Publication and live verification follow the focused PR approval.
+
+## Desktop landscape, Stage 1
+
+The actual game window renders portrait, landscape and ultrawide with the same aspect-preserving stretch. An extremely short desktop window reduced the HUD to unreadable size. The native desktop window now has a 540-pixel minimum height while retaining the tested portrait and wide layouts. Resize still resets active motion and restores hit geometry. See the [landscape plan and captures](../plans/responsive-landscape.md#stage-1-capture-evidence). Mobile rotation remains a later stage.
