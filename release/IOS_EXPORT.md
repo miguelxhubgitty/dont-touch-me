@@ -7,6 +7,7 @@ No iOS archive, certificate, provisioning profile, or device result is claimed. 
 - Source project: `project.godot`, `main.tscn`, `scripts/blob.gd`; exactly 16 existing reactions.
 - Opaque icon: project `assets/icon_ios.png`, and `release/assets/icons/ios/AppIcon.appiconset/`.
 - Warm launch background and engine splash-image setting in `project.godot`.
+- iPhone launch screen: both iOS storyboard image slots use the 1 × 1 transparent `release/ios/launch-transparent.png`. Without it, Godot 4.7.2 puts its own logo in the generated `SplashImage`, even with `boot_splash/show_image=false`. The storyboard keeps the warm `boot_splash/bg_color` background. Any new iOS preset must set `storyboard/custom_image@2x` and `@3x` the same way (`tests/test_ios_launch_screen.py` enforces this). Simulator evidence: `docs/testing/ios-launch-screen/`.
 - Apple-sized reference captures and their limitations: `release/assets/README.md`.
 - Listing and privacy drafts in `release/`; engine/license acknowledgments in `THIRD_PARTY_NOTICES.txt`.
 

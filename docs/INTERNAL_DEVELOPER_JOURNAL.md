@@ -432,3 +432,9 @@ The top-left Settings menu separates the five volume controls from mobile orient
 Each submenu has a Back button. Native menu taps complete on the owning touch release. The button action is deferred so mirrored mouse input stays in the HUD when the submenu changes. Desktop still uses its existing window orientation and resize rules. The top-right sound toggle and Android Privacy Policy use their existing input paths.
 
 Synthetic tests cover menu navigation, orientation requests, preference restoration, safe-area bounds, and isolation from gameplay. Device rotation and system orientation locks still need native validation.
+
+## iPhone launch screen without the Godot logo
+
+Main's iOS export showed Godot's logo on the launch screen, on both the Simulator and an iPhone. The cause: Godot fills the storyboard `SplashImage` with its logo when the preset leaves the storyboard image slots empty. The approved Alpha fix (PR #49) is reused unchanged. The same transparent PNG goes in both slots, and the warm storyboard background is kept.
+
+A disposable Mac export showed both generated splash PNGs change from the 800 × 600 logo to 1 × 1 with zero alpha. The storyboard is unchanged. In one source tree, the game PCK is byte-identical with the setting on and off. A Simulator cold launch after reinstall showed no logo, then the normal game. See [the plan](../plans/ios-launch-screen.md). The production preset in PR #53 needs the same two lines when the two PRs are combined.
