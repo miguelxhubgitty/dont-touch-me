@@ -521,3 +521,17 @@ Fourteen suites passed but printed Godot's exit report ("ObjectDB instances were
 - Each fixed test passed 10 of 10 windowed CoreAudio runs and 3 of 3 headless Dummy runs.
 - `tests/run.ps1 -Mode audio -AudioDriver CoreAudio` passed all 11 suites.
 - The full runner (Dummy) passed end to end: 42 Godot suites with the exit-leak check, 57 Python tests (3 skipped) and 21 workflow checks. It was given an absolute `-Python` path because of the separate multiple-`python3` runner issue.
+
+## Privacy Policy button: one open per touch
+
+The shared `scripts/privacy_policy_button.gd` called `OS.shell_open()` on every native touch-down. A second finger landing on the button while the first was still down opened the policy again, on Android and iOS alike. The iOS test even recorded that as expected (four opens), and it reset the counter afterwards.
+
+The button now reuses the single-touch pattern the mute button already ships. `touch_index` remembers the first finger, which opens the policy once. Further touch-downs are ignored until that finger's release or cancellation clears it. Focus loss and hiding also clear it. On a device, opening the browser always backgrounds the app, so a lost release can't leave the button locked. One-finger taps, drag and emulated-mouse consumption, `Button.pressed` activation, placement and gameplay isolation are unchanged.
+
+Both `tests/ios_privacy_policy.gd` and `tests/android_privacy_policy.gd` now check:
+- a second and third finger don't reopen;
+- releasing an extra finger doesn't free the tracked touch;
+- a later tap opens again;
+- cancellation, focus loss and hiding each end the tracked touch.
+
+The iOS test no longer resets its counter. Against the old script, the six new checks and the final count fail on both platforms.

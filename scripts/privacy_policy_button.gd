@@ -5,6 +5,8 @@ const POLICY_URL := "https://miguelxhubgitty.github.io/dont-touch-me/privacy.htm
 const RELEASE_FONT := "res://assets/fonts/SpaceGrotesk.ttf"
 const MARGIN := Vector2(24, 24)
 
+var touch_index := -1
+
 func _ready() -> void:
 	if not (_is_android() or _is_ios()):
 		return
@@ -22,7 +24,9 @@ func _is_ios() -> bool:
 	return OS.has_feature("ios")
 
 func _notification(what: int) -> void:
-	if what == NOTIFICATION_APPLICATION_FOCUS_IN and is_node_ready() and is_visible_in_tree():
+	if what == NOTIFICATION_APPLICATION_FOCUS_OUT or what == NOTIFICATION_VISIBILITY_CHANGED:
+		touch_index = -1
+	elif what == NOTIFICATION_APPLICATION_FOCUS_IN and is_node_ready() and is_visible_in_tree():
 		_refresh_position()
 
 func _refresh_position() -> void:
@@ -34,8 +38,15 @@ func _place(safe_rect: Rect2) -> void:
 func _gui_input(event: InputEvent) -> void:
 	if event is InputEventScreenTouch:
 		accept_event()
-		if event.pressed and not event.canceled and event.device != InputEvent.DEVICE_ID_EMULATION:
-			_open_policy()
+		if event.device == InputEvent.DEVICE_ID_EMULATION:
+			return
+		# Open once for the first finger; ignore others until it lifts or is canceled.
+		if event.pressed and not event.canceled:
+			if touch_index == -1:
+				touch_index = event.index
+				_open_policy()
+		elif event.index == touch_index:
+			touch_index = -1
 	elif event is InputEventScreenDrag or (event is InputEventMouse and event.device == InputEvent.DEVICE_ID_EMULATION):
 		# The synthetic mouse event must not reach BaseButton's pressed path.
 		accept_event()

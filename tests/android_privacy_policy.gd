@@ -34,8 +34,9 @@ func add_game(viewport: SubViewport, simulate_android: bool) -> Node:
 	game.set_process(false)
 	return game
 
-func touch(viewport: Viewport, point: Vector2, down: bool, device := 0, canceled := false) -> void:
+func touch(viewport: Viewport, point: Vector2, down: bool, device := 0, canceled := false, index := 0) -> void:
 	var event := InputEventScreenTouch.new()
+	event.index = index
 	event.position = point
 	event.pressed = down
 	event.canceled = canceled
@@ -88,12 +89,39 @@ func run() -> void:
 	check(button.requests == 1, "emulated and canceled touches do not open the browser")
 	click(viewport, point)
 	check(button.requests == 2, "normal Button activation opens once")
+	# Multi-touch: only the first finger opens; others are ignored until that touch ends.
+	touch(viewport, point, true, 0, false, 0)
+	touch(viewport, point, true, 0, false, 1)
+	check(button.requests == 3, "a second finger does not reopen while the first is down")
+	touch(viewport, point, false, 0, false, 1)
+	touch(viewport, point, true, 0, false, 2)
+	check(button.requests == 3, "releasing an extra finger does not free the tracked touch")
+	touch(viewport, point, false, 0, false, 0)
+	touch(viewport, point, false, 0, false, 2)
+	touch(viewport, point, true, 0, false, 1)
+	check(button.requests == 4, "after the tracked touch lifts, a new tap opens again")
+	touch(viewport, point, false, 0, true, 1)
+	touch(viewport, point, true)
+	check(button.requests == 5, "cancellation ends the tracked touch")
+	touch(viewport, point, false)
+	# Focus loss and hiding end a tracked touch whose release never arrives.
+	touch(viewport, point, true)
+	button.notification(Node.NOTIFICATION_APPLICATION_FOCUS_OUT)
+	touch(viewport, point, true)
+	check(button.requests == 7, "focus loss ends the tracked touch")
+	touch(viewport, point, false)
+	touch(viewport, point, true)
+	button.hide()
+	button.show()
+	touch(viewport, point, true)
+	check(button.requests == 9, "hiding ends the tracked touch")
+	touch(viewport, point, false)
 	check(game.annoyance == 9.0 and game.idle_time == 1.8 and game.reaction == 0,
 		"privacy gestures do not touch gameplay")
 	check(manager.click_streak == 0 and manager.trace.is_empty(), "privacy gestures do not trigger click tracking or audio")
 	touch(viewport, point + Vector2(101, 0), true)
 	touch(viewport, point + Vector2(101, 0), false)
-	check(game.annoyance < 9.0 and button.requests == 2, "a background touch immediately outside still counts as a miss")
+	check(game.annoyance < 9.0 and button.requests == 9, "a background touch immediately outside still counts as a miss")
 
 	var volume: Button = game.get_node("SoundHUD/VolumeButton")
 	click(viewport, volume.get_global_rect().get_center())
