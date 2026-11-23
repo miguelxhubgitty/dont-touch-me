@@ -60,8 +60,16 @@ func run() -> void:
 						actor.advance(interrupt_at)
 						route_poke(views[i],actor.body_position+Vector2(side*20,-70),use_touch)
 					compare(native,source)
-					check(native.reaction != Original.Reaction.WAKE and not native.asleep,"body poke interrupts WAKE at each phase")
-					check(native.audio_manager.active_reaction != "wake" and native.bubble != "I was DREAMING.","interruption clears old audio schedule and bubble")
+					# The WAKE hop and its landing recovery finish under touches (plans/movement-continuity.md).
+					check(native.reaction == Original.Reaction.WAKE and is_equal_approx(native.elapsed,interrupt_at) and not native.asleep,"body poke keeps WAKE at each phase")
+					check(native.audio_manager.active_reaction == "wake" and native.bubble == "I was DREAMING.","kept WAKE keeps its audio schedule and bubble")
+					for i in range(actors.size()):
+						var actor = actors[i]
+						actor.advance(float(Original.DURATIONS[Original.Reaction.WAKE])-actor.elapsed)
+						route_poke(views[i],actor.body_position+Vector2(side*20,-70),use_touch)
+					compare(native,source)
+					check(native.reaction != Original.Reaction.WAKE and native.reaction != Original.Reaction.NONE and not native.asleep,"body poke after WAKE settles starts the next reaction")
+					check(native.audio_manager.active_reaction != "wake" and native.bubble != "I was DREAMING.","next reaction clears old audio schedule and bubble")
 					continue
 				for i in range(times.size()):
 					var at: float = times[i]

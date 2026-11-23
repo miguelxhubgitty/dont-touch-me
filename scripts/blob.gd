@@ -17,6 +17,9 @@ const DURATIONS := {
 	Reaction.SIGN: 2.0, Reaction.BOX: 2.7, Reaction.RUN: 4.1, Reaction.WAKE: 1.65, Reaction.RECOIL: 0.9,
 	Reaction.PUFFER_HUFF: 1.35,
 }
+# Body deformation in these lasts to the final frame, so touches never cut them short.
+const PHYSICAL_MOVEMENT := [Reaction.SLIDE, Reaction.JUMP, Reaction.RECOIL, Reaction.WAKE]
+const STAGE_MARGIN := 190.0
 const POOLS := [
 	[Reaction.BLINK, Reaction.SIDE_EYE, Reaction.SQUISH, Reaction.RECOIL],
 	[Reaction.IRRITATED, Reaction.DONT, Reaction.SERIOUSLY, Reaction.SLIDE, Reaction.PUFFER_HUFF],
@@ -378,14 +381,23 @@ func touch_at(point: Vector2) -> bool:
 	touch_flash = 1.0
 	if asleep:
 		begin_reaction(Reaction.WAKE, point)
-	elif reaction != Reaction.RUN and reaction != Reaction.BOX:
-		# Escapes finish on schedule even under frantic tapping.
+	elif not reaction_locked():
+		# Escapes and physical movement finish on schedule even under frantic tapping.
 		begin_reaction(choose_reaction(), point)
 	idle_time = 0.0
 	_reset_special_idle()
 	if audio_manager != null:
 		audio_manager.contact(reaction)
 	return true
+
+## Whether a touch keeps the current reaction instead of starting a new one.
+func reaction_locked() -> bool:
+	return jump_returning or reaction == Reaction.RUN or reaction == Reaction.BOX or reaction in PHYSICAL_MOVEMENT
+
+## Clamps a destination into the stage band, which collapses to the centre on narrow screens.
+func _stage_x(x: float) -> float:
+	var margin := minf(STAGE_MARGIN, last_size.x * 0.5)
+	return clampf(x, margin, last_size.x - margin)
 
 func begin_reaction(which: int, touch: Vector2) -> void:
 	startled_mouth.clear()
@@ -397,7 +409,8 @@ func begin_reaction(which: int, touch: Vector2) -> void:
 	if which == Reaction.WAKE:
 		asleep = false
 	jump_returning = false
-	origin = Vector2(body_position.x if which == Reaction.RECOIL or (which == Reaction.JUMP and _free_jump_enabled()) else clampf(body_position.x, 190.0, last_size.x - 190.0), anchor.y)
+	# Start where the body is. Only destinations are kept on stage.
+	origin = Vector2(body_position.x, anchor.y)
 	anchor = origin
 	destination = origin
 	elapsed = 0.0
@@ -410,10 +423,13 @@ func begin_reaction(which: int, touch: Vector2) -> void:
 	if which == Reaction.JUMP and _free_jump_enabled():
 		destination.x = origin.x+direction*FREE_JUMP_TRAVEL
 	elif which == Reaction.SLIDE or which == Reaction.JUMP:
-		destination.x = clampf(origin.x + direction * 155.0, 190.0, last_size.x - 190.0)
+		destination.x = _stage_x(origin.x + direction * 155.0)
 		if absf(destination.x - origin.x) < 35.0:
 			direction *= -1.0
-			destination.x = clampf(origin.x + direction * 155.0, 190.0, last_size.x - 190.0)
+			destination.x = _stage_x(origin.x + direction * 155.0)
+		if destination.x != origin.x:
+			# From outside the band the clamp can reverse travel; face the way it goes.
+			direction = signf(destination.x - origin.x)
 	if which == Reaction.RUN:
 		direction = -1.0 if origin.x < last_size.x * 0.5 else 1.0
 		destination = Vector2(last_size.x * 0.5, anchor.y)

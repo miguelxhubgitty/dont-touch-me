@@ -127,7 +127,7 @@ func run() -> void:
 				if Rect2(Vector2.ZERO, Vector2(viewport.size)).has_point(point):
 					var old_reaction: int = game.last_reaction
 					var was_sleeping: bool = game.asleep
-					var protected: bool = game.reaction in [Blob.Reaction.RUN, Blob.Reaction.BOX]
+					var protected: bool = game.reaction_locked()
 					var hit: bool = game.touch_at(point)
 					if hit and not protected and not was_sleeping:
 						check(game.last_reaction != old_reaction, "no repeated reaction during live input")

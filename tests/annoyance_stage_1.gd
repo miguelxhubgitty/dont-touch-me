@@ -49,9 +49,13 @@ func check_window(game) -> void:
 		var expected: float = roll.randf_range(1.8, 3.6) * multiplier
 		var before: float = game.annoyance
 		var previous: int = game.reaction
+		var locked: bool = game.reaction_locked()
 		check(poke(game), "successful poke")
 		check(is_equal_approx(game.annoyance - before, expected), "seeded gain at multiplier %s" % multiplier)
-		check(game.reaction != previous and game.reaction != game.Reaction.NONE, "successful poke selects a new reaction even at zero gain")
+		if locked:
+			check(game.reaction == previous, "successful poke keeps physical movement even at zero gain")
+		else:
+			check(game.reaction != previous and game.reaction != game.Reaction.NONE, "successful poke selects a new reaction even at zero gain")
 		game.advance(0.09)
 	game.advance(0.45)
 	check(audio.click_attenuation_db() == 0.0, "audio streak expires before gameplay window")
