@@ -387,7 +387,8 @@ func touch_at(point: Vector2) -> bool:
 	idle_time = 0.0
 	_reset_special_idle()
 	if audio_manager != null:
-		audio_manager.contact(reaction)
+		# The return glide ends a JUMP after its reaction is cleared, so it answers with JUMP's contact.
+		audio_manager.contact(Reaction.JUMP if jump_returning else reaction)
 	return true
 
 ## Whether a touch keeps the current reaction instead of starting a new one.

@@ -536,9 +536,9 @@ Both `tests/ios_privacy_policy.gd` and `tests/android_privacy_policy.gd` now che
 
 The iOS test no longer resets its counter. Against the old script, the six new checks and the final count fail on both platforms.
 
-## Movement continuity (draft for 0.1.1)
+## Movement continuity (0.1.1)
 
-Plan: [plans/movement-continuity.md](../plans/movement-continuity.md). Branch `fix/movement-continuity-0.1.1`; not merged.
+Plan: [plans/movement-continuity.md](../plans/movement-continuity.md). Merged to `main` in [PR #65](https://github.com/miguelxhubgitty/dont-touch-me/pull/65) (merge commit `2c99276`). Not yet in a public build.
 
 Before this change, an accepted poke always called `begin_reaction`, which rebuilt the new reaction from the body's current x (clamped to 190 … width − 190) and the floor height `anchor.y`. Poking a jumping blob therefore dropped it to the floor in one frame (up to 175 px). WAKE could drop 100 px, RECOIL 18 px, and a slide or the offscreen-return glide just stopped. The clamp also teleported a blob that was at rest: a free jump from the middle of a 720-pixel screen lands at x = 590, and the next poke moved it to 530 before anything else happened. Below 380 logical pixels wide the clamp band is inverted, so every reaction began 10 px off-centre.
 
@@ -551,3 +551,5 @@ Now:
 `tests/movement_continuity.gd` pokes each movement every five frames in both renderers at 300, 360, 720 and 1280 pixels. It compares position and displayed scale against an untouched twin, checks that the next poke starts with no step, and covers stage-band destinations, rapid tapping, single landings, resize cancellation and expression reactions staying interruptible. Assertions that used to expect an interruption were updated in `annoyance_stage_1`, `adobe_wake`, `jump_unbounded`, `adobe_reaction_hits` and `release`.
 
 Not changed: small on-the-spot offsets (SHAKE, STOP, the Yawn beat, Sleep Twitch) still carry into the next reaction, and Humming's up-to-9 px lift still drops to the floor on a poke.
+
+**Follow-up (in review, `claude/recoil-contact-0.1.1`).** The architecture audit found that pokes during RECOIL made no sound. `touch_at` plays the current reaction's contact cue, but `audio/blob_events.json` had no `recoil.contact`, so `play_event` found nothing. Before PR #65 that didn't matter, because a poke during RECOIL started a new reaction with its own contact sound. Now RECOIL is locked for its 0.9 s, so those pokes were silent. The new `recoil.contact` reuses `tap_success.wav` at `slide.contact`'s settings (−16 dB, 0.3 s); no new audio. `movement_continuity` now checks that every locked movement has an enabled contact cue and that each locked poke plays it unless the 0.1 s contact cooldown applies. It also moved to the `fast` group, so every code PR runs it in CI. The new check then caught the same gap in the offscreen return glide: the glide runs after JUMP's `reaction` has been cleared to NONE, so `contact(reaction)` played nothing. `touch_at` now passes `Reaction.JUMP` while `jump_returning`, the only code change in this follow-up. `tests/audio.gd` checks that the audio manager's `REACTIONS` names match the `Reaction` enum one for one, because the audio code looks them up by enum index.

@@ -368,6 +368,14 @@
       "volume_db": 0,
       "max_seconds": 0.9
     },
+    "recoil.contact": {
+      "stream": "res://audio/candidate_sfx/user/tap_success.wav",
+      "role": "contact",
+      "marker": "contact",
+      "enabled": true,
+      "volume_db": -16,
+      "max_seconds": 0.3
+    },
     "puffer_huff.action": {
       "stream": "res://audio/animation_cues/01-air-valve.wav",
       "role": "action",

@@ -13,7 +13,7 @@ pwsh -File tests/run.ps1 full -Godot <path-to-godot> -Python <path-to-python>
 
 | Mode | Coverage |
 | --- | --- |
-| `fast` | Core gameplay, input, tiers, sleep/wake and basic viewport behavior. |
+| `fast` | Core gameplay, input, tiers, sleep/wake, movement continuity under touches and basic viewport behavior. |
 | `audio` | Cue dispatch, mute, click streak, fades, voice timing, balancing, variation, preview and saved volumes. |
 | `animation` | Authored and procedural playback, pose geometry, interruption, hit outlines, viewport movement, props, speech bubbles and rendered edges. |
 | `full` | All three groups plus Godot release and fingerprint checks, existing Python unit tests, and the local typography/Git workflow fixture. |

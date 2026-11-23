@@ -119,17 +119,26 @@ func movement_case(viewport: SubViewport, quiet: SubViewport, width: int, native
 		game.begin_reaction(which, game.body_position + Vector2(-20, -70))
 	var lands := [0] # Lambdas capture locals by value; share a counter.
 	touched.audio_manager.event_played.connect(func(id): if id == "jump.land": lands[0] += 1)
+	var contact_id: String = Blob.Reaction.keys()[which].to_lower() + ".contact"
+	check(touched.audio_manager.events.get(contact_id, {}).get("enabled", false), label + " has an enabled " + contact_id)
 	var frame := 0
 	var hits := 0
+	var heard_hits := 0
 	while not settled(twin) and frame < 2000:
 		frame += 1
 		if frame % 5 == 0:
 			var before: float = touched.annoyance
 			var point: Vector2 = touched.body_position + Vector2(0, -70)
 			var visible: bool = touched.contains_touch(point)
+			var audio = touched.audio_manager
+			var heard_before: int = audio.trace.count(contact_id)
+			var cooling: bool = audio.time - audio.last_contact < 0.1 - 0.000001
 			poke(viewport, point, frame % 10 == 0)
 			if visible:
 				hits += 1
+				# The 0.1 s contact cooldown may throttle a poke; otherwise every locked poke is heard.
+				check(cooling or audio.trace.count(contact_id) == heard_before + 1, label + " locked hit plays " + contact_id)
+				if not cooling: heard_hits += 1
 				check(touched.annoyance > before or touched.successful_poke_streak >= 9, label + " locked hit still scores")
 				check(touched.idle_time == 0.0 and touched.touch_flash == 1.0, label + " locked hit resets idle and flashes")
 			check(touched.reaction == twin.reaction and touched.elapsed == twin.elapsed and touched.jump_returning == twin.jump_returning,
@@ -140,6 +149,7 @@ func movement_case(viewport: SubViewport, quiet: SubViewport, width: int, native
 		check(shown_scale(touched).distance_to(shown_scale(twin)) < .0001, label + " squash and recovery unchanged by touches")
 	accepted_locked_hits += hits
 	check(hits >= 3, label + " visible body accepted touches during the movement")
+	check(heard_hits >= 1, label + " at least one locked hit was audible")
 	check(settled(touched) and settled(twin), label + " movement settles")
 	check(touched.body_position.distance_to(twin.body_position) < .0001 and touched.body_position.y == touched.anchor.y, label + " settles on the floor at the same place")
 	if free_jump:
