@@ -173,7 +173,11 @@ func run() -> void:
 				var initial_elapsed: float = actor.elapsed
 				pointer(viewport,kind,point,true)
 				if want_hit:
-					check(actor.annoyance > 0 and actor.elapsed == 0,kind+" visible reaction edge interrupts normally")
+					if which in Original.PHYSICAL_MOVEMENT:
+						# Physical movement keeps its clock; the hit still scores (plans/movement-continuity.md).
+						check(actor.annoyance > 0 and actor.reaction == which and actor.elapsed == initial_elapsed,kind+" visible moving edge scores without interrupting")
+					else:
+						check(actor.annoyance > 0 and actor.elapsed == 0,kind+" visible reaction edge interrupts normally")
 				else:
 					check(actor.annoyance == 0 and actor.elapsed == initial_elapsed,kind+" invisible old edge ignored")
 				var annoyance: float = actor.annoyance

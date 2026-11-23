@@ -535,3 +535,19 @@ Both `tests/ios_privacy_policy.gd` and `tests/android_privacy_policy.gd` now che
 - cancellation, focus loss and hiding each end the tracked touch.
 
 The iOS test no longer resets its counter. Against the old script, the six new checks and the final count fail on both platforms.
+
+## Movement continuity (draft for 0.1.1)
+
+Plan: [plans/movement-continuity.md](../plans/movement-continuity.md). Branch `feature/movement-continuity`; not merged.
+
+Before this change, an accepted poke always called `begin_reaction`, which rebuilt the new reaction from the body's current x (clamped to 190 … width − 190) and the floor height `anchor.y`. Poking a jumping blob therefore dropped it to the floor in one frame (up to 175 px). WAKE could drop 100 px, RECOIL 18 px, and a slide or the offscreen-return glide just stopped. The clamp also teleported a blob that was at rest: a free jump from the middle of a 720-pixel screen lands at x = 590, and the next poke moved it to 530 before anything else happened. Below 380 logical pixels wide the clamp band is inverted, so every reaction began 10 px off-centre.
+
+Now:
+
+- `reaction_locked()` in `scripts/blob.gd` is true during RUN, BOX, the JUMP return glide and the four `PHYSICAL_MOVEMENT` reactions: SLIDE, JUMP, RECOIL and WAKE. In each of those, the squash or recovery lasts to the final frame in both the procedural envelope and the authored scale track, so the lock covers the whole reaction. `touch_at` still does all its scoring and audio for a locked poke; it just doesn't choose a new reaction. Nothing is queued. This is the same treatment RUN and BOX already had.
+- `begin_reaction` starts from the body's real x. Only SLIDE and procedural JUMP destinations go through `_stage_x`, whose margin shrinks to half the width on narrow screens, so the band never inverts. If the clamp makes the blob travel the other way, `direction` follows the travel.
+- Because the reaction is no longer cancelled, `jump.land` plays once when the jump really lands. Resize still cancels everything.
+
+`tests/movement_continuity.gd` pokes each movement every five frames in both renderers at 300, 360, 720 and 1280 pixels. It compares position and displayed scale against an untouched twin, checks that the next poke starts with no step, and covers stage-band destinations, rapid tapping, single landings, resize cancellation and expression reactions staying interruptible. Assertions that used to expect an interruption were updated in `annoyance_stage_1`, `adobe_wake`, `jump_unbounded`, `adobe_reaction_hits` and `release`.
+
+Not changed: small on-the-spot offsets (SHAKE, STOP, the Yawn beat, Sleep Twitch) still carry into the next reaction, and Humming's up-to-9 px lift still drops to the floor on a poke.
