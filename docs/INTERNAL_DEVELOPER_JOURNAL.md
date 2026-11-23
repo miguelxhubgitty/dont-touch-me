@@ -432,3 +432,39 @@ The top-left Settings menu separates the five volume controls from mobile orient
 Each submenu has a Back button. Native menu taps complete on the owning touch release. The button action is deferred so mirrored mouse input stays in the HUD when the submenu changes. Desktop still uses its existing window orientation and resize rules. The top-right sound toggle and Android Privacy Policy use their existing input paths.
 
 Synthetic tests cover menu navigation, orientation requests, preference restoration, safe-area bounds, and isolation from gameplay. Device rotation and system orientation locks still need native validation.
+
+## iOS Privacy Policy button (draft PR)
+
+The flat **Privacy Policy** label in the bottom-right of the safe area now also appears on iPhone. `scripts/privacy_policy_button.gd` already handled placement, the release font, input filtering and the policy URL for Android. Its `_ready()` gate now accepts `_is_android() or _is_ios()`, where the new `_is_ios()` is `OS.has_feature("ios")`. Nothing else changed. Android follows the same code path as before, and desktop/Web stay hidden. The gate doesn't depend on `manual_ios_orientation`, so every iOS export of `main` shows the button.
+
+`tests/ios_privacy_policy.gd` (fast runner group) repeats the Android test's checks with iOS simulated:
+- label and footprint;
+- portrait, landscape and narrow safe-area placement;
+- open on native press only;
+- drags, emulated and canceled touches consumed;
+- no gameplay, annoyance or audio effect;
+- an adjacent background tap still counts as a miss.
+
+It also records the shared behavior that a second native press before release opens the policy again. The frozen Alpha's separate iOS script (PR #46) guarded against that. Porting the guard would change Android too, so it's left for a separate decision ([plan](../plans/ios-privacy-policy.md)).
+
+A Mac preview export ran in the iPhone 17 Pro Max Simulator (iOS 26.5) and showed the button bottom-right, clear of the Settings and Sound buttons. A native tap, Safari handoff, return to the game and VoiceOver still need an iPhone check.
+
+## iPhone launch screen without the Godot logo
+
+Main's iOS export showed Godot's logo on the launch screen, on both the Simulator and an iPhone. The cause: Godot fills the storyboard `SplashImage` with its logo when the preset leaves the storyboard image slots empty. The approved Alpha fix (PR #49) is reused unchanged. The same transparent PNG goes in both slots, and the warm storyboard background is kept.
+
+A disposable Mac export showed both generated splash PNGs change from the 800 × 600 logo to 1 × 1 with zero alpha. The storyboard is unchanged. In one source tree, the game PCK is byte-identical with the setting on and off. A Simulator cold launch after reinstall showed no logo, then the normal game. See [the plan](../plans/ios-launch-screen.md). The production preset in PR #53 needs the same two lines when the two PRs are combined.
+
+## Production iOS export preset (PR A, draft)
+
+`export_presets.cfg` now has a second iOS preset named **iOS**, next to the unchanged **iOS Orientation Preview**. The new preset copies the preview's resource filters, feature tag, icon, project-only export and iPhone-only arm64 settings. It changes two values. It uses the registered production bundle ID `com.littlebutterflyproductions.donttouchme`, which is already the App Store Connect app *Don't Touch Me - WANDIEL*, instead of the preview's `.orientationpreview` ID. Its minimum iOS is 15.0, ahead of Apple's April 2027 upload requirement; the preview keeps 14.0. The Team ID stays blank, as in the Alpha preset; enter it locally at export/signing time. Version and build fields are unset; the owner will choose them on the release branch. The existing App Store Connect 0.1.0 record and TestFlight build 0.1.0 (1) are not affected.
+
+Because the production preset sets the same `manual_ios_orientation` feature, Settings → Orientation (Auto/Portrait/Landscape) behaves exactly as in the preview validated in the PR #52 Simulator and iPhone 15 Pro Max runs. The game itself still starts in fixed Portrait (`window/handheld/orientation=1`). `release/tools/configure_ios_orientation_preview.py` keeps its name and its single job, widening the generated iPhone `UISupportedInterfaceOrientations` list. It now accepts exactly two IDs, preview and production, read from the plist or from a single unambiguous `PRODUCT_BUNDLE_IDENTIFIER` in the generated project. Any other or mixed ID still stops without writing.
+
+`tests/test_ios_export.py` covers this:
+- the preview preset is unchanged;
+- the production identity and iOS 15.0 minimum are correct;
+- the two presets have the same content and orientation settings, and their bundle IDs differ;
+- the script widens only the two accepted IDs and leaves unknown or ambiguous exports byte-identical.
+
+A Mac export (Godot 4.7.2, Team ID set only in a disposable copy) produced byte-identical game packages for both presets. An unsigned Xcode 26.6 Release device build of the production project succeeded (arm64, MinimumOSVersion 15.0, iOS 26.5 SDK). Launch screen, the iOS privacy control and release presentation are separate pending PRs. No signing, upload or physical test of the production identity has occurred.

@@ -1,5 +1,25 @@
 # iOS handoff — Windows preparation complete, native build pending
 
+## Current presets (November 22, 2026)
+
+| Preset | Bundle ID | Minimum iOS | Use |
+| --- | --- | --- | --- |
+| **iOS** | `com.littlebutterflyproductions.donttouchme` (registered, App Store Connect app *Don't Touch Me - WANDIEL*) | 15.0 | Production exports from a reviewed `release/<version>` branch |
+| **iOS Orientation Preview** | `com.littlebutterflyproductions.donttouchme.orientationpreview` | 14.0 | Development device and Simulator testing only |
+
+Both presets set the `manual_ios_orientation` feature (Settings → Orientation: Auto, Portrait, Landscape) and share the same resource filters, icon and iPhone-only arm64 settings. Never cross the two identifiers.
+
+Production export on a Mac with Godot 4.7.2 and matching templates:
+
+1. In a disposable copy or **Project > Export**, enter the Team ID `RN864V86S3` locally. Do not commit it. Set the owner-approved version and build on the release branch.
+2. Export **iOS** project-only to an ignored folder, for example `builds/ios/DontTouchMe.xcodeproj`.
+3. Run `python3 release/tools/configure_ios_orientation_preview.py builds/ios/DontTouchMe/DontTouchMe-Info.plist` after every fresh export. It widens only the iPhone orientation allowlist and accepts only the two identifiers above.
+4. Archive Release in Xcode. Distribution signing, Organizer validation and any upload each need explicit owner approval. Leave the existing App Store Connect 0.1.0 record and TestFlight build 0.1.0 (1) unchanged unless the owner directs otherwise.
+
+Both presets also set `storyboard/custom_image@2x` and `@3x` to the transparent `res://release/ios/launch-transparent.png`, so the launch screen shows the warm game background instead of Godot's logo (`tests/test_ios_launch_screen.py`). Every iOS export shows the in-app Privacy Policy button (`scripts/privacy_policy_button.gd`, gated on the `ios` feature).
+
+## Historical Windows handoff
+
 No iOS archive, certificate, provisioning profile, or device result is claimed. The game uses GDScript, Godot's Compatibility renderer, procedural 2D drawing, a portrait expanding canvas, and native touch events. These are supported by Godot's iOS exporter; this is design compatibility, not a completed iOS test.
 
 ## Prepared files
@@ -7,6 +27,7 @@ No iOS archive, certificate, provisioning profile, or device result is claimed. 
 - Source project: `project.godot`, `main.tscn`, `scripts/blob.gd`; exactly 16 existing reactions.
 - Opaque icon: project `assets/icon_ios.png`, and `release/assets/icons/ios/AppIcon.appiconset/`.
 - Warm launch background and engine splash-image setting in `project.godot`.
+- iPhone launch screen: both iOS storyboard image slots use the 1 × 1 transparent `release/ios/launch-transparent.png`. Without it, Godot 4.7.2 puts its own logo in the generated `SplashImage`, even with `boot_splash/show_image=false`. The storyboard keeps the warm `boot_splash/bg_color` background. Any new iOS preset must set `storyboard/custom_image@2x` and `@3x` the same way (`tests/test_ios_launch_screen.py` enforces this). Simulator evidence: `docs/testing/ios-launch-screen/`.
 - Apple-sized reference captures and their limitations: `release/assets/README.md`.
 - Listing and privacy drafts in `release/`; engine/license acknowledgments in `THIRD_PARTY_NOTICES.txt`.
 
