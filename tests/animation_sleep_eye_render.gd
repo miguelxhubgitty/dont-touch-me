@@ -27,7 +27,7 @@ func sample(authored: bool, width: int) -> void:
 	var actor = Game.instantiate()
 	actor.use_adobe_idle = authored
 	view.add_child(actor)
-	actor.set_process(false)
+	actor.process_mode = Node.PROCESS_MODE_DISABLED
 	actor.get_node("SoundHUD").hide()
 	actor.intro_alpha = 0
 	actor.audio_manager.muted = true
