@@ -6,7 +6,7 @@ const RELEASE_FONT := "res://assets/fonts/SpaceGrotesk.ttf"
 const MARGIN := Vector2(24, 24)
 
 func _ready() -> void:
-	if not _is_android():
+	if not (_is_android() or _is_ios()):
 		return
 	if ResourceLoader.exists(RELEASE_FONT, "Font"):
 		add_theme_font_override("font", load(RELEASE_FONT))
@@ -17,6 +17,9 @@ func _ready() -> void:
 
 func _is_android() -> bool:
 	return OS.has_feature("android")
+
+func _is_ios() -> bool:
+	return OS.has_feature("ios")
 
 func _notification(what: int) -> void:
 	if what == NOTIFICATION_APPLICATION_FOCUS_IN and is_node_ready() and is_visible_in_tree():

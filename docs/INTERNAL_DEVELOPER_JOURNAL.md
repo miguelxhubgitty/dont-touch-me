@@ -432,3 +432,19 @@ The top-left Settings menu separates the five volume controls from mobile orient
 Each submenu has a Back button. Native menu taps complete on the owning touch release. The button action is deferred so mirrored mouse input stays in the HUD when the submenu changes. Desktop still uses its existing window orientation and resize rules. The top-right sound toggle and Android Privacy Policy use their existing input paths.
 
 Synthetic tests cover menu navigation, orientation requests, preference restoration, safe-area bounds, and isolation from gameplay. Device rotation and system orientation locks still need native validation.
+
+## iOS Privacy Policy button (draft PR)
+
+The flat **Privacy Policy** label in the bottom-right of the safe area now also appears on iPhone. `scripts/privacy_policy_button.gd` already handled placement, the release font, input filtering and the policy URL for Android. Its `_ready()` gate now accepts `_is_android() or _is_ios()`, where the new `_is_ios()` is `OS.has_feature("ios")`. Nothing else changed. Android follows the same code path as before, and desktop/Web stay hidden. The gate doesn't depend on `manual_ios_orientation`, so every iOS export of `main` shows the button.
+
+`tests/ios_privacy_policy.gd` (fast runner group) repeats the Android test's checks with iOS simulated:
+- label and footprint;
+- portrait, landscape and narrow safe-area placement;
+- open on native press only;
+- drags, emulated and canceled touches consumed;
+- no gameplay, annoyance or audio effect;
+- an adjacent background tap still counts as a miss.
+
+It also records the shared behavior that a second native press before release opens the policy again. The frozen Alpha's separate iOS script (PR #46) guarded against that. Porting the guard would change Android too, so it's left for a separate decision ([plan](../plans/ios-privacy-policy.md)).
+
+A Mac preview export ran in the iPhone 17 Pro Max Simulator (iOS 26.5) and showed the button bottom-right, clear of the Settings and Sound buttons. A native tap, Safari handoff, return to the game and VoiceOver still need an iPhone check.
