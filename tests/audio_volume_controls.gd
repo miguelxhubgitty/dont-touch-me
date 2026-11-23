@@ -2,6 +2,7 @@ extends SceneTree
 var audio_cleanup = preload("res://tests/audio_test_cleanup.gd").new()
 
 const GAME := preload("res://main.tscn")
+const ManualBlob := preload("res://tests/manual_blob.gd")
 const HudSafeArea := preload("res://scripts/hud_safe_area.gd")
 
 class TrackedVolume extends "res://scripts/audio_volume_controls.gd":
@@ -50,12 +51,15 @@ func at(slider: HSlider, x: float) -> Vector2:
 func run() -> void:
 	audio_cleanup.attach(self)
 	var game = GAME.instantiate()
+	var free_jump: bool = game.free_jump_enabled
+	game.set_script(ManualBlob)
+	game.free_jump_enabled = free_jump
 	var button = game.get_node("SoundHUD/VolumeButton")
 	button.set_script(TrackedVolume)
 	button.settings_path = PREFS
 	game.get_node("SoundHUD/SoundButton").settings_path = MUTE_PREFS
 	root.add_child(game)
-	game.set_process(false)
+	root.propagate_notification(Node.NOTIFICATION_APPLICATION_FOCUS_IN) # As when the window gains focus; must not advance the blob.
 	await process_frame
 	var audio = game.audio_manager
 	audio.muted = false
