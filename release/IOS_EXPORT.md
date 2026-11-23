@@ -1,5 +1,25 @@
 # iOS handoff — Windows preparation complete, native build pending
 
+## Current presets (November 22, 2026)
+
+| Preset | Bundle ID | Minimum iOS | Use |
+| --- | --- | --- | --- |
+| **iOS** | `com.littlebutterflyproductions.donttouchme` (registered, App Store Connect app *Don't Touch Me - WANDIEL*) | 15.0 | Production exports from a reviewed `release/<version>` branch |
+| **iOS Orientation Preview** | `com.littlebutterflyproductions.donttouchme.orientationpreview` | 14.0 | Development device and Simulator testing only |
+
+Both presets set the `manual_ios_orientation` feature (Settings → Orientation: Auto, Portrait, Landscape) and share the same resource filters, icon and iPhone-only arm64 settings. Never cross the two identifiers.
+
+Production export on a Mac with Godot 4.7.2 and matching templates:
+
+1. In a disposable copy or **Project > Export**, enter the Team ID `RN864V86S3` locally. Do not commit it. Set the owner-approved version and build on the release branch.
+2. Export **iOS** project-only to an ignored folder, for example `builds/ios/DontTouchMe.xcodeproj`.
+3. Run `python3 release/tools/configure_ios_orientation_preview.py builds/ios/DontTouchMe/DontTouchMe-Info.plist` after every fresh export. It widens only the iPhone orientation allowlist and accepts only the two identifiers above.
+4. Archive Release in Xcode. Distribution signing, Organizer validation and any upload each need explicit owner approval. Leave the existing App Store Connect 0.1.0 record and TestFlight build 0.1.0 (1) unchanged unless the owner directs otherwise.
+
+The default Godot launch image and the iOS in-app privacy control are tracked as separate pending changes.
+
+## Historical Windows handoff
+
 No iOS archive, certificate, provisioning profile, or device result is claimed. The game uses GDScript, Godot's Compatibility renderer, procedural 2D drawing, a portrait expanding canvas, and native touch events. These are supported by Godot's iOS exporter; this is design compatibility, not a completed iOS test.
 
 ## Prepared files
