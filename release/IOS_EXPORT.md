@@ -16,7 +16,7 @@ Production export on a Mac with Godot 4.7.2 and matching templates:
 3. Run `python3 release/tools/configure_ios_orientation_preview.py builds/ios/DontTouchMe/DontTouchMe-Info.plist` after every fresh export. It widens only the iPhone orientation allowlist and accepts only the two identifiers above.
 4. Archive Release in Xcode. Distribution signing, Organizer validation and any upload each need explicit owner approval. Leave the existing App Store Connect 0.1.0 record and TestFlight build 0.1.0 (1) unchanged unless the owner directs otherwise.
 
-The default Godot launch image and the iOS in-app privacy control are tracked as separate pending changes.
+Both presets also set `storyboard/custom_image@2x` and `@3x` to the transparent `res://release/ios/launch-transparent.png`, so the launch screen shows the warm game background instead of Godot's logo (`tests/test_ios_launch_screen.py`). Every iOS export shows the in-app Privacy Policy button (`scripts/privacy_policy_button.gd`, gated on the `ios` feature).
 
 ## Historical Windows handoff
 
