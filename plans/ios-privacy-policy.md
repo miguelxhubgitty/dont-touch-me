@@ -1,6 +1,6 @@
 # iOS in-app Privacy Policy button
 
-Status: owner-approved direction (2026-11-22): reuse the Android implementation on iOS. Implemented on `feature/ios-privacy-policy`, draft PR, awaiting review.
+Status: shipped on `main` via #54/#56. Follow-up (owner-approved 2026-11-23): single-touch fix for both platforms on `fix/privacy-button-single-touch`, draft PR, awaiting review.
 
 ## Player-visible behavior
 
@@ -34,7 +34,7 @@ No other code path changes. Placement, input filtering, font and URL are shared.
 ## Edge cases and trade-offs
 
 - **Gate on `ios`, not on the orientation feature.** Every iOS export of `main` shows the button, whatever its preset.
-- **Repeated native press.** PR #46 found that a second native press before the first one's release opens the policy twice. The Alpha iOS script added an active-touch guard for this. The shared Android implementation has no such guard. This PR keeps the Android behavior identical on both platforms, as directed, and records the case in tests as the current behavior. If wanted, port the guard to both platforms in a separate approved change.
+- **Repeated native press (fixed in the follow-up).** PR #46 found that a second native press before the first one's release opened the policy twice, and the shared script did the same on Android and iOS. The button now reuses the mute button's single-touch tracking (`touch_index`). The first native touch-down opens the policy once, and other fingers are ignored until that touch is released or canceled. Focus loss or hiding also resets the tracking, so a lost release cannot lock the button. Both privacy tests cover extra fingers, cancellation, focus loss, hiding and a later tap.
 - **HUD layout.** The button sits apart from the top Settings/Sound HUD; there's no overlap at the tested portrait, landscape and narrow sizes.
 - **Accessibility.** The visible text "Privacy Policy" is the button's accessible name. The 200 × 58 target exceeds Apple's 44 pt minimum at the project scale.
 
