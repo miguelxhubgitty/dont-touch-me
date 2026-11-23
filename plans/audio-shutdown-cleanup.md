@@ -53,6 +53,10 @@ finish(tree, exit_code):          # replaces the suite's final quit()
   - `-- --finish-timeout` runs `finish()` on the retained playback and must print the error and exit 1.
 - **`tests/run.ps1`** now fails when Godot prints `^WARNING: \d+ ObjectDB instances were leaked at exit` or `^ERROR: \d+ resources? still in use at exit`. Previously it passed that pair with a warning. Other warnings are unaffected and other errors still fail as before.
 
+## Follow-up: audio_preview_menu_test
+
+`tests/audio_preview_menu_test.gd` plays through the preview menu's own `AudioStreamPlayer`, not the audio manager, so the `node_added` hook does not see it. It kept a fixed `await create_timer(0.3).timeout`. Removing the wait outright left one playback alive at exit in 5 of 5 headless Dummy runs, so the wait was doing real work, by timing rather than by condition. The suite now registers the menu player with `audio_cleanup.observe(menu.player)` after each preview and ends with `finish()`, like the other suites. That passed 10 of 10 runs on each of Dummy and CoreAudio with no exit-leak lines.
+
 ## Edge cases
 
 - **Timeout limit:** 2 s is a failure bound, not a delay. The measured worst case is 71 ms.
