@@ -13,7 +13,8 @@ param(
 
 $ErrorActionPreference = 'Stop'
 $PSNativeCommandUseErrorActionPreference = $false
-$engine = (Get-Command $Godot -CommandType Application -ErrorAction Stop).Source
+# Get-Command lists every PATH match; use the first, as the shell would.
+$engine = (Get-Command $Godot -CommandType Application -ErrorAction Stop | Select-Object -First 1).Source
 $version = & $engine --version
 if ($LASTEXITCODE -ne 0 -or $version -notmatch '^4\.7\.2\.stable(\.|$)') {
     throw "Godot 4.7.2 stable required. Found: $version"
@@ -101,7 +102,7 @@ try {
         Invoke-GodotCheck $suite ($display + @('--audio-driver', $driver, '--script', "tests/$suite.gd"))
     }
     if ($Mode -eq 'full') {
-        $interpreter = (Get-Command $Python -CommandType Application -ErrorAction Stop).Source
+        $interpreter = (Get-Command $Python -CommandType Application -ErrorAction Stop | Select-Object -First 1).Source
         & $interpreter -B -m unittest discover -s tests
         if ($LASTEXITCODE -ne 0) { throw "Python suite failed (exit $LASTEXITCODE)." }
         & "$PSScriptRoot/workflow.ps1" -BaseRef HEAD
