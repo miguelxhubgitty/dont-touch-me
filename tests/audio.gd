@@ -37,6 +37,12 @@ func run() -> void:
 	game.set_process(false)
 	var audio = game.audio_manager
 	audio.trace_enabled = true
+	# Audio reaction names are indexed by the Reaction enum; a missed edit would shift every cue.
+	var names: Array = Blob.Reaction.keys()
+	check(audio.REACTIONS.size() == names.size(), "audio reaction names match the Reaction enum size")
+	for index in range(1, mini(names.size(), audio.REACTIONS.size())):
+		check(audio.REACTIONS[index] == str(names[index]).to_lower(), "audio reaction name follows enum: " + str(names[index]))
+	check(audio.REACTIONS[0] == "", "Reaction.NONE has no audio name")
 	check(audio.players.size() == 3, "exactly three bounded players")
 	check(audio.streams.size() >= 3, "several independent candidate audio streams")
 	for stream in audio.streams.values():

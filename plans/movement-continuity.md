@@ -1,6 +1,6 @@
 # Movement continuity
 
-Target release: 0.1.1. Status: design approved by the owner on 2026-11-23 (decisions A, B and C as recommended; D revised as below). Implementation on `fix/movement-continuity-0.1.1`.
+Target release: 0.1.1. Status: design approved by the owner on 2026-11-23 (decisions A, B and C as recommended; D revised as below). Implemented on `fix/movement-continuity-0.1.1` and merged to `main` in [PR #65](https://github.com/miguelxhubgitty/dont-touch-me/pull/65) (merge commit `2c99276`). A follow-up adds the missing RECOIL contact sound; see Status.
 
 ## Problem
 
@@ -82,4 +82,5 @@ Existing assertions that expected a hit to interrupt a movement are updated: `ad
 
 - [x] Design approved (2026-11-23)
 - [x] Implementation and regression tests (fix/movement-continuity-0.1.1; affected suites pass locally on Windows)
-- [ ] Owner review of the draft PR
+- [x] Owner review and merge (PR #65, `2c99276`, 2026-11-23)
+- [ ] Follow-up in review on `claude/recoil-contact-0.1.1`: RECOIL had no `recoil.contact` cue, so locked pokes during RECOIL were silent, contrary to design item 3. It now reuses `tap_success.wav` with `slide.contact`'s settings. The new check also found that pokes during the offscreen return glide were silent: `reaction` is already NONE there. `touch_at` now plays `jump.contact` while `jump_returning`. `movement_continuity` asserts the contact sound for every locked movement and runs in the fast group.
