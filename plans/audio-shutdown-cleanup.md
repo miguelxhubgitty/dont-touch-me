@@ -68,4 +68,4 @@ finish(tree, exit_code):          # replaces the suite's final quit()
 
 ## Verification
 
-See the PR and the journal entry "Audio shutdown cleanup in tests".
+All 42 Godot suites passed in the full runner with the stricter leak check. The runner then stopped during Python discovery, because several `python3` installs are on this Mac's PATH (a pre-existing runner limitation). Run separately, the 57 Python tests and the 21 workflow checks passed. See the PR and the journal entry "Audio shutdown cleanup in tests" for the rest.

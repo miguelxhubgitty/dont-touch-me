@@ -501,5 +501,5 @@ Fourteen suites passed but printed Godot's exit report ("ObjectDB instances were
 
 **Verification.**
 - The 16 suites plus the new test passed three runs each (Dummy, verbose) with no exit-time leak lines. Assertion counts were identical to `main`.
-- The full runner passed with the stricter check.
+- In the full runner, all 42 Godot suites passed with the stricter check. The runner then stopped during Python discovery, because `Get-Command python3` returned three installs on this Mac and `-Python` can't use more than one; that limitation predates this change. Run separately, the 57 Python tests passed (3 skipped) and the 21 workflow checks passed.
 - With CoreAudio (real output, windowed), all 17 were also free of leak lines. Separately, `audio_volume_controls` failed its check "HUD input leaves gameplay and cue tracking untouched" in 2 of 5 windowed CoreAudio runs, both on this branch and on unmodified `main`. It is a pre-existing flake unrelated to teardown, possibly the same window-focus effect as the Sleep Twitch test, and is tracked for a separate investigation. Dummy runs pass consistently.
