@@ -468,3 +468,18 @@ Because the production preset sets the same `manual_ios_orientation` feature, Se
 - the script widens only the two accepted IDs and leaves unknown or ambiguous exports byte-identical.
 
 A Mac export (Godot 4.7.2, Team ID set only in a disposable copy) produced byte-identical game packages for both presets. An unsigned Xcode 26.6 Release device build of the production project succeeded (arm64, MinimumOSVersion 15.0, iOS 26.5 SDK). Launch screen, the iOS privacy control and release presentation are separate pending PRs. No signing, upload or physical test of the production identity has occurred.
+
+## Sleep Twitch test and window focus
+
+On the Intel Mac, "Sleep Twitch animates through its full duration" failed in the first case only (288 px, authored setting), with 18–21 twitch frames against the required 31. It was a test-harness problem, not an animation or GPU-timing defect.
+
+The test runs in a real window and steps the blob manually at 1/60 s. On macOS the window gains focus a few frames after launch. The game's focus-in handler calls `set_process(true)`, which is intended pause/resume behavior. So `_process` also advanced the first case by real frame time: `idle_time` ended at 24.44–24.51 s instead of 24.08 s. Later cases start after the focus event and were unaffected.
+
+The test now sets `process_mode = PROCESS_MODE_DISABLED` instead of calling `set_process(false)`. The process mode gates `_process` even when the focus handler sets the flag back. The replacement is enough on its own; keeping both calls changed nothing.
+
+**Verification:**
+- 10 consecutive runs passed, every case with 33 twitch frames and 42 softened frames.
+- The five previously passing cases produce byte-identical frames to the unmodified test.
+- The fixed first case now matches the other 288 px case.
+
+`blob.gd`, the assertions and the 0.54 s clip from the [Stage 2 plan](../plans/idle-stage-2.md) are unchanged.
