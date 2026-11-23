@@ -503,3 +503,21 @@ Fourteen suites passed but printed Godot's exit report ("ObjectDB instances were
 - The 16 suites plus the new test passed three runs each (Dummy, verbose) with no exit-time leak lines. Assertion counts were identical to `main`.
 - In the full runner, all 42 Godot suites passed with the stricter check. The runner then stopped during Python discovery, because `Get-Command python3` returned three installs on this Mac and `-Python` can't use more than one; that limitation predates this change. Run separately, the 57 Python tests passed (3 skipped) and the 21 workflow checks passed.
 - With CoreAudio (real output, windowed), all 17 were also free of leak lines. Separately, `audio_volume_controls` failed its check "HUD input leaves gameplay and cue tracking untouched" in 2 of 5 windowed CoreAudio runs, both on this branch and on unmodified `main`. It is a pre-existing flake unrelated to teardown, possibly the same window-focus effect as the Sleep Twitch test, and is tracked for a separate investigation. Dummy runs pass consistently.
+
+## HUD tests and window focus
+
+`audio_volume_controls` failed "HUD input leaves gameplay and cue tracking untouched" in some windowed CoreAudio runs, on `main` as well. It is the Sleep Twitch problem again. The test turns off the game's clock with `set_process(false)`, sets `idle_time = 1.8`, and later expects it unchanged. When the window gained focus mid-run, `blob.gd`'s focus-in handler (specified Alpha behavior: pause on focus loss, resume on focus gain) turned the clock back on. `idle_time` drifted by 26–35 ms. Everything else in that check stayed correct. Dummy runs are headless, or focus arrives later, so they passed. `manual_landscape` has the same pattern and failed the same way when a focus-in was sent.
+
+#58's fix (disabling the node's process mode) does not fit here. The HUD under test is a child of the game node and would stop receiving input.
+
+**Fix (test-only).** `tests/manual_blob.gd` subclasses the game script with a `_process` that does nothing.
+- The affected game instance in each test gets it through `set_script()`, the same pattern these tests already use for the volume button.
+- `set_script()` resets the root's scene-assigned script properties, so each test copies `main.tscn`'s `free_jump_enabled = true` across.
+- Each test then sends `NOTIFICATION_APPLICATION_FOCUS_IN` itself, so the focus case runs every time rather than by chance.
+- The game, HUD input, focus handling and every assertion are unchanged.
+
+**Verification.**
+- With the forced focus-in, `main`'s versions of both tests failed 3 of 3 runs and the fixed tests passed 3 of 3.
+- Each fixed test passed 10 of 10 windowed CoreAudio runs and 3 of 3 headless Dummy runs.
+- `tests/run.ps1 -Mode audio -AudioDriver CoreAudio` passed all 11 suites.
+- The full runner (Dummy) passed end to end: 42 Godot suites with the exit-leak check, 57 Python tests (3 skipped) and 21 workflow checks. It was given an absolute `-Python` path because of the separate multiple-`python3` runner issue.

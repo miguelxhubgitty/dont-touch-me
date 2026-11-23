@@ -1,6 +1,7 @@
 extends SceneTree
 
 const Game := preload("res://main.tscn")
+const ManualBlob := preload("res://tests/manual_blob.gd")
 
 class PreviewVolume extends "res://scripts/audio_volume_controls.gd":
 	var requests: Array[int] = []
@@ -51,10 +52,13 @@ func run() -> void:
 		check(game.get_node("SoundHUD/VolumeButton").orientation_menu == null, "desktop menu stays unchanged")
 	game.free()
 	game = Game.instantiate()
+	var free_jump: bool = game.free_jump_enabled
+	game.set_script(ManualBlob)
+	game.free_jump_enabled = free_jump
 	var volume = game.get_node("SoundHUD/VolumeButton")
 	volume.set_script(PreviewVolume)
 	viewport.add_child(game)
-	game.set_process(false)
+	root.propagate_notification(Node.NOTIFICATION_APPLICATION_FOCUS_IN) # As when the window gains focus; must not advance the blob.
 	game.annoyance = 9.0
 	game.idle_time = 1.8
 	await process_frame
