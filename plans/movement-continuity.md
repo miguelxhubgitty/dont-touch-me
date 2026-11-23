@@ -1,6 +1,6 @@
 # Movement continuity
 
-Target release: 0.1.1. Status: design approved by the owner on 2026-11-23 (decisions A, B and C as recommended; D revised as below). Implementation on `feature/movement-continuity`.
+Target release: 0.1.1. Status: design approved by the owner on 2026-11-23 (decisions A, B and C as recommended; D revised as below). Implementation on `fix/movement-continuity-0.1.1`.
 
 ## Problem
 
@@ -81,5 +81,5 @@ Existing assertions that expected a hit to interrupt a movement are updated: `ad
 ## Status
 
 - [x] Design approved (2026-11-23)
-- [x] Implementation and regression tests (feature/movement-continuity; affected suites pass locally on Windows)
+- [x] Implementation and regression tests (fix/movement-continuity-0.1.1; affected suites pass locally on Windows)
 - [ ] Owner review of the draft PR

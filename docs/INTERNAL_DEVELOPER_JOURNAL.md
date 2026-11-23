@@ -538,7 +538,7 @@ The iOS test no longer resets its counter. Against the old script, the six new c
 
 ## Movement continuity (draft for 0.1.1)
 
-Plan: [plans/movement-continuity.md](../plans/movement-continuity.md). Branch `feature/movement-continuity`; not merged.
+Plan: [plans/movement-continuity.md](../plans/movement-continuity.md). Branch `fix/movement-continuity-0.1.1`; not merged.
 
 Before this change, an accepted poke always called `begin_reaction`, which rebuilt the new reaction from the body's current x (clamped to 190 … width − 190) and the floor height `anchor.y`. Poking a jumping blob therefore dropped it to the floor in one frame (up to 175 px). WAKE could drop 100 px, RECOIL 18 px, and a slide or the offscreen-return glide just stopped. The clamp also teleported a blob that was at rest: a free jump from the middle of a 720-pixel screen lands at x = 590, and the next poke moved it to 530 before anything else happened. Below 380 logical pixels wide the clamp band is inverted, so every reaction began 10 px off-centre.
 
