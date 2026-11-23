@@ -15,7 +15,13 @@ Read [BRANCH_WORKFLOW.md](BRANCH_WORKFLOW.md) for the detailed procedure and [CU
 ## Verification and handoff
 
 - Preserve established behavior and add regression coverage for meaningful changes. Verify both authored and procedural animation paths, hit detection and interruptions when affected.
-- Run the relevant [test runner modes](TESTING.md#development-test-runner). Isolate test settings from player preferences. Check exit codes and runtime errors. Investigate shutdown warnings in context, including a normal game close where relevant, before treating them as test-only. A leak during normal play, a failed test, or a reproducible runtime error blocks integration.
+- Test in tiers (see [When to run what](TESTING.md#when-to-run-what)):
+  - **During development:** run only the affected suites with `tests/run.ps1 -Suite`.
+  - **Before review:** run the relevant group (`fast`, `audio` or `animation`).
+  - **Every code PR:** GitHub Actions runs the fast checks automatically.
+  - **After an approved merge batch and before each release:** run the full suite once, locally or with the `full-tests` label or a manual workflow run.
+  - Do not repeat full-suite runs a task does not need. `-Quiet` shortens output only. It never relaxes failure detection.
+- CI covers Linux with the Dummy audio driver and software rendering only. Platform, audio-output, GPU and device checks stay manual ([CI limitations](TESTING.md#continuous-integration)). Isolate test settings from player preferences. Check exit codes and runtime errors. Investigate shutdown warnings in context, including a normal game close where relevant, before treating them as test-only. A leak during normal play, a failed test, or a reproducible runtime error blocks integration.
 - Update the relevant plan, current-state documentation and journal. Report the scope, PR and commit, tests with results and coverage limits, and any work or decisions still pending.
 
 ## Code Quality & Refactoring Policy
