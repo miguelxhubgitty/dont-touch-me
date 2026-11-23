@@ -448,3 +448,9 @@ The flat **Privacy Policy** label in the bottom-right of the safe area now also 
 It also records the shared behavior that a second native press before release opens the policy again. The frozen Alpha's separate iOS script (PR #46) guarded against that. Porting the guard would change Android too, so it's left for a separate decision ([plan](../plans/ios-privacy-policy.md)).
 
 A Mac preview export ran in the iPhone 17 Pro Max Simulator (iOS 26.5) and showed the button bottom-right, clear of the Settings and Sound buttons. A native tap, Safari handoff, return to the game and VoiceOver still need an iPhone check.
+
+## iPhone launch screen without the Godot logo
+
+Main's iOS export showed Godot's logo on the launch screen, on both the Simulator and an iPhone. The cause: Godot fills the storyboard `SplashImage` with its logo when the preset leaves the storyboard image slots empty. The approved Alpha fix (PR #49) is reused unchanged. The same transparent PNG goes in both slots, and the warm storyboard background is kept.
+
+A disposable Mac export showed both generated splash PNGs change from the 800 × 600 logo to 1 × 1 with zero alpha. The storyboard is unchanged. In one source tree, the game PCK is byte-identical with the setting on and off. A Simulator cold launch after reinstall showed no logo, then the normal game. See [the plan](../plans/ios-launch-screen.md). The production preset in PR #53 needs the same two lines when the two PRs are combined.
