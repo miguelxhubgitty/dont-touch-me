@@ -1,4 +1,5 @@
 extends SceneTree
+var audio_cleanup = preload("res://tests/audio_test_cleanup.gd").new()
 const Blob = preload("res://scripts/blob.gd")
 var checks := 0
 var failures := 0
@@ -29,6 +30,7 @@ func reset(game) -> void:
 	game.audio_manager.muted = false
 
 func run() -> void:
+	audio_cleanup.attach(self)
 	root.size = Vector2i(720, 1280)
 	var game = Blob.new()
 	root.add_child(game)
@@ -202,8 +204,5 @@ func run() -> void:
 	else:
 		print("Baseline comparison skipped: optional local pre-change snapshot is absent")
 	game.queue_free()
-	await process_frame
-	await process_frame
-	await create_timer(0.3).timeout # Let the mixer retire stopped playback handles.
 	print("Audio checks: %d; failures: %d; mapped events exercised: %d" % [checks, failures, covered.size()])
-	quit(1 if failures else 0)
+	await audio_cleanup.finish(self, 1 if failures else 0)

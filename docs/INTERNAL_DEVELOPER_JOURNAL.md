@@ -483,3 +483,23 @@ The test now sets `process_mode = PROCESS_MODE_DISABLED` instead of calling `set
 - The fixed first case now matches the other 288 px case.
 
 `blob.gd`, the assertions and the 0.54 s clip from the [Stage 2 plan](../plans/idle-stage-2.md) are unchanged.
+
+## Audio shutdown cleanup in tests
+
+Fourteen suites passed but printed Godot's exit report ("ObjectDB instances were leaked", "resources still in use"). With `--verbose`, every listed object was an audio playback or the sound file it held.
+
+**Cause.** Godot 4.7.2 frees a stopped playback in two steps: the audio thread drops it on its next mix, then the main loop's `AudioServer` update frees it. The suites quit right after freeing the game, before both steps had run. It was not a leak during play: kept running a few more frames, every observed playback retired within 71 ms (1,765 in `release`). The fixed `create_timer(0.3)` waits several suites used did not help. In `audio_variation` all 18 playbacks were still alive after the timer, because startup time counts toward a headless run's first frame.
+
+**Fix (test-only).** This reuses the approach from draft PR #10.
+- `tests/audio_test_cleanup.gd` watches every audio manager through the SceneTree's `node_added` signal and records weak references to playbacks as `event_played` fires.
+- At the end, `finish()` stops watched audio, processes frames until every recorded playback has retired, then quits. It fails with a message after 2 s, a failure bound and not a delay.
+- 16 suites adopt it, and the six fixed 0.3 s waits are gone.
+- `tests/audio_shutdown.gd` covers the helper, including a deliberate timeout.
+- `tests/run.ps1` now fails on the two exit-leak lines instead of passing them with a warning.
+
+**Unchanged:** the game, the audio code and normal application shutdown. Closing the window while a sound is still playing prints one playback and its file at exit. That is Godot behavior ([godotengine/godot#76745](https://github.com/godotengine/godot/issues/76745)), recorded in [the visible-shutdown notes](../plans/visible-audio-shutdown.md). See [the plan](../plans/audio-shutdown-cleanup.md).
+
+**Verification.**
+- The 16 suites plus the new test passed three runs each (Dummy, verbose) with no exit-time leak lines. Assertion counts were identical to `main`.
+- In the full runner, all 42 Godot suites passed with the stricter check. The runner then stopped during Python discovery, because `Get-Command python3` returned three installs on this Mac and `-Python` can't use more than one; that limitation predates this change. Run separately, the 57 Python tests passed (3 skipped) and the 21 workflow checks passed.
+- With CoreAudio (real output, windowed), all 17 were also free of leak lines. Separately, `audio_volume_controls` failed its check "HUD input leaves gameplay and cue tracking untouched" in 2 of 5 windowed CoreAudio runs, both on this branch and on unmodified `main`. It is a pre-existing flake unrelated to teardown, possibly the same window-focus effect as the Sleep Twitch test, and is tracked for a separate investigation. Dummy runs pass consistently.

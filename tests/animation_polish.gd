@@ -1,4 +1,5 @@
 extends SceneTree
+var audio_cleanup = preload("res://tests/audio_test_cleanup.gd").new()
 
 const Game = preload("res://main.tscn")
 const IdleFixture = preload("res://tests/idle_fixture.gd")
@@ -123,7 +124,8 @@ func examine(authored: bool) -> void:
 	baseline.free()
 
 func run() -> void:
+	audio_cleanup.attach(self)
 	examine(true)
 	examine(false)
 	print("Stage 3 polish checks: %d; failures: %d" % [checks, failures])
-	quit(1 if failures else 0)
+	await audio_cleanup.finish(self, 1 if failures else 0)

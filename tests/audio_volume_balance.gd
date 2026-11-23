@@ -1,9 +1,11 @@
 extends SceneTree
+var audio_cleanup = preload("res://tests/audio_test_cleanup.gd").new()
 
 func _initialize() -> void:
 	run.call_deferred()
 
 func run() -> void:
+	audio_cleanup.attach(self)
 	var game = load("res://main.tscn").instantiate()
 	root.add_child(game)
 	game.set_process(false)
@@ -19,6 +21,5 @@ func run() -> void:
 		audio.stop_all()
 	audio.muted = true
 	game.queue_free()
-	await create_timer(0.3).timeout
 	print("Volume balance checks passed: ", passed)
-	quit(0 if passed else 1)
+	await audio_cleanup.finish(self, 0 if passed else 1)

@@ -1,4 +1,5 @@
 extends "res://tests/adobe_reactions.gd"
+var audio_cleanup = preload("res://tests/audio_test_cleanup.gd").new()
 
 func route_poke(viewport: SubViewport, point: Vector2, touch: bool) -> void:
 	if touch:
@@ -14,6 +15,7 @@ func route_poke(viewport: SubViewport, point: Vector2, touch: bool) -> void:
 		viewport.push_input(event, true)
 
 func run() -> void:
+	audio_cleanup.attach(self)
 	var views: Array[SubViewport] = [SubViewport.new(),SubViewport.new()]
 	var native = Native.new()
 	var source = Original.new()
@@ -86,4 +88,4 @@ func run() -> void:
 	for view in views:
 		view.free()
 	print("WAKE_TESTS ",JSON.stringify({"checks":checks,"failures":failures,"widths":[360,720]}))
-	quit(0 if failures == 0 else 1)
+	await audio_cleanup.finish(self, 0 if failures == 0 else 1)

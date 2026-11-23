@@ -1,4 +1,5 @@
 extends "res://tests/adobe_reactions.gd"
+var audio_cleanup = preload("res://tests/audio_test_cleanup.gd").new()
 ## Additional approved-pose, eyelid, bubble and continuity coverage.
 func pose(actor,which: int,time: float,side: int = 1) -> void:
 	reset(actor)
@@ -6,6 +7,7 @@ func pose(actor,which: int,time: float,side: int = 1) -> void:
 	actor.advance(time)
 
 func run() -> void:
+	audio_cleanup.attach(self)
 	root.size = Vector2i(720,1280)
 	var actor = Native.new()
 	var original = Original.new()
@@ -78,4 +80,4 @@ func run() -> void:
 	for value in [actor,original]: value.free()
 	await process_frame
 	print("NEXT_REACTION_TESTS ",JSON.stringify(report))
-	quit(0 if failures == 0 else 1)
+	await audio_cleanup.finish(self, 0 if failures == 0 else 1)
