@@ -31,6 +31,7 @@ Stretch ([#31](https://github.com/miguelxhubgitty/dont-touch-me/pull/31)), Hummi
 ## Evidence and release boundary
 
 - The in-app Privacy Policy button reuses the Android implementation on iOS ([plan](plans/ios-privacy-policy.md), draft PR). Android behavior is unchanged. A native iPhone tap and Safari handoff still need checking.
+- The production **iOS** export preset (draft PR A) uses the registered App Store bundle ID `com.littlebutterflyproductions.donttouchme`, minimum iOS 15.0 and the preview's orientation feature. It sits beside the unchanged development **iOS Orientation Preview** preset (`.orientationpreview`). Version/build, launch screen, the iOS privacy control and release presentation are pending separate work. See [release/IOS_EXPORT.md](release/IOS_EXPORT.md).
 - [Android identity reconciliation](release/ANDROID_IDENTITY.md) targets the existing WANDIEL Play app. Version code 4 is provisional until Play Console's upload history is checked. The published-line privacy control needs a separate approved port before an update can ship.
 - [Stage 4 audio export hygiene](plans/stage-4-audio-export-hygiene.md) is in review. It preserves the current enabled cues and adds an approved-stream manifest, a generated MIT notice and export/receipt checks.
 - Rapid automated audio shutdown has intermittently reported outstanding playback resources. A normal WASAPI window close after a tap exited cleanly in a prior check, which does not rule out every active-audio shutdown case. Compare exact conditions before labeling a warning harmless.
