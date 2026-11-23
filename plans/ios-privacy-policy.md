@@ -41,5 +41,5 @@ No other code path changes. Placement, input filtering, font and URL are shared.
 ## Acceptance criteria
 
 - With iOS simulated, the button is visible with the same label, footprint and safe-area placement as Android. Native press opens once. Drag, emulated and canceled touches don't open it. Gameplay, annoyance and audio are untouched, and an adjacent background tap still counts as a miss.
-- The Android checks pass unchanged; desktop stays hidden and disconnected.
+- The Android checks pass; desktop stays hidden and disconnected. (Original #54 criterion. The later single-touch fix intentionally changes multi-touch behavior on both platforms, and both privacy tests were extended for it.)
 - A Mac iOS export contains the updated script. Native Safari handoff, return to the game and VoiceOver reading need an iPhone check.
