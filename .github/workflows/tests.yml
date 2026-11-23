@@ -1,0 +1,148 @@
+# Automated checks for tests/run.ps1. See TESTING.md#continuous-integration.
+# - Every code PR runs the fast group. Documentation-only PRs are skipped.
+# - The `full-tests` label, or a manual run, runs the full suite instead.
+name: Tests
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened, ready_for_review, labeled]
+    paths-ignore:
+      - '**/*.md'
+      - 'docs/**'
+      - 'plans/**'
+  workflow_dispatch:
+    inputs:
+      mode:
+        description: 'Runner mode (ignored when suites are given)'
+        type: choice
+        options: [full, fast, audio, animation]
+        default: full
+      suite:
+        description: 'Optional comma-separated suites, for example behavior,python'
+        type: string
+        default: ''
+
+permissions:
+  contents: read
+
+concurrency:
+  group: tests-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+env:
+  GODOT_VERSION: '4.7.2'
+  # From the official 4.7.2-stable SHA512-SUMS.txt; pinned so a changed download fails.
+  GODOT_SHA512: 9aa00f7a605200940bce3027a567b782f49bd8e940dd06ae9e987bd65aee1b1467edd56ed84fcdcbdd44354bf613bdbb4e5d2913e925850368e150c59ed54c65
+
+jobs:
+  tests:
+    # Adding any other label does not rerun the checks.
+    if: github.event.action != 'labeled' || github.event.label.name == 'full-tests'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 90
+    steps:
+      - name: Choose tests
+        id: plan
+        env:
+          EVENT: ${{ github.event_name }}
+          FULL_LABEL: ${{ contains(github.event.pull_request.labels.*.name, 'full-tests') }}
+          INPUT_MODE: ${{ inputs.mode }}
+          INPUT_SUITE: ${{ inputs.suite }}
+        run: |
+          set -euo pipefail
+          suite=''
+          if [ "$EVENT" = workflow_dispatch ]; then
+            mode="$INPUT_MODE"
+            suite="$INPUT_SUITE"
+          elif [ "$FULL_LABEL" = true ]; then
+            mode=full
+          else
+            mode=fast
+          fi
+          # The fast group is headless; everything else may include rendered suites.
+          if [ "$mode" = fast ] && [ -z "$suite" ]; then display=false; else display=true; fi
+          # Full mode and the workflow suite need history, main and the aesthetic branch.
+          if [ "$mode" = full ] && [ -z "$suite" ] || [[ ",$suite," == *",workflow,"* ]]; then history=true; else history=false; fi
+          {
+            echo "mode=$mode"
+            echo "suite=$suite"
+            echo "display=$display"
+            echo "history=$history"
+          } >> "$GITHUB_OUTPUT"
+          echo "Mode: $mode; suites: ${suite:-(mode)}; display: $display; history: $history"
+
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: ${{ steps.plan.outputs.history == 'true' && '0' || '1' }}
+
+      - name: Prepare Git history for the workflow check
+        if: steps.plan.outputs.history == 'true'
+        run: |
+          set -euo pipefail
+          git fetch --no-tags origin aesthetic/typography-v1:refs/remotes/origin/aesthetic/typography-v1
+          # tests/workflow.ps1 clones the local main branch.
+          git show-ref --verify --quiet refs/heads/main || git branch main origin/main
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Restore Godot download
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/godot-ci
+          key: godot-${{ env.GODOT_VERSION }}-${{ env.GODOT_SHA512 }}
+
+      - name: Install Godot (verified)
+        run: |
+          set -euo pipefail
+          cache="$HOME/.cache/godot-ci"
+          name="Godot_v${GODOT_VERSION}-stable_linux.x86_64"
+          mkdir -p "$cache"
+          if [ ! -f "$cache/$name.zip" ]; then
+            curl -fsSL --retry 3 -o "$cache/$name.zip" \
+              "https://github.com/godotengine/godot/releases/download/${GODOT_VERSION}-stable/$name.zip"
+          fi
+          # Verify every run, including cache hits.
+          echo "$GODOT_SHA512  $cache/$name.zip" | sha512sum -c -
+          mkdir -p "$RUNNER_TEMP/godot"
+          unzip -oq "$cache/$name.zip" -d "$RUNNER_TEMP/godot"
+          chmod +x "$RUNNER_TEMP/godot/$name"
+          echo "GODOT_BIN=$RUNNER_TEMP/godot/$name" >> "$GITHUB_ENV"
+          "$RUNNER_TEMP/godot/$name" --version
+
+      - name: Install virtual display
+        if: steps.plan.outputs.display == 'true'
+        run: |
+          sudo apt-get update -q
+          sudo apt-get install -yq --no-install-recommends xvfb libgl1 libgl1-mesa-dri libglx-mesa0 \
+            libxcursor1 libxinerama1 libxrandr2 libxi6 libxkbcommon0 libxkbcommon-x11-0
+
+      - name: Run tests
+        shell: bash
+        env:
+          MODE: ${{ steps.plan.outputs.mode }}
+          SUITE: ${{ steps.plan.outputs.suite }}
+          DISPLAY_NEEDED: ${{ steps.plan.outputs.display }}
+        run: |
+          set -euo pipefail
+          args=(-NoProfile -File tests/run.ps1 -Quiet -Godot "$GODOT_BIN" -Python python)
+          if [ -n "$SUITE" ]; then args+=(-Suite "$SUITE"); else args+=("$MODE"); fi
+          if [ "$DISPLAY_NEEDED" = true ]; then
+            # Rendered suites need a real window; Mesa's software OpenGL serves the Compatibility renderer.
+            xvfb-run -a -s '-screen 0 1920x1080x24' pwsh "${args[@]}"
+          else
+            pwsh "${args[@]}"
+          fi
+
+      - name: Upload diagnostics
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-output-${{ github.run_id }}
+          # The disposable workflow clone is a whole repository; leave it out.
+          path: |
+            test-output/
+            !test-output/workflow-fixture-*/
+          if-no-files-found: ignore
+          retention-days: 9

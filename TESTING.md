@@ -18,11 +18,52 @@ pwsh -File tests/run.ps1 full -Godot <path-to-godot> -Python <path-to-python>
 | `animation` | Authored and procedural playback, pose geometry, interruption, hit outlines, viewport movement, props, speech bubbles and rendered edges. |
 | `full` | All three groups plus Godot release and fingerprint checks, existing Python unit tests, and the local typography/Git workflow fixture. |
 
+Run individual suites with `-Suite` instead of a mode. It takes Godot suite names (the `tests/<name>.gd` files listed in the runner), `python` and `workflow`, as an array or a comma-separated string. The project import still runs first. An unknown name stops the run, and a mode cannot be combined with `-Suite`.
+
+```powershell
+pwsh -File tests/run.ps1 -Suite behavior -Godot <path-to-godot>
+pwsh -File tests/run.ps1 -Suite "audio_mute,manual_landscape" -Godot <path-to-godot>
+pwsh -File tests/run.ps1 -Suite python,workflow -Python <path-to-python>
+```
+
+Add `-Quiet` to any run to print one `PASS: <check> (<seconds>s)` line per check. If a check fails, the runner prints that check's full output under `--- <check> (FAILED) ---` and stops. Quiet mode only changes what is printed. Failure detection stays the same.
+
+### When to run what
+
+| When | Run |
+| --- | --- |
+| During development | Only the suites affected by the change, with `-Suite`. |
+| Before requesting review | The relevant group (`fast`, `audio` or `animation`) for the area changed. |
+| Every code PR | Automated fast checks in GitHub Actions. |
+| After an approved merge batch, and before every release | The full suite, once, on the merged result. |
+
+Avoid running the full suite repeatedly during a task. It is the gate for merged batches and releases, not for every edit.
+
 `-Godot` and `-Python` accept a command name or a full path. A command name resolves to the first match on `PATH`, as the shell would, so several installed Pythons are fine; `python` is the default, so on macOS pass `-Python python3`. The runner imports once and stops on nonzero exits, a Godot error, or a timeout. Each Godot invocation has a 270-second limit by default. Use `-TimeoutSeconds` for slower machines. Godot can print shutdown diagnostics despite a zero exit. Suites that play audio end with `await audio_cleanup.finish(self, exit_code)` from `tests/audio_test_cleanup.gd`. It stops the watched audio and waits, with a 2-second failure limit, until Godot has retired every observed playback before quitting. The runner therefore fails on Godot's exit-time leak report (`ObjectDB instances were leaked at exit` or `resources still in use at exit`); rerun the suite with `--verbose` to list the objects. New suites that play audio should attach the helper first in `run()` and finish through it. Treat a normal-game leak or any other runtime error as a blocker.
 
 Godot's Dummy driver is the default. Add `-AudioDriver WASAPI` on Windows for audio suites to use the real Windows driver. Tests still need physical listening checks. Pixel comparisons require a working graphical session with the Compatibility renderer. Always check reported skips and limitations. Full mode also needs Python and Git with the referenced aesthetic history available. To make that ref available, run `git fetch --no-tags origin aesthetic/typography-v1`. Set `DTM_ALPHA_WINDOWS_ZIP` to a known local frozen Alpha ZIP for the optional real-input MSIX regression. The Python suite reports any skipped cases, including unavailable local historical packages or Pillow.
 
 The runner creates a fresh temporary Godot profile for user data and logs. Godot import can regenerate local `.import` or `.uid` metadata, so use a dedicated topic worktree and keep unrelated generated changes out of commits. The typography workflow uses a disposable Git clone under ignored `test-output/`. The runner leaves these files available for diagnosis.
+
+## Continuous integration
+
+`.github/workflows/tests.yml` runs `tests/run.ps1 -Quiet` on Ubuntu with the official Godot 4.7.2 stable Linux build. The workflow downloads Godot once, caches it, and checks it against a pinned SHA-512 from the release's `SHA512-SUMS.txt` on every run.
+
+- **Pull requests:** the `fast` group runs on every code PR. PRs that change only Markdown, `docs/` or `plans/` are skipped.
+- **Full suite on a PR:** add the `full-tests` label. The labeled run replaces the fast run rather than adding to it. Other labels do not rerun checks.
+- **Manual runs:** use *Actions → Tests → Run workflow* on any branch. Choose a mode (default `full`) or enter a comma-separated `-Suite` list.
+- Rendered suites run under a virtual X display (`xvfb-run`) using Mesa's software OpenGL. Headless runs need no display.
+- Full mode fetches the full history plus `aesthetic/typography-v1` and creates a local `main` for the workflow fixture.
+- On failure, `test-output/` is uploaded as an artifact, without the disposable workflow clone.
+
+CI limitations:
+
+- CI uses only the Dummy audio driver, so it does not cover real audio output.
+- Pixel checks run on Mesa's software renderer under Xvfb, not a GPU. A rendered result that passes in CI still needs checking on the target hardware.
+- Only Linux is covered. Windows, macOS, Web, Android and iOS behavior, packaging, signing and physical-device checks stay manual.
+- Python cases that need the frozen Alpha packages, `DTM_ALPHA_WINDOWS_ZIP` or Pillow skip in CI. Read the reported skips.
+- The documentation-only skip relies on GitHub's `paths-ignore`. If this check is ever made required in branch protection, docs-only PRs will wait for a check that never runs, so the trigger must be adjusted first.
+- CI does not replace the local strict checks before merging. It applies the same failure rules: nonzero exit, `FAIL:` assertions, Godot errors, exit-time leaks and timeouts.
 
 Run optional contact sheets directly with `godot --path . --script tests/render.gd`. Browser smoke checks require an existing, separately approved Web export and Playwright. Package validation, exports, signing, certification, and publication are separate release work. Physical Android/iOS tests still need to cover touch, simultaneous inputs, safe areas, audio output and latency, focus/background/resume, and device performance. Check browser autoplay and mobile audio on the actual Web target.
 
