@@ -1,4 +1,5 @@
 extends SceneTree
+var audio_cleanup = preload("res://tests/audio_test_cleanup.gd").new()
 
 func _initialize() -> void:
 	run.call_deferred()
@@ -13,8 +14,10 @@ func run() -> void:
 			disabled_id = id
 			break
 	menu.preview(disabled_id)
+	audio_cleanup.observe(menu.player)
 	passed = passed and menu.player.playing and not menu.manager.events[disabled_id].enabled
 	menu.preview("user.tap_miss")
+	audio_cleanup.observe(menu.player)
 	passed = passed and menu.player.playing and menu.player.stream == menu.manager.streams[menu.manager.events["user.tap_miss"].stream]
 	menu.get_child(2).pressed.emit()
 	passed = passed and not menu.player.playing
@@ -24,6 +27,5 @@ func run() -> void:
 		if presets.has_section_key(section, "export_filter"):
 			passed = "tests/*" in str(presets.get_value(section, "exclude_filter")).split(",") and passed
 	menu.queue_free()
-	await create_timer(0.3).timeout
 	print("Development preview checks passed: ", passed)
-	quit(0 if passed else 1)
+	await audio_cleanup.finish(self, 0 if passed else 1)
