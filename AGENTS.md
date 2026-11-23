@@ -22,7 +22,9 @@ Read [BRANCH_WORKFLOW.md](BRANCH_WORKFLOW.md) for the detailed procedure and [CU
 
 Prefer simple, maintainable code. Before adding logic, look for existing functions or behavior you can reuse or improve. Address root causes where practical. Introduce abstractions, classes, managers, or compatibility layers only when there is a demonstrated need.
 
-- Small refactors directly related to an approved task are permitted when they simplify the implementation, preserve behavior, and pass relevant tests.
+- **Bug fixes need not add code.** First consider whether removing, replacing, consolidating, or simplifying existing logic solves the root cause more clearly and efficiently than another guard, helper, layer, or workaround. Do not optimize for the fewest changed lines at the expense of correctness or maintainability.
+- **Refactoring or replacing code is allowed when it improves the implementation without changing unrelated behavior.** Explain the current problem, the proposed changes or deletions, expected benefit, affected dependencies, potential regressions, and verification plan. Obtain explicit owner approval for the proposed refactor or replacement before implementing it; an unrelated bug-fix approval is not blanket permission to rewrite code.
+- A small refactor specifically included in an already approved task does not need duplicate approval. Verify behavior preservation with relevant regression tests and comparisons, including both renderer paths when affected.
 - Obtain explicit owner approval before a larger structural change, even if you discover it during an approved task. Obtain explicit approval before overwriting, removing, modifying, or refactoring unrelated code.
 - Before removing apparently unused functionality, verify its purpose, callers, and dependencies. Preserve unrelated changes, including uncommitted local work.
 
