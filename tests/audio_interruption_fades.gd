@@ -1,9 +1,11 @@
 extends SceneTree
+var audio_cleanup = preload("res://tests/audio_test_cleanup.gd").new()
 
 func _initialize() -> void:
 	run.call_deferred()
 
 func run() -> void:
+	audio_cleanup.attach(self)
 	var game = load("res://main.tscn").instantiate()
 	root.add_child(game)
 	game.set_process(false)
@@ -29,6 +31,5 @@ func run() -> void:
 	for player in audio.fade_players.values():
 		passed = passed and not player.playing
 	game.queue_free()
-	await create_timer(0.3).timeout
 	print("Interruption fade checks passed: ", passed)
-	quit(0 if passed else 1)
+	await audio_cleanup.finish(self, 0 if passed else 1)

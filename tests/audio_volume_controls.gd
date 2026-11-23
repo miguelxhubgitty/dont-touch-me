@@ -1,4 +1,5 @@
 extends SceneTree
+var audio_cleanup = preload("res://tests/audio_test_cleanup.gd").new()
 
 const GAME := preload("res://main.tscn")
 const HudSafeArea := preload("res://scripts/hud_safe_area.gd")
@@ -47,6 +48,7 @@ func at(slider: HSlider, x: float) -> Vector2:
 	return slider.get_global_rect().position + slider.size * Vector2(x, 0.5)
 
 func run() -> void:
+	audio_cleanup.attach(self)
 	var game = GAME.instantiate()
 	var button = game.get_node("SoundHUD/VolumeButton")
 	button.set_script(TrackedVolume)
@@ -178,4 +180,4 @@ func run() -> void:
 	DirAccess.remove_absolute(PREFS)
 	DirAccess.remove_absolute(MUTE_PREFS)
 	print("Volume controls checks passed: ", passed)
-	quit(0 if passed else 1)
+	await audio_cleanup.finish(self, 0 if passed else 1)

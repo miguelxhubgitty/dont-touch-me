@@ -1,4 +1,5 @@
 extends SceneTree
+var audio_cleanup = preload("res://tests/audio_test_cleanup.gd").new()
 
 const Game = preload("res://main.tscn")
 var failures := 0
@@ -116,6 +117,7 @@ func check_tier_access(game) -> void:
 	check(reached.size() == 4 and game.annoyance == 100.0, "continuous accepted pokes reach all tiers")
 
 func run() -> void:
+	audio_cleanup.attach(self)
 	var games: Array = []
 	for authored in [true, false]:
 		var game = fixture(authored)
@@ -135,4 +137,4 @@ func run() -> void:
 		game.queue_free()
 	await process_frame
 	print("Annoyance Stage 1 checks: %d; failures: %d" % [checks, failures])
-	quit(1 if failures else 0)
+	await audio_cleanup.finish(self, 1 if failures else 0)

@@ -1,4 +1,5 @@
 extends SceneTree
+var audio_cleanup = preload("res://tests/audio_test_cleanup.gd").new()
 
 const Game = preload("res://main.tscn")
 const IdleFixture = preload("res://tests/idle_fixture.gd")
@@ -175,6 +176,7 @@ func check_suppression(game) -> void:
 	check(audio.slots.is_empty() and audio.fades.is_empty(), "resize stops audio through existing path")
 
 func run() -> void:
+	audio_cleanup.attach(self)
 	for authored in [true, false]:
 		var game = Game.instantiate()
 		game.use_adobe_idle = authored
@@ -188,4 +190,4 @@ func run() -> void:
 		game.queue_free()
 		await process_frame
 	print("Animation audio cue checks: %d; failures: %d" % [checks, failures])
-	quit(0 if failures == 0 else 1)
+	await audio_cleanup.finish(self, 0 if failures == 0 else 1)

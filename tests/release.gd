@@ -1,4 +1,5 @@
 extends SceneTree
+var audio_cleanup = preload("res://tests/audio_test_cleanup.gd").new()
 ## Additional release regressions: actual viewport input, interruption matrix,
 ## logical mobile aspect ratios, focus lifecycle, and long mixed-input sessions.
 const Blob = preload("res://scripts/blob.gd")
@@ -15,6 +16,7 @@ func check(ok: bool, message: String) -> void:
 		printerr("FAIL: " + message)
 
 func run() -> void:
+	audio_cleanup.attach(self)
 	check(ProjectSettings.get_setting("display/window/handheld/orientation") == 1, "portrait orientation configured")
 	check(ProjectSettings.get_setting("display/window/stretch/mode") == "canvas_items", "responsive canvas stretch")
 	check(not ProjectSettings.get_setting("input_devices/pointing/emulate_mouse_from_touch"), "no duplicate emulated mouse taps")
@@ -137,4 +139,4 @@ func run() -> void:
 		check(game.reaction == Blob.Reaction.NONE and game.asleep, "session recovers to peaceful sleep")
 	print("Release checks: %d; failures: %d" % [checks, failures])
 	viewport.queue_free()
-	quit(1 if failures else 0)
+	await audio_cleanup.finish(self, 1 if failures else 0)

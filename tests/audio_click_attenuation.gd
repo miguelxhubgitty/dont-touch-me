@@ -1,9 +1,11 @@
 extends SceneTree
+var audio_cleanup = preload("res://tests/audio_test_cleanup.gd").new()
 
 func _initialize() -> void:
 	run.call_deferred()
 
 func run() -> void:
+	audio_cleanup.attach(self)
 	var game = load("res://main.tscn").instantiate()
 	root.add_child(game)
 	game.set_process(false)
@@ -45,4 +47,4 @@ func run() -> void:
 	await process_frame
 	await process_frame
 	print("Click attenuation failures: ", failures)
-	quit(1 if failures else 0)
+	await audio_cleanup.finish(self, 1 if failures else 0)

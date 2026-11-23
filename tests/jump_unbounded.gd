@@ -1,4 +1,5 @@
 extends SceneTree
+var audio_cleanup = preload("res://tests/audio_test_cleanup.gd").new()
 ## Exercise the actual game scene and routed input, not a preview actor stub.
 const Game = preload("res://main.tscn")
 const Blob = preload("res://scripts/blob.gd")
@@ -53,6 +54,7 @@ func poke(viewport: SubViewport,point: Vector2,touch: bool) -> void:
 	viewport.push_input(event,true)
 
 func run() -> void:
+	audio_cleanup.attach(self)
 	var viewport := SubViewport.new()
 	viewport.handle_input_locally = true
 	root.add_child(viewport)
@@ -179,4 +181,4 @@ func run() -> void:
 	viewport.free()
 	await process_frame
 	print("UNBOUNDED_CONTROLLER ",JSON.stringify(result))
-	quit(0 if failures == 0 else 1)
+	await audio_cleanup.finish(self, 0 if failures == 0 else 1)

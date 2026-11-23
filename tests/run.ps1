@@ -20,7 +20,7 @@ if ($LASTEXITCODE -ne 0 -or $version -notmatch '^4\.7\.2\.stable(\.|$)') {
 }
 
 $root = Split-Path -Parent $PSScriptRoot
-$fast = @('behavior', 'annoyance_stage_1', 'idle_stage_2', 'animation_polish', 'android_privacy_policy', 'ios_privacy_policy')
+$fast = @('behavior', 'annoyance_stage_1', 'idle_stage_2', 'animation_polish', 'android_privacy_policy', 'ios_privacy_policy', 'audio_shutdown')
 $audio = @('audio', 'audio_mute', 'audio_click_attenuation', 'audio_interruption_fades',
     'audio_volume_balance', 'audio_preview_menu_test', 'audio_voice_timing',
     'audio_variation', 'audio_volume_controls', 'animation_audio_cues', 'manual_landscape')
@@ -67,15 +67,14 @@ function Invoke-GodotCheck([string]$Label, [string[]]$Arguments) {
 
     if ($lines -match '^\s*FAIL:') { throw "$Label reported a failed assertion." }
 
-    # Godot can exit zero on script errors. Keep reported shutdown diagnostics visible.
-    $errors = @($lines | Where-Object { $_ -match '^\s*(ERROR|SCRIPT ERROR):' })
-    if ($errors.Count -eq 1 -and $errors[0] -match '^ERROR: \d+ resources? still in use at exit' -and
-        ($lines -match '^WARNING: \d+ ObjectDB instances were leaked at exit') -and
-        $Label -ne 'Import') {
-        Write-Warning "$Label reported outstanding resources at test shutdown. Compare against a normal game exit before attributing a runtime leak."
-    } elseif ($errors.Count) {
-        throw "$Label reported a Godot error."
+    # Suites drain stopped audio playbacks before quitting (tests/audio_test_cleanup.gd),
+    # so Godot's exit-time leak report now means something was really left alive.
+    if ($lines -match '^WARNING: \d+ ObjectDB instances were leaked at exit' -or
+        $lines -match '^ERROR: \d+ resources? still in use at exit') {
+        throw "$Label leaked objects or resources at exit. Rerun it with --verbose to list them."
     }
+    # Godot can exit zero on script errors.
+    if ($lines -match '^\s*(ERROR|SCRIPT ERROR):') { throw "$Label reported a Godot error." }
 }
 
 # Godot keeps logs and user:// data in these per-process locations. Give each run its own profile.

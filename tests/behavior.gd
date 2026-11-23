@@ -1,4 +1,5 @@
 extends SceneTree
+var audio_cleanup = preload("res://tests/audio_test_cleanup.gd").new()
 
 const Blob = preload("res://scripts/blob.gd")
 var failures := 0
@@ -14,6 +15,7 @@ func check(value: bool, message: String) -> void:
 		printerr("FAIL: " + message)
 
 func run() -> void:
+	audio_cleanup.attach(self)
 	var game := Blob.new()
 	root.add_child(game)
 	game.set_process(false)
@@ -135,4 +137,4 @@ func run() -> void:
 		check(game.contains_touch(game.body_position + Vector2(0, -60)), "resize restores hitbox")
 	print("Behavior checks: %d; failures: %d" % [checks, failures])
 	game.queue_free()
-	quit(1 if failures else 0)
+	await audio_cleanup.finish(self, 1 if failures else 0)
