@@ -165,7 +165,20 @@ try {
     }
     if ($runWorkflow) {
         $shell = (Get-Process -Id $PID).Path
-        Invoke-Check 'workflow' $shell @('-NoProfile', '-NonInteractive', '-File', (Join-Path $PSScriptRoot 'workflow.ps1'), '-BaseRef', 'HEAD')
+        # The workflow check integrates typography into a basic-font base. A release
+        # branch already carries it (the helper refuses to apply it twice, and the
+        # check still asserts that guard), so test from the main commit it was cut from.
+        $workflowBase = 'HEAD'
+        if (Test-Path -LiteralPath (Join-Path $root 'scripts/typography.gd')) {
+            $mainRef = @('main', 'origin/main') | Where-Object { git -C $root rev-parse --verify --quiet "$_^{commit}" } | Select-Object -First 1
+            if (-not $mainRef) { throw 'workflow: typography is applied here; a main or origin/main ref is needed for the basic-font base.' }
+            $workflowBase = (git -C $root merge-base HEAD $mainRef).Trim()
+            git -C $root cat-file -e "${workflowBase}:scripts/typography.gd" 2>$null
+            if ($LASTEXITCODE -eq 0) { throw "workflow: base $workflowBase already contains typography; it is not a basic-font commit." }
+            $global:LASTEXITCODE = 0
+            Write-Host "workflow: release branch detected; using basic-font base $workflowBase (merge-base with $mainRef)."
+        }
+        Invoke-Check 'workflow' $shell @('-NoProfile', '-NonInteractive', '-File', (Join-Path $PSScriptRoot 'workflow.ps1'), '-BaseRef', $workflowBase)
         $extras += 'workflow'
     }
     $summary = @("$($godotSuites.Count) Godot suites") + $extras
