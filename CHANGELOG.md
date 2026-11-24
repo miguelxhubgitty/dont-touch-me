@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.1.1 — release candidate on `release/0.1.1` — not published
+
+- Everything merged to `main` since the Alpha through PR #66: audio (off by default, five saved volumes), Recoil and Puffer-huff, Stretch and Humming plus Stage 2 sleep idles, 18-second sleep, streak-based annoyance with gradual decay, movement continuity, Settings (volume; orientation on Android and iOS), landscape and short-window layout, the Privacy Policy button on Android and iOS, and the iOS launch screen. See [release notes](release/catalog/RELEASE_NOTES.md).
+- Release presentation: typography-v1 (Space Grotesk and cached Ink Free phrases), Space Grotesk on the HUD, and a Settings panel styled in the game's palette. "STOP." re-rendered at 180 px to meet the 4x density standard.
+- Versions: game 0.1.1; Windows/MSIX 0.1.1.0; macOS 0.1.1 (3); iOS 0.1.1 (2); Android 0.1.1 with the code pending Play Console verification. Web, Linux and macOS presets restored.
+- The Android app ID changes to the Play ID `com.wandiel.donttouchme`, so the Alpha's sideloaded test APK does not upgrade in place.
+
 ## 0.1.0-alpha — GitHub public prerelease — October 31, 2026
 
 - Publish the existing Windows, Linux, macOS, HTML5 ZIPs, debug-signed Android testing APK and unchanged SHA256SUMS with explicit owner authorization. Preserve the existing tag and all artifact bytes; exclude the unsigned AAB. Verify every public download anonymously against its SHA-256.
