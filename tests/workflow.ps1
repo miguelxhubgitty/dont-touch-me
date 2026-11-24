@@ -1,7 +1,9 @@
 <# Integration regression: local clone only, no network, generation or publication.
-   Run when the workflow helper changes, not on every gameplay edit. #>
+   Run when the workflow helper changes, not on every gameplay edit.
+   The disposable fixture clone is deleted after a passing run; a failing run keeps it for
+   diagnosis, and -KeepFixture keeps it on success too. #>
 [CmdletBinding()]
-param([string]$AestheticRef = 'origin/aesthetic/typography-v1', [string]$BaseRef = 'main')
+param([string]$AestheticRef = 'origin/aesthetic/typography-v1', [string]$BaseRef = 'main', [switch]$KeepFixture)
 $ErrorActionPreference = 'Stop'
 Set-StrictMode -Version Latest
 $checks = 0
@@ -22,6 +24,8 @@ function Assert-Rejected([scriptblock]$Action, [string]$Reason) {
     Assert-Workflow $rejected "Expected guard: $Reason"
 }
 $repoRoot = [IO.Path]::GetFullPath((Join-Path $PSScriptRoot '..'))
+$fixture = $null
+$passed = $false
 Push-Location -LiteralPath $repoRoot
 try {
     $main = Invoke-Git -Arguments @('rev-parse', '--verify', '--end-of-options', "$BaseRef^{commit}")
@@ -35,6 +39,8 @@ try {
     Push-Location -LiteralPath $fixture
     try {
         Invoke-Git -Arguments @('remote', 'set-url', 'origin', 'https://github.com/miguelxhubgitty/dont-touch-me.git')
+        # The fixture must never be able to push to the real repository.
+        Invoke-Git -Arguments @('remote', 'set-url', '--push', 'origin', 'https://invalid.invalid/workflow-fixture-no-push.git')
         Invoke-Git -Arguments @('config', 'user.name', 'Workflow verification')
         Invoke-Git -Arguments @('config', 'user.email', 'workflow@example.invalid')
         Invoke-Git -Arguments @('config', 'commit.gpgsign', 'false')
@@ -96,6 +102,14 @@ try {
         Assert-Workflow ((Get-FileHash -LiteralPath $blobPath).Hash -eq $blobHash) 'Conflict preflight preserves gameplay file'
         Assert-Workflow (-not (Invoke-Git -Arguments @('status', '--porcelain'))) 'Rejected conflict leaves tree clean'
         Assert-Workflow (-not (Test-Path -LiteralPath 'scripts/typography.gd')) 'Rejected conflict leaves no partial typography resources'
-        Write-Output "Workflow: $checks checks passed; local fixture retained at $fixture"
+        $passed = $true
     } finally { Pop-Location }
-} finally { Pop-Location }
+} finally {
+    Pop-Location
+    if ($passed -and -not $KeepFixture -and $fixture -and (Test-Path -LiteralPath $fixture)) {
+        Remove-Item -LiteralPath $fixture -Recurse -Force
+        Write-Output "Workflow: $checks checks passed; fixture removed"
+    } elseif ($fixture) {
+        Write-Output "Workflow: $checks checks run; fixture kept at $fixture"
+    }
+}
