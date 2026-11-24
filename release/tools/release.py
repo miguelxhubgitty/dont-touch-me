@@ -621,7 +621,7 @@ class Release:
             node=shutil.which('node')
             if not node: raise RuntimeError('Web runtime validation requires Node and an installed Playwright/browser; export remains structurally validated only.')
             self.run([node,ROOT/'tests/web_smoke.cjs',f'http://127.0.0.1:{server.server_port}/',self.out/'logs'], 'web-runtime-smoke', timeout=180)
-            record['validation']['runtime']='passed: local HTTP, WebGL2, desktop click, mobile-sized touch and resize; automated browser smoke only'
+            record['validation']['runtime']='passed: local HTTP, WebGL2, desktop click, audio output (silent by default, audible after Sound On, silent when muted), mobile-sized touch and resize; automated browser smoke only'
             record['validation']['browser_evidence']='logs/web-smoke.json'
             self.write_manifest()
         except (RuntimeError,subprocess.SubprocessError) as error:
