@@ -8,8 +8,9 @@ TARGETS = {
     'linux': ('Linux ZIP — not native-tested', '.zip'),
     'macos': ('macOS ZIP — ad-hoc signing default; notarization/native testing not implied', '.zip'),
     'web': ('HTML5 Web ZIP — host over HTTP(S)', '.zip'),
-    'android-apk': ('Android debug-signed APK — TESTING BUILD, not production signing', '.apk'),
 }
+# Debug-signed APKs are never published publicly; Android ships only through the stores.
+NON_PUBLIC_EXTENSIONS = ('.apk', '.aab')
 
 def sha(file):
     with file.open('rb') as stream:
@@ -45,6 +46,8 @@ def plan(root=ROOT):
             raise ValueError('Invalid existing build: '+target)
         relative = entry['package']
         file = (out/relative).resolve()
+        if file.suffix in NON_PUBLIC_EXTENSIONS:
+            raise ValueError('Android packages are never published on GitHub: '+relative)
         if not file.is_relative_to(out.resolve()) or file.suffix != extension:
             raise ValueError('Unsafe/unsupported package')
         digest = sha(file)
@@ -106,7 +109,7 @@ def notes(prepared):
     text = (ROOT/'release/catalog/RELEASE_NOTES.md').read_text(encoding='utf-8').replace('This is a prepared release, not a claim of publication or store approval.', '')
     text += '\n\n## Downloads and testing boundaries\n\n'
     text += '\n'.join('- '+a['name']+': '+a['label']+'.' for a in prepared['assets'])
-    text += '\n\nThese are the prepared Public Alpha packages. Linux has not been native-tested. macOS app-signature validation, Gatekeeper trust and native gameplay testing are separate gates; consult the release-specific evidence. Android is a debug-signed testing build with static checks only. Windows is unsigned. No platform/store certification is claimed. The unsigned Android AAB is intentionally excluded. iOS is unavailable.\n\nFree, with no payments or donations. Browser play: https://wandiel.itch.io/dont-touch-me\n\nSHA256SUMS is the original full local handoff ledger, including files not uploaded here; its paths are relative to builds/'+prepared['tag']+'/. Match downloaded filenames to those paths. Package SHA-256 values:\n\n```text\n'
+    text += '\n\nThese are the prepared Public Alpha packages. Linux has not been native-tested. macOS app-signature validation, Gatekeeper trust and native gameplay testing are separate gates; consult the release-specific evidence. Android is distributed through Google Play and Amazon only; no APK is published here. Windows is unsigned. No platform/store certification is claimed. The unsigned Android AAB is intentionally excluded. iOS is unavailable.\n\nFree, with no payments or donations. Browser play: https://wandiel.itch.io/dont-touch-me\n\nSHA256SUMS is the original full local handoff ledger, including files not uploaded here; its paths are relative to builds/'+prepared['tag']+'/. Match downloaded filenames to those paths. Package SHA-256 values:\n\n```text\n'
     text += '\n'.join(a['sha256']+'  '+a['name'] for a in prepared['assets'] if a['target'] != 'checksums')+'\n```\n'
     return text
 
