@@ -276,7 +276,19 @@
 	],
 	"engine": "4.7.2-stable (official)",
 	"generated_by": "release/tools/generate_assets.gd",
-	"screenshot_provenance": "Actual Blob Node2D rendering in Godot SubViewports on Windows. Deterministic reachable reaction poses; no compositing, captions, fake OS frames, or post-capture resizing. Apple files are dimension-ready reference renders, not verified iOS device captures.",
+	"renderer_sources_sha256": {
+		"assets/fonts/hud_theme.tres": "471c71504ae3c1051a67b7f6b84a31a4f798beefdd89ce9e0a5c861d0ba3e34a",
+		"main.tscn": "a10556665cb9b07925e32a04deddedd28fc7cd344a2118b7e0fa0847921a7232",
+		"scenes/blob/blob.tscn": "d7d45a08781ebc16f6109d01f22e8690521f1e87a8755bffecb3435424d9541c",
+		"scripts/audio_mute_button.gd": "2a1a876e775c731faa4073388981683a43984de3a8ddcc083d61bd19b1b50bf7",
+		"scripts/audio_volume_controls.gd": "9c9a1d69728c6cf9fa9a9410f3bef0278a6f78244db040f5afc6665838d51c24",
+		"scripts/blob.gd": "e4d10d173e440932915504b756d56d573f104be3bbf8e1aabe0dfc88d1dc6fa9",
+		"scripts/blob_animationplayer.gd": "0f46b46698b6af76c791b53ef042452c20989b3ea38b856f5f332f0b3a84fa6c",
+		"scripts/bubble_foreground.gd": "0e5a9d7cd02acdfdcdcd8b1736f4f3604ca4e9d7a3c3fd6ea621c60a54d042b7",
+		"scripts/privacy_policy_button.gd": "04cbf23f1bad2add487cd51cd31301c03062e2c04d146d7411c9045fd5900932",
+		"scripts/sound_hud_layout.gd": "137e35ef33911a0bef460669b2cdc7faef4fdc3b3929049ad1bb925a906465fe"
+	},
+	"screenshot_provenance": "Actual shipping scene (main.tscn: authored AnimationPlayer renderer and HUD) rendered in Godot SubViewports on Windows with the game's expanding canvas. Menus closed; Sound shows a fresh profile's default (off); the Privacy Policy button is shown as on Android and iOS. Deterministic reachable reaction poses; no compositing, captions, fake OS frames, or post-capture resizing. The feature graphic and itch cover are layout compositions using the procedural Blob renderer. Apple files are dimension-ready reference renders, not verified iOS device captures.",
 	"source_hash_mode": "text-lf-binary-raw-v1",
 	"source_script_sha256": "e4d10d173e440932915504b756d56d573f104be3bbf8e1aabe0dfc88d1dc6fa9",
 	"typography_sources_sha256": {

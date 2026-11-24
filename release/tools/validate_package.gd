@@ -18,6 +18,10 @@ func _initialize() -> void:
 	var manifest = JSON.parse_string(FileAccess.get_file_as_string("res://release/assets/manifest.json"))
 	var hash_mode: String = manifest.get("source_hash_mode", "")
 	check(Fingerprint.matches("res://scripts/blob.gd", manifest.source_script_sha256, hash_mode), "screenshots match current gameplay source (regenerate only during release finalization)")
+	# Screenshots show the shipping scene, so its renderer and HUD sources must match too.
+	check(manifest.has("renderer_sources_sha256") and manifest.renderer_sources_sha256.has("main.tscn"), "captures record the shipping scene's renderer sources")
+	for source in manifest.get("renderer_sources_sha256", {}):
+		check(Fingerprint.matches("res://" + source, manifest.renderer_sources_sha256[source], hash_mode), "captures match renderer/HUD source: " + source)
 	for source in manifest.get("typography_sources_sha256", {}):
 		check(Fingerprint.matches("res://" + source, manifest.typography_sources_sha256[source], hash_mode), "captures match typography source: " + source)
 	check(manifest.assets.size() == 39, "complete 39-PNG graphics package")

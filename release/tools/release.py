@@ -330,6 +330,9 @@ def inventory_refresh():
 def asset_input():
     # Source-only invalidation: a docs change must not re-render screenshots.
     paths = ['scripts/blob.gd','scripts/typography.gd','release/tools/generate_assets.gd','release/tools/generate_branding.gd','icon.svg']
+    # Store screenshots render the shipping scene: its renderer and HUD sources count too.
+    paths += ['main.tscn','scripts/blob_animationplayer.gd','scenes/blob/blob.tscn','scripts/bubble_foreground.gd',
+              'scripts/audio_mute_button.gd','scripts/audio_volume_controls.gd','scripts/sound_hud_layout.gd','scripts/privacy_policy_button.gd']
     paths += [p.relative_to(ROOT).as_posix() for p in (ROOT / 'assets').rglob('*') if p.is_file() and p.suffix != '.uid']
     return {p: sha(ROOT / p, True) for p in sorted(set(paths))}
 
@@ -429,7 +432,7 @@ class Release:
         self.run([self.godot,'--path',ROOT,'--script','release/tools/generate_assets.gd','--','--finalize-release'], 'finalize-assets')
         self.run([self.godot,'--path',ROOT,'--script','release/tools/generate_branding.gd','--','--finalize-release'], 'finalize-branding')
         inventory_refresh()
-        save(receipt, {'inputs':inputs,'generated_at':stamp(),'phrases':'Reused approved complete-phrase graphics; no phrase regeneration.'})
+        save(receipt, {'inputs':inputs,'generated_at':stamp(),'phrases':'Used the cached complete-phrase graphics as committed; finalize-assets never renders phrases (generate_typography.gd does, separately).'})
         print('Final store captures generated once; inventory refreshed.')
 
     def runtime_hash(self):

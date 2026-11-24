@@ -119,7 +119,7 @@
     {
       "file": "assets/manifest.json",
       "hash_mode": "utf8-lf",
-      "sha256": "8d2383a76aced7a51355be3e108c537b4dae717330f5970fca6aed4b206a1027"
+      "sha256": "a85faf33acbcf60608f8475df2ad5206902945ed4aaab3d785377c548343ddfd"
     },
     {
       "file": "assets/README.md",
@@ -129,102 +129,102 @@
     {
       "file": "assets/screenshots/google-play/01-calm.png",
       "hash_mode": "binary",
-      "sha256": "5bf14e724c02013cc125d7212f83a15fd25e1197e76b63bce659a7619e3b73c6"
+      "sha256": "745dfa68f2de45942bc2e6a997b626e2952ec7665e614efaf699ee9ba78b7d6c"
     },
     {
       "file": "assets/screenshots/google-play/02-annoyed.png",
       "hash_mode": "binary",
-      "sha256": "eaf8835bf8aceb7facd1a5518cece87236bc944df339f336545c7cde89bbae45"
+      "sha256": "fb0d0645a0a9b7ea26c3710df28a32fa0e671a593e7d4c7375d25c8744db4aaf"
     },
     {
       "file": "assets/screenshots/google-play/03-angry.png",
       "hash_mode": "binary",
-      "sha256": "be16878cad65248db8d53a8b1ded7b75caa5e9bfc2053647c3ebb19880dd3dc2"
+      "sha256": "0de10317f94135965c8854e082fe1fdcebc351d6c93305b72fd86ac40e9fcd51"
     },
     {
       "file": "assets/screenshots/google-play/04-hiding.png",
       "hash_mode": "binary",
-      "sha256": "a18d5890f75c9e0604f2f302cec29f76c8c22550fde54c7899256a705c541b82"
+      "sha256": "20b4160416fb31d5cc1f0d7e1c5725dcd774d2b57d19e7c380bd33e61c6d145c"
     },
     {
       "file": "assets/screenshots/google-play/05-sleeping.png",
       "hash_mode": "binary",
-      "sha256": "81df4132b98c56625264db2a20f639374205aeadcb8ca480e8478c4644c4dca8"
+      "sha256": "f7977dd623a2a3663a8f2b054f59a38ef570534a87ae13b9d90348fd9e621eea"
     },
     {
       "file": "assets/screenshots/ipad-reference/01-calm.png",
       "hash_mode": "binary",
-      "sha256": "a4a39c35a66aef71d841a80b7c341e9d89d95855e51dddcd7a51d82c5f1138a1"
+      "sha256": "c635d216c117e45ac4647a6327738ab79c9aa3c8e116dc992678c57e2edba245"
     },
     {
       "file": "assets/screenshots/ipad-reference/02-annoyed.png",
       "hash_mode": "binary",
-      "sha256": "6fe813ad3f6632bbe66c0f98dd31e56bbbca8e0c93210d230d8ff92a543c458c"
+      "sha256": "5b676d82816a1f7382031f03658304d6e82be2a17d0bf10c14d0e4362cc8e6de"
     },
     {
       "file": "assets/screenshots/ipad-reference/03-angry.png",
       "hash_mode": "binary",
-      "sha256": "d2ac86e080640d7abd73c3980411f1847f14d0188054c8d7279ede9b1d601c4e"
+      "sha256": "0d8d2f3b97de9e071210d8087d091253e6338bd8a438d64f11bedc12dc1651b4"
     },
     {
       "file": "assets/screenshots/ipad-reference/04-hiding.png",
       "hash_mode": "binary",
-      "sha256": "1c33aa727181b7d3bf3d09e6a684bb5a93210fe19401580c021363b629b77a5c"
+      "sha256": "f67fa4160e3868aafe9252899f41d1b54e9a93015b0f63891152d812fde398bc"
     },
     {
       "file": "assets/screenshots/ipad-reference/05-sleeping.png",
       "hash_mode": "binary",
-      "sha256": "00c2b730369d50c745e0f84b38653afc9f2464eab80e1351190f002f617e61b8"
+      "sha256": "e873da53e083d3a766170c581b5261c9db00017ab3e366061c990d6b4452a587"
     },
     {
       "file": "assets/screenshots/iphone-large-reference/01-calm.png",
       "hash_mode": "binary",
-      "sha256": "80cb3fd9ef0cf11d39415c29a898e39a0052c42e8326c71e6f443a02573d4f44"
+      "sha256": "66261efec1d4b26de0da94fc078f1790130c6b3410f8629b86d2d90be93204b9"
     },
     {
       "file": "assets/screenshots/iphone-large-reference/02-annoyed.png",
       "hash_mode": "binary",
-      "sha256": "98c56b307334b71ba5d5e77f827b642f5a7154554d4e20970e4abf46cc66e678"
+      "sha256": "762afc2be7a68a4a634b18be63f15964206218ce9b193c13382262c525fba61e"
     },
     {
       "file": "assets/screenshots/iphone-large-reference/03-angry.png",
       "hash_mode": "binary",
-      "sha256": "2112fc5c500c72ef6f0dd1548cb4517d83146f781f496218befe7e661437045e"
+      "sha256": "0ef35236062f2a188dcf297659dc7e66cecfac9833f3226dfca44df3d373e96f"
     },
     {
       "file": "assets/screenshots/iphone-large-reference/04-hiding.png",
       "hash_mode": "binary",
-      "sha256": "9e3fd3d5e7cd7df35cd0e642f3ed4940944c7a1f0af21b24a5be52c1b60b6529"
+      "sha256": "eb272b72aba294ad0daa7b1fe34d0b8a6cae008ca165b36463cedfa32fcda607"
     },
     {
       "file": "assets/screenshots/iphone-large-reference/05-sleeping.png",
       "hash_mode": "binary",
-      "sha256": "84e5902cd757a4eebc3018ea0c4bc216ce6b01c4b6d59f55021c30e19413e62a"
+      "sha256": "9ed0c1b8e289d3f1656c6d1c28bc3816fb2f578310e0b9ba7f27ce3d40835347"
     },
     {
       "file": "assets/screenshots/iphone-medium-reference/01-calm.png",
       "hash_mode": "binary",
-      "sha256": "f5cbd1d0fbd9c687ada3b033382e15418d6c85952d57a0468711396c61ee2a2a"
+      "sha256": "c26ef277978630259fc85b560f138f68f37e951dfeb84edd68af64f48e4f11b0"
     },
     {
       "file": "assets/screenshots/iphone-medium-reference/02-annoyed.png",
       "hash_mode": "binary",
-      "sha256": "4941a969538c34224a208e670823fe5b2b526d3cdd4234e6fe89beecf979bca2"
+      "sha256": "a616b5b55499916c765351d61433c350b9d08a7ff87383ae2d33b84799e5a2d7"
     },
     {
       "file": "assets/screenshots/iphone-medium-reference/03-angry.png",
       "hash_mode": "binary",
-      "sha256": "d1deb8c5e9a7fee9c82a652f78eb368a5f97c5304d628410b7137ea0e7f688d8"
+      "sha256": "435a8192a5aeb4f81c38631a69cf2316ec35f8534578a4e6d83dfe29c7e78434"
     },
     {
       "file": "assets/screenshots/iphone-medium-reference/04-hiding.png",
       "hash_mode": "binary",
-      "sha256": "48dd0a4e31f8ad2089f8efa2a61ac0540838b7a57a677ca35d008d4a9dd11a8e"
+      "sha256": "2436033eeea0e277f78bc3f8e1ef9830fea5348e34111fa6245bbb3e70a869c9"
     },
     {
       "file": "assets/screenshots/iphone-medium-reference/05-sleeping.png",
       "hash_mode": "binary",
-      "sha256": "704e8401c284386b908c10711dfa83e3b1bcbf19b672004f9fae5294f9c22e06"
+      "sha256": "4cf95be868dad2ea2308b269bae1b0397736e81b60407001b2e819acb4cbfff3"
     },
     {
       "file": "catalog/branding/itch-cover-630x500.png",

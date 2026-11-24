@@ -2,7 +2,14 @@ extends SceneTree
 ## Run with a real renderer: godot --path . --script release/tools/generate_assets.gd
 ## Screenshots come from the existing Blob renderer, with no image compositing.
 const Blob = preload("res://scripts/blob.gd")
+const Game = preload("res://main.tscn")
 const Fingerprint = preload("res://release/tools/source_fingerprint.gd")
+## Everything that shapes a store screenshot of the shipping scene; validate_package.gd
+## rejects captures whose recorded hashes no longer match these files.
+const RENDERER_SOURCES := ["main.tscn", "scripts/blob.gd", "scripts/blob_animationplayer.gd", "scenes/blob/blob.tscn",
+	"scripts/bubble_foreground.gd", "scripts/audio_mute_button.gd", "scripts/audio_volume_controls.gd",
+	"scripts/sound_hud_layout.gd", "scripts/privacy_policy_button.gd", "assets/fonts/hud_theme.tres"]
+var audio_cleanup = preload("res://tests/audio_test_cleanup.gd").new()
 const Typography = preload("res://scripts/typography.gd")
 const OUT := "res://release/assets/"
 const PAPER := Color("f6f2e9")
@@ -53,6 +60,7 @@ func write_text(path: String, content: String) -> void:
 	file.store_string(content)
 
 func run() -> void:
+	audio_cleanup.attach(self)
 	root.size = Vector2i(432, 768)
 	save_image(svg_image("res://icon.svg", 1024, true), "icons/master-1024.png", "master_icon")
 	save_image(svg_image("res://icon.svg", 512, true), "icons/google-play-512.png", "play_icon", false)
@@ -82,17 +90,21 @@ func run() -> void:
 	for phrase in Typography.Phrases.PHRASES.values():
 		var source: String = phrase.texture.resource_path.trim_prefix("res://")
 		typography_sources[source] = Fingerprint.digest("res://" + source)
+	var renderer_sources := {}
+	for source in RENDERER_SOURCES:
+		renderer_sources[source] = Fingerprint.digest("res://" + source)
 	write_text(OUT + "manifest.json", JSON.stringify({
 		"generated_by": "release/tools/generate_assets.gd",
 		"engine": Engine.get_version_info().string,
 		"source_script_sha256": Fingerprint.digest("res://scripts/blob.gd"),
 		"source_hash_mode": Fingerprint.MODE,
+		"renderer_sources_sha256": renderer_sources,
 		"typography_sources_sha256": typography_sources,
-		"screenshot_provenance": "Actual Blob Node2D rendering in Godot SubViewports on Windows. Deterministic reachable reaction poses; no compositing, captions, fake OS frames, or post-capture resizing. Apple files are dimension-ready reference renders, not verified iOS device captures.",
+		"screenshot_provenance": "Actual shipping scene (main.tscn: authored AnimationPlayer renderer and HUD) rendered in Godot SubViewports on Windows with the game's expanding canvas. Menus closed; Sound shows a fresh profile's default (off); the Privacy Policy button is shown as on Android and iOS. Deterministic reachable reaction poses; no compositing, captions, fake OS frames, or post-capture resizing. The feature graphic and itch cover are layout compositions using the procedural Blob renderer. Apple files are dimension-ready reference renders, not verified iOS device captures.",
 		"assets": records,
 	}, "\t"))
 	print("Release assets generated: %d PNGs; failures: %s" % [records.size(), failed])
-	quit(1 if failed else 0)
+	await audio_cleanup.finish(self, 1 if failed else 0)
 
 func feature_graphic() -> void:
 	var viewport := SubViewport.new()
@@ -124,11 +136,20 @@ func capture(target: String, pixels: Vector2i, situation: String) -> void:
 	viewport.size_2d_override_stretch = true
 	viewport.render_target_update_mode = SubViewport.UPDATE_ALWAYS
 	root.add_child(viewport)
-	var blob := Blob.new()
+	# The shipping scene: authored renderer, speech bubbles, HUD with menus closed.
+	var blob: Node = Game.instantiate()
 	viewport.add_child(blob)
 	blob.set_process(false)
+	blob.audio_manager.muted = true
+	# A fresh profile starts with sound off; never show this machine's saved choice.
+	blob.get_node("SoundHUD/SoundButton")._update_label()
+	# Shown on Android and iOS, the platforms these store captures are for.
+	var privacy: Button = blob.get_node("PrivacyHUD/PrivacyPolicy")
+	privacy.add_theme_font_override("font", load(privacy.RELEASE_FONT))
+	privacy.get_parent().show()
 	blob.rng.seed = 472
 	blob.clock = 1.1
+	blob.blink_timer = 9.0
 	blob.intro_alpha = 1.0 if situation == "01-calm" else 0.0
 	match situation:
 		"02-annoyed":
@@ -148,6 +169,9 @@ func capture(target: String, pixels: Vector2i, situation: String) -> void:
 				blob.advance(0.1)
 	blob._update_pose()
 	blob.queue_redraw()
+	await process_frame
+	# Place the Privacy Policy button once layout has given it its size.
+	privacy._place(Rect2(Vector2.ZERO, Vector2(viewport.size_2d_override)))
 	await process_frame
 	await RenderingServer.frame_post_draw
 	save_image(viewport.get_texture().get_image(), "screenshots/%s/%s.png" % [target, situation], "actual_gameplay_render")
