@@ -554,10 +554,14 @@ class Release:
             checks['runtime'] = 'not run on current Android device; static package checks only'
         return checks
 
-    def package(self):
+    def package(self, keys=None):
+        """Package built artifacts. With keys, only those targets: other receipts stay as
+        recorded, so a platform-only change (e.g. the Android version code) does not
+        force re-exporting packages that were already approved from an earlier commit."""
         self.current_validation()
         for key, record in self.receipts['artifacts'].items():
             if record['status'] != 'built': continue
+            if keys is not None and key not in keys: continue
             if record.get('runtime_fingerprint') != self.runtime_hash() or not record.get('audio_pack'):
                 raise RuntimeError('Raw export receipt needs a current audio pack audit: ' + key)
             raw = self.out / ('android' if key.startswith('android') else key) / ('raw-' + key)
@@ -680,7 +684,7 @@ def main():
     elif args.command=='finalize-assets': release.finalize_assets()
     elif args.command=='validate': release.validate()
     elif args.command=='export': release.export(args.targets)
-    elif args.command=='package': release.package()
+    elif args.command=='package': release.package(args.targets if '--targets' in sys.argv else None)
     elif args.command=='web-test': release.web_test()
     elif args.command=='report': release.report()
     elif args.command=='prepare':

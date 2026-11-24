@@ -112,6 +112,17 @@ class PackagingTests(unittest.TestCase):
         before=package.stat().st_mtime_ns
         self.release.package()
         self.assertEqual(before,package.stat().st_mtime_ns)
+    def test_targeted_package_leaves_other_approved_receipts_alone(self):
+        self.add('linux',{'DontTouchMe.x86_64':b'\x7fELF fixture'})
+        self.release.package()
+        approved=dict(self.release.receipts['artifacts']['linux'])
+        # A later platform-only commit changes the runtime fingerprint.
+        self.release.runtime_hash=lambda:'android-version-code-commit'
+        self.add('web',{'index.html':b'<canvas></canvas>','index.wasm':b'\0asm'})
+        with self.assertRaises(RuntimeError): self.release.package()
+        self.release.package(['web'])
+        self.assertIn('package',self.release.receipts['artifacts']['web'])
+        self.assertEqual(self.release.receipts['artifacts']['linux'],approved)
     def test_tampered_raw_export_rejected(self):
         raw=self.add('windows',{'DontTouchMe.exe':b'MZ fixture'})
         (raw/'DontTouchMe.exe').write_bytes(b'changed')
