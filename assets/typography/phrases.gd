@@ -9,7 +9,7 @@ const PHRASES := {
 	"Don't.": {"texture": preload("res://assets/typography/phrase-03.png"), "advance": 394.0000, "ascent": 107.0000},
 	"Seriously?": {"texture": preload("res://assets/typography/phrase-04.png"), "advance": 663.0000, "ascent": 107.0000},
 	"Can't touch this.": {"texture": preload("res://assets/typography/phrase-05.png"), "advance": 1135.0000, "ascent": 107.0000},
-	"STOP.": {"texture": preload("res://assets/typography/phrase-06.png"), "advance": 438.0000, "ascent": 107.0000},
+	"STOP.": {"texture": preload("res://assets/typography/phrase-06.png"), "advance": 493.0000, "ascent": 120.0000, "base": 180.0},
 	"I was DREAMING.": {"texture": preload("res://assets/typography/phrase-07.png"), "advance": 1362.0000, "ascent": 107.0000},
 	"NO": {"texture": preload("res://assets/typography/phrase-08.png"), "advance": 225.0000, "ascent": 107.0000},
 	"definitely empty": {"texture": preload("res://assets/typography/phrase-09.png"), "advance": 1084.0000, "ascent": 107.0000},

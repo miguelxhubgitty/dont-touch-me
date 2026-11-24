@@ -44,7 +44,16 @@ func _initialize() -> void:
 		check(image.get_width() > entry.advance and image.get_height() > entry.ascent, "Phrase padding prevents clipping: " + phrase)
 		check(image.detect_alpha() != Image.ALPHA_NONE, "Transparent phrase background: " + phrase)
 		for size in [19, 23, 24, 31, 34, 43]:
-			check(is_equal_approx(Typography.width(phrase, size), float(entry.advance) * size / Typography.Phrases.BASE_SIZE), "Runtime width matches rendered phrase")
+			check(is_equal_approx(Typography.width(phrase, size), float(entry.advance) * size / Typography.base_size(entry)), "Runtime width matches rendered phrase")
+	# Release standard: every phrase image is at least 4x its largest display size
+	# (BRANCH_WORKFLOW.md). Sizes come from blob.gd and generate_assets.gd.
+	var largest := {"a little personal space, please.": 24, "(especially the little one)": 19,
+		"A tiny interactive comedy.": 19, "Don't.": 31, "Seriously?": 31, "Can't touch this.": 31,
+		"STOP.": 43, "I was DREAMING.": 31, "NO": 34, "definitely empty": 19}
+	for phrase in Typography.Phrases.PHRASES:
+		check(largest.has(phrase), "Largest display size recorded for: " + phrase)
+		var density := Typography.base_size(Typography.Phrases.PHRASES[phrase]) / float(largest.get(phrase, 1))
+		check(density >= 4.0, "Phrase meets 4x density (%.2fx): %s" % [density, phrase])
 	for width in [720, 960]:
 		check(Typography.width("Don't Touch Me", 40, true) + 36 < width, "Title fits reference phone/tablet")
 		check(Typography.width("a little personal space, please.", 23) + 36 < width, "Handwritten intro fits reference phone/tablet")
