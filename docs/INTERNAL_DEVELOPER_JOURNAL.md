@@ -570,3 +570,7 @@ Verification:
 - `tests/adobe_playable.gd` now fails if any `Polygon2D` remains in the shipping scene, or if the replacement eyes differ from the authored polygon, colour or position.
 
 `main` has the same authored renderer and the same bug; the fix needs a separate backport PR. When the project moves to Godot 4.8+, the swap can be removed.
+
+## 0.1.1 release tooling — package provenance review (2026-11-24)
+
+Follow-up to `cd31d6f`: `release/tools/github_release.py::check_source_commit` now rejects missing provenance, invalid commits, and unreadable or absent target export presets when comparing an older build with the intended tag. Previously a missing source bypassed the check, and two absent presets could compare equal. The regression fixtures in `tests/test_github_release.py` create their own tiny Git histories so they exercise the new gates even in a shallow CI checkout; the direct unittest entry point runs after all test classes. This is release-tool-only: no gameplay, assets, signing, package rebuild, tag or publication changes. The existing approved desktop/Web and Android checksums and their original source commits must be retained. CI and the offline prepare check on the actual local packages are separate verification gates; neither is claimed by this journal entry.
