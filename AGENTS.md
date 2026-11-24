@@ -58,6 +58,10 @@ Implementation of those opportunities requires owner authorization. If an out-of
 
 ## Planning and tracking
 
+- For a new or resumed planning chat, read [PLANNING.md on docs/planning-history](https://github.com/miguelxhubgitty/dont-touch-me/blob/docs/planning-history/PLANNING.md) first, then reconcile against current PRs and canonical project/release files. It is the compact conversation handoff, not a substitute for this file, the roadmap or the journal.
+- At meaningful planning milestones and owner-requested checkpoints, update that single file in place with dated decisions, progress, blockers and next steps. Commit planning-history updates directly to its permanent branch only; never merge, delete or rewrite that branch. This is a narrow documentation exception to the normal topic-branch/PR workflow, not permission for implementation or publication.
+- The repository and all its branches are public. Exclude credentials, private transcripts, personal information and sensitive records. Preserve explicit approvals and distinguish proposed, tested and published work. Do not imply that a chat can save updates while inactive.
+
 - Before changing gameplay, check `GAME_ROADMAP.md` and the relevant files under `plans/` for proposed features and reported bugs.
 - Treat newly reported bugs and feature ideas as **plans**, not as authorization to immediately implement, regenerate assets, or change a published release. Record a focused plan with observed behavior, investigation, acceptance criteria and target release when appropriate.
 - Keep planning commits distinct from implementation commits. When implementing an approved item, update its status and reference the implementation commit; do not mark an item complete without validation.
