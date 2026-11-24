@@ -4,6 +4,7 @@ const Blob = preload("res://scripts/blob.gd")
 const Authoring = preload("res://release/tools/generate_typography.gd")
 var failures := 0
 var checks := 0
+var audio_cleanup = preload("res://tests/audio_test_cleanup.gd").new()
 
 func check(ok: bool, message: String) -> void:
 	checks += 1
@@ -48,5 +49,30 @@ func _initialize() -> void:
 		check(Typography.width("Don't Touch Me", 40, true) + 36 < width, "Title fits reference phone/tablet")
 		check(Typography.width("a little personal space, please.", 23) + 36 < width, "Handwritten intro fits reference phone/tablet")
 	check(not FileAccess.file_exists("res://assets/fonts/Inkfree.ttf"), "No proprietary font file is bundled")
+	_check_hud.call_deferred()
+
+## Release HUD text uses Space Grotesk, including the generated Settings panel.
+## Deferred: the scene's _ready (which builds the panel) runs once the tree is live.
+func _check_hud() -> void:
+	audio_cleanup.attach(self)
+	var scene: Node = load("res://main.tscn").instantiate()
+	root.add_child(scene)
+	scene.set_process(false)
+	var sound: Button = scene.get_node("SoundHUD/SoundButton")
+	var settings: Button = scene.get_node("SoundHUD/VolumeButton")
+	var hud: Array[Control] = [sound, settings]
+	var pending: Array[Node] = [settings.panel]
+	while not pending.is_empty():
+		var node: Node = pending.pop_back()
+		if node is Label or node is Button or node is Range:
+			hud.append(node)
+		pending.append_array(node.get_children())
+	check(hud.size() >= 12, "HUD controls found: %d" % hud.size())
+	for control in hud:
+		var resolved: Font = control.get_theme_font("font")
+		check(resolved != null and resolved.get_font_name().begins_with("Space Grotesk"), "HUD text uses Space Grotesk: " + control.name)
+	for text in ["Sound Off", "Sound On", "Settings"]:
+		var font: Font = sound.get_theme_font("font")
+		check(font.get_string_size(text, HORIZONTAL_ALIGNMENT_LEFT, -1, 24).x + 24 < sound.size.x, "HUD label fits its button: " + text)
 	print("Typography: %d checks; %d failures" % [checks, failures])
-	quit(1 if failures else 0)
+	await audio_cleanup.finish(self, 1 if failures else 0)
