@@ -1,7 +1,5 @@
 # Don't Touch Me 0.1.1
 
-Draft for owner review. Prepared, not published or store-approved.
-
 The blob has opinions, and now you can hear them.
 
 ## New
@@ -22,5 +20,5 @@ The blob has opinions, and now you can hear them.
 ## Notes
 
 - **Android:** 0.1.1 uses the Google Play app ID. It cannot update the 0.1.0 Alpha test APK in place; uninstall that first.
-- Windows and macOS builds are unsigned (macOS is ad-hoc signed, not notarized). Linux is not native-tested.
+- Windows and macOS builds are unsigned (macOS is ad-hoc signed, not notarized). The Linux and macOS builds have not been tested on native hardware. The Web build was tested in Chromium, Edge and Firefox, not Safari. Android was checked automatically, not on a physical phone.
 - Still free and offline, with no ads, accounts, purchases or analytics.
