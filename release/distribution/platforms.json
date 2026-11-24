@@ -39,8 +39,8 @@
       "publication": {
         "status": "published",
         "live_url": "https://wandiel.itch.io/dont-touch-me",
-        "last_successfully_published_version": "v0.1.0-alpha",
-        "publication_date": "2026-10-31",
+        "last_successfully_published_version": "v0.1.1",
+        "publication_date": "2026-11-24",
         "artifacts": [
           "windows",
           "web",
@@ -48,8 +48,22 @@
           "macos",
           "android-debug"
         ],
-        "evidence": "release/distribution/manifest-v0.1.0-alpha.json",
-        "note": "Windows and Web were published on 2026-10-31; Linux, macOS and the debug APK were verified anonymously on 2026-11-01, with exact upload dates unknown."
+        "evidence": "Pushed with butler 15.32.0 on 2026-11-24 (userversion 0.1.1, from release/0.1.1 7fa2a15 packages); butler status shows all five channels on 0.1.1 and the public page lists Version 0.1.1 for each download. Earlier builds remain in each channel history.",
+        "note": "Linux and macOS not native-tested; Web tested in Chromium, Edge and Firefox, not Safari; the APK is a debug test build, not the Play release.",
+        "previous_versions": [
+          {
+            "version": "v0.1.0-alpha",
+            "publication_date": "2026-10-31",
+            "note": "Windows and Web were published on 2026-10-31; Linux, macOS and the debug APK were verified anonymously on 2026-11-01, with exact upload dates unknown."
+          }
+        ],
+        "channels": {
+          "windows": "build 2492290",
+          "linux": "build 2492292",
+          "macos": "build 2492293",
+          "html5": "build 2492294",
+          "android-experimental-debug": "build 2492295"
+        }
       },
       "required_assets": [
         "assets.branding",
@@ -239,79 +253,85 @@
       "console_review_required": true,
       "publication": {
         "status": "published",
-        "live_url": "https://github.com/miguelxhubgitty/dont-touch-me/releases/tag/v0.1.0-alpha",
-        "last_successfully_published_version": "v0.1.0-alpha",
-        "publication_date": "2026-10-31",
-        "published_at": "2026-11-01T01:32:15Z",
+        "live_url": "https://github.com/miguelxhubgitty/dont-touch-me/releases/tag/v0.1.1",
+        "last_successfully_published_version": "v0.1.1",
+        "publication_date": "2026-11-24",
+        "published_at": "2026-11-24T20:50:03Z",
         "prerelease": true,
-        "tag_commit": "d61c86568b40c23a291db7aa2757ffe82e1896e8",
-        "release_id": 430296808,
-        "verified_at": "2026-11-01T01:32:29.421110+00:00",
+        "tag_commit": "7f6a992470b6b59cfe2b709166e63062896658b8",
+        "release_id": 457318472,
+        "verified_at": "2026-11-24T20:50:18.285849+00:00",
         "assets": [
           {
             "target": "windows",
-            "path": "windows/DontTouchMe-v0.1.0-alpha-windows.zip",
-            "name": "DontTouchMe-v0.1.0-alpha-windows.zip",
+            "path": "windows/DontTouchMe-v0.1.1-windows.zip",
+            "name": "DontTouchMe-v0.1.1-windows.zip",
             "label": "Windows ZIP — unsigned",
-            "sha256": "42a43d68e9c0dd2af46da6dfa6f74d32b4e4c2242a68771dc046900134bcbdc9",
-            "size": 38715912,
-            "url": "https://github.com/miguelxhubgitty/dont-touch-me/releases/download/v0.1.0-alpha/DontTouchMe-v0.1.0-alpha-windows.zip"
+            "sha256": "1f9ff611982995e6134da8403ab81513338fc5167d4df9b42ae0a0974d784738",
+            "size": 39261195,
+            "source_commit": "7fa2a1553910211882e714c9f1dea6e6ceb4ff7b",
+            "url": "https://github.com/miguelxhubgitty/dont-touch-me/releases/download/v0.1.1/DontTouchMe-v0.1.1-windows.zip"
           },
           {
             "target": "linux",
-            "path": "linux/DontTouchMe-v0.1.0-alpha-linux.zip",
-            "name": "DontTouchMe-v0.1.0-alpha-linux.zip",
+            "path": "linux/DontTouchMe-v0.1.1-linux.zip",
+            "name": "DontTouchMe-v0.1.1-linux.zip",
             "label": "Linux ZIP — not native-tested",
-            "sha256": "1788065ce5019eb1594c86b8f784e88607b5d8459d32cdc20875bf0e78747427",
-            "size": 29088537,
-            "url": "https://github.com/miguelxhubgitty/dont-touch-me/releases/download/v0.1.0-alpha/DontTouchMe-v0.1.0-alpha-linux.zip"
+            "sha256": "04914560fc6bd28356f1def8f49e8ca93d876df2bb74091fd9f2cd12c5741ef6",
+            "size": 29634559,
+            "source_commit": "7fa2a1553910211882e714c9f1dea6e6ceb4ff7b",
+            "url": "https://github.com/miguelxhubgitty/dont-touch-me/releases/download/v0.1.1/DontTouchMe-v0.1.1-linux.zip"
           },
           {
             "target": "macos",
-            "path": "macos/DontTouchMe-v0.1.0-alpha-macos.zip",
-            "name": "DontTouchMe-v0.1.0-alpha-macos.zip",
-            "label": "macOS ZIP — ad-hoc signed, not Developer ID signed/notarized; Intel native-tested",
-            "sha256": "b7854c72f0a1389830acc5eae92db9e1c3e058a3ce5bb610333a6e2e4f4bca66",
-            "size": 59863757,
-            "url": "https://github.com/miguelxhubgitty/dont-touch-me/releases/download/v0.1.0-alpha/DontTouchMe-v0.1.0-alpha-macos.zip"
+            "path": "macos/DontTouchMe-v0.1.1-macos.zip",
+            "name": "DontTouchMe-v0.1.1-macos.zip",
+            "label": "macOS ZIP — ad-hoc signing default; notarization/native testing not implied",
+            "sha256": "3457dc07c29c7a96c9f17aab8dbb99cdcc2304a2fd9bad6dd5c9fd647e37996f",
+            "size": 61687221,
+            "source_commit": "7fa2a1553910211882e714c9f1dea6e6ceb4ff7b",
+            "url": "https://github.com/miguelxhubgitty/dont-touch-me/releases/download/v0.1.1/DontTouchMe-v0.1.1-macos.zip"
           },
           {
             "target": "web",
-            "path": "web/DontTouchMe-v0.1.0-alpha-web.zip",
-            "name": "DontTouchMe-v0.1.0-alpha-web.zip",
+            "path": "web/DontTouchMe-v0.1.1-web.zip",
+            "name": "DontTouchMe-v0.1.1-web.zip",
             "label": "HTML5 Web ZIP — host over HTTP(S)",
-            "sha256": "a83c11065a9e0eb893aca487ebe8c7873a990de0acb00bc291f7d90c8cb6cb70",
-            "size": 10903361,
-            "url": "https://github.com/miguelxhubgitty/dont-touch-me/releases/download/v0.1.0-alpha/DontTouchMe-v0.1.0-alpha-web.zip"
+            "sha256": "78603858a3eb8fafc03242a3156da25c9b360d20221129ad0581b718b053d05c",
+            "size": 11448079,
+            "source_commit": "7fa2a1553910211882e714c9f1dea6e6ceb4ff7b",
+            "url": "https://github.com/miguelxhubgitty/dont-touch-me/releases/download/v0.1.1/DontTouchMe-v0.1.1-web.zip"
           },
           {
             "target": "android-apk",
             "path": "android/raw-android-apk/dont-touch-me-debug.apk",
             "name": "dont-touch-me-debug.apk",
             "label": "Android debug-signed APK — TESTING BUILD, not production signing",
-            "sha256": "159ecbab25ad21bf57f3b5aec2b27b5b6e283ce4b8c2c41a4cf02fb80ed08edd",
-            "size": 28918307,
-            "url": "https://github.com/miguelxhubgitty/dont-touch-me/releases/download/v0.1.0-alpha/dont-touch-me-debug.apk"
+            "sha256": "02b278bc8d0601da52bac018b43c8f6dbe4c9241c46d7223fd918c059eb2c88b",
+            "size": 29522807,
+            "source_commit": "7fa2a1553910211882e714c9f1dea6e6ceb4ff7b",
+            "url": "https://github.com/miguelxhubgitty/dont-touch-me/releases/download/v0.1.1/dont-touch-me-debug.apk"
           },
           {
             "target": "checksums",
             "path": "SHA256SUMS",
             "name": "SHA256SUMS",
-            "label": "SHA-256 ledger with corrected macOS package entry; historical raw entries retained",
-            "sha256": "817eeb805dfe0625c751b335357e31453ba203f3ae0426a8d30f57fa2d65fd0b",
-            "size": 14374,
-            "url": "https://github.com/miguelxhubgitty/dont-touch-me/releases/download/v0.1.0-alpha/SHA256SUMS"
+            "label": "Original local handoff SHA-256 ledger (paths relative to the build directory)",
+            "sha256": "1b48518088734adc63fe411ea9ee1671130759c40a1552f1493f18046ee3c982",
+            "size": 15373,
+            "url": "https://github.com/miguelxhubgitty/dont-touch-me/releases/download/v0.1.1/SHA256SUMS"
           }
         ],
-        "macos_packaging_correction": {
-          "date": "2026-11-01",
-          "tag_unchanged": true,
-          "game_content_unchanged": true,
-          "anonymous_downloads_verified": true,
-          "previous_macos_sha256": "111bffb1bbf431422a250a94dba919f1b16af7cef37614336ef956d7a325e7fa",
-          "signing": "ad-hoc signed; not Developer ID signed or notarized",
-          "native_testing": "Intel macOS startup, mouse reactions, sleep/wake and resizing passed"
-        }
+        "previous_versions": [
+          {
+            "version": "v0.1.0-alpha",
+            "live_url": "https://github.com/miguelxhubgitty/dont-touch-me/releases/tag/v0.1.0-alpha",
+            "tag_commit": "d61c86568b40c23a291db7aa2757ffe82e1896e8",
+            "release_id": 430296808,
+            "publication_date": "2026-10-31"
+          }
+        ],
+        "evidence": "builds/v0.1.1/github/publication.json: every asset downloaded anonymously and its SHA-256 matched."
       },
       "required_assets": [
         "assets.branding",
