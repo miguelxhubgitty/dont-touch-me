@@ -25,8 +25,12 @@ class Publishing(unittest.TestCase):
     def test_existing_packages_and_no_aab(self):
         if not (self.out/'manifest.json').exists(): self.skipTest('Existing local Alpha packages unavailable; no builds generated')
         prepared,_=module.plan()
-        self.assertEqual({a['target'] for a in prepared['assets']},{'windows','linux','macos','web','android-apk','checksums'})
+        self.assertEqual({a['target'] for a in prepared['assets']},{'windows','linux','macos','web','checksums'})
+        self.assertFalse(any(a['name'].endswith('.apk') for a in prepared['assets']))
         self.assertFalse(any(a['name'].endswith('.aab') for a in prepared['assets']))
+    def test_android_packages_never_targeted(self):
+        self.assertNotIn('android-apk', module.TARGETS)
+        self.assertFalse(any(ext in module.NON_PUBLIC_EXTENSIONS for _, ext in module.TARGETS.values()))
     def test_approval_and_tag_guards_before_writes(self):
         api=FakeApi(self.prepared)
         with self.assertRaises(ValueError): module.publish(self.prepared,self.out,api,'',self.prepared['source_commit'])

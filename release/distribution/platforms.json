@@ -45,11 +45,10 @@
           "windows",
           "web",
           "linux",
-          "macos",
-          "android-debug"
+          "macos"
         ],
         "evidence": "Pushed with butler 15.32.0 on 2026-11-24 (userversion 0.1.1, from release/0.1.1 7fa2a15 packages); butler status shows all five channels on 0.1.1 and the public page lists Version 0.1.1 for each download. Earlier builds remain in each channel history.",
-        "note": "Linux and macOS not native-tested; Web tested in Chromium, Edge and Firefox, not Safari; the APK is a debug test build, not the Play release.",
+        "note": "Linux and macOS not native-tested; Web tested in Chromium, Edge and Firefox, not Safari. Debug APK removed from public download on 2026-11-24 at the owner's request (GitHub asset deleted; itch upload hidden). Debug APKs are never distributed publicly.",
         "previous_versions": [
           {
             "version": "v0.1.0-alpha",
@@ -61,8 +60,7 @@
           "windows": "build 2492290",
           "linux": "build 2492292",
           "macos": "build 2492293",
-          "html5": "build 2492294",
-          "android-experimental-debug": "build 2492295"
+          "html5": "build 2492294"
         }
       },
       "required_assets": [
@@ -303,16 +301,6 @@
             "url": "https://github.com/miguelxhubgitty/dont-touch-me/releases/download/v0.1.1/DontTouchMe-v0.1.1-web.zip"
           },
           {
-            "target": "android-apk",
-            "path": "android/raw-android-apk/dont-touch-me-debug.apk",
-            "name": "dont-touch-me-debug.apk",
-            "label": "Android debug-signed APK — TESTING BUILD, not production signing",
-            "sha256": "02b278bc8d0601da52bac018b43c8f6dbe4c9241c46d7223fd918c059eb2c88b",
-            "size": 29522807,
-            "source_commit": "7fa2a1553910211882e714c9f1dea6e6ceb4ff7b",
-            "url": "https://github.com/miguelxhubgitty/dont-touch-me/releases/download/v0.1.1/dont-touch-me-debug.apk"
-          },
-          {
             "target": "checksums",
             "path": "SHA256SUMS",
             "name": "SHA256SUMS",
@@ -331,7 +319,8 @@
             "publication_date": "2026-10-31"
           }
         ],
-        "evidence": "builds/v0.1.1/github/publication.json: every asset downloaded anonymously and its SHA-256 matched."
+        "evidence": "builds/v0.1.1/github/publication.json: every asset downloaded anonymously and its SHA-256 matched.",
+        "note": "Debug APK removed from public download on 2026-11-24 at the owner's request (GitHub asset deleted; itch upload hidden). Debug APKs are never distributed publicly."
       },
       "required_assets": [
         "assets.branding",
