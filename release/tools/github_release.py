@@ -43,15 +43,23 @@ def preset_sections(text, name):
     return None
 
 def check_source_commit(target, source, tag_commit, root=ROOT):
-    if not source or source == tag_commit:
-        return
+    if not isinstance(source, str) or not source.strip():
+        raise ValueError(f'{target}: missing package source commit')
     run = lambda *a: subprocess.run(['git', *a], cwd=root, capture_output=True, text=True)
     if run('merge-base', '--is-ancestor', source, tag_commit).returncode != 0:
         raise ValueError(f'{target} was built from {source[:7]}, which is not an ancestor of {tag_commit[:7]}')
+    if source == tag_commit:
+        return
     if run('diff', '--quiet', source, tag_commit, '--', *RUNTIME_PATHS).returncode != 0:
         raise ValueError(f'{target}: game files changed since its source commit {source[:7]}; re-export it')
-    old, new = (run('show', f'{c}:export_presets.cfg').stdout for c in (source, tag_commit))
-    if preset_sections(old, PRESET_NAMES[target]) != preset_sections(new, PRESET_NAMES[target]):
+    presets = []
+    for commit in (source, tag_commit):
+        result = run('show', f'{commit}:export_presets.cfg')
+        preset = preset_sections(result.stdout, PRESET_NAMES[target]) if result.returncode == 0 else None
+        if preset is None:
+            raise ValueError(f'{target}: cannot verify its export preset at {commit[:7]}')
+        presets.append(preset)
+    if presets[0] != presets[1]:
         raise ValueError(f'{target}: its export preset changed since {source[:7]}; re-export it')
 
 def plan(root=ROOT):
