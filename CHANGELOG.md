@@ -7,6 +7,7 @@
 - Versions: game 0.1.1; Windows/MSIX 0.1.1.0; macOS 0.1.1 (3); iOS 0.1.1 (2); Android 0.1.1 (version code 4, verified in Play Console). Web, Linux and macOS presets restored.
 - The Android app ID changes to the Play ID `com.wandiel.donttouchme`, so the Alpha's sideloaded test APK does not upgrade in place.
 - Web: the authored eyes and mouth are drawn with `draw_colored_polygon` instead of `Polygon2D`, avoiding a Godot 4.7.2 WebGL index-buffer bug ([godotengine/godot#124726](https://github.com/godotengine/godot/issues/124726)) that flooded the console with `INVALID_OPERATION` warnings and dropped index updates. Rendering is pixel-identical.
+- Web: sound now reaches the speakers. Godot 4.7.2's web audio placed runtime-created buses ahead of Master, so the volume-category sends formed a loop with no output. Buses are now appended with `AudioServer.set_bus_count` (PR #73). All 0.1.1 packages were rebuilt from `7fa2a15`; the earlier build is archived as superseded.
 
 ## 0.1.0-alpha — GitHub public prerelease — October 31, 2026
 
