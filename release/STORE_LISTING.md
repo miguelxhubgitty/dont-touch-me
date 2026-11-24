@@ -58,7 +58,7 @@ blob,comedy,casual,minimalist,offline,interactive,character,funny,expressions
 
 ## Version 1.0 release notes
 
-Meet the blob. Discover 17 expressive reactions, a special wake-up reaction, and a firm objection to being poked. Version 1.0 introduces the complete offline game.
+Don't Touch Me 0.1.1. The blob now has a voice (sound starts off), two new reactions, idle stretches, hums and yawns, and a Settings menu for volume and orientation. It falls asleep after 18 seconds, and jumps and slides always finish. Free and offline, with no ads, accounts or purchases.
 
 ## Rating and audience guidance
 
