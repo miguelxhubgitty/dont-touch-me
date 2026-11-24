@@ -4,6 +4,7 @@ const VisualScene = preload("res://scenes/blob/blob.tscn")
 const AUTHORED_REACTIONS := {Reaction.BLINK:"reaction_blink",Reaction.SIDE_EYE:"reaction_side_eye",Reaction.SQUISH:"reaction_squish",Reaction.IRRITATED:"reaction_irritated",Reaction.DONT:"reaction_dont",Reaction.SERIOUSLY:"reaction_seriously",Reaction.SLIDE:"reaction_slide",Reaction.JUMP:"reaction_jump",Reaction.SHAKE:"reaction_shake",Reaction.FLATTEN:"reaction_flatten",Reaction.TURN:"reaction_turn",Reaction.STOP:"reaction_stop",Reaction.SIGN:"reaction_sign",Reaction.BOX:"reaction_box",Reaction.RUN:"reaction_run",Reaction.WAKE:"reaction_wake",Reaction.RECOIL:"reaction_recoil",Reaction.PUFFER_HUFF:"reaction_puffer_huff"}
 const MODEL_EYE_REACTIONS := [Reaction.FLATTEN, Reaction.TURN, Reaction.STOP, Reaction.SIGN, Reaction.BOX, Reaction.RUN, Reaction.WAKE, Reaction.RECOIL, Reaction.PUFFER_HUFF]
 const BubbleDrawer = preload("res://scripts/bubble_foreground.gd")
+const FlatPolygon2D = preload("res://scripts/flat_polygon_2d.gd")
 
 class Props extends Node2D:
 	var actor
@@ -37,9 +38,9 @@ var visual_reaction := Reaction.NONE
 var reaction_templates: Dictionary = {}
 var pending_entry: Dictionary = {}
 var bubble_drawer: Node2D
-var left_eye: Polygon2D
-var right_eye: Polygon2D
-var mouth: Polygon2D
+var left_eye: FlatPolygon2D
+var right_eye: FlatPolygon2D
+var mouth: FlatPolygon2D
 var oval_eye := PackedVector2Array()
 var eyes_morphed := false
 var turn_details: TurnDetails
@@ -52,6 +53,10 @@ func _ready() -> void:
 		outline_bounds = Rect2(idle_outline[0],Vector2.ZERO)
 		for point in idle_outline: outline_bounds = outline_bounds.expand(point)
 	add_child(visual)
+	# Polygon2D redraws hit a Godot 4.7.2 WebGL bug (see flat_polygon_2d.gd). Swap the eyes
+	# before the AnimationPlayer starts so its Left/Right track paths resolve to the new nodes.
+	for eye_name in ["Left", "Right"]:
+		FlatPolygon2D.replace(visual.get_node("Breathing/Eyes/" + eye_name))
 	breathing = visual.get_node("Breathing")
 	player = visual.get_node("BreathingPlayer")
 	# Native resources are editable/shared on disk, but entry/exit keys are local.
@@ -76,7 +81,7 @@ func _ready() -> void:
 	left_eye = eyes.get_node("Left")
 	right_eye = eyes.get_node("Right")
 	oval_eye = left_eye.polygon
-	mouth = Polygon2D.new()
+	mouth = FlatPolygon2D.new()
 	mouth.color = YAWN_PINK
 	mouth.hide()
 	breathing.add_child(mouth)
