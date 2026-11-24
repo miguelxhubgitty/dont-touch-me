@@ -72,7 +72,9 @@ func _ensure_preview_buses() -> void:
 	for bus_name in ["UserSFX", "CharacterVoice", "CharacterSFX", "Environment", "Music"]:
 		if AudioServer.get_bus_index(bus_name) != -1:
 			continue
-		AudioServer.add_bus()
+		# Not add_bus(): Godot 4.7.2's web audio inserts runtime-added buses before Master,
+		# looping the sends with no route to the speakers (plans/web-audio-bus-order.md).
+		AudioServer.set_bus_count(AudioServer.get_bus_count() + 1)
 		var index := AudioServer.get_bus_count() - 1
 		AudioServer.set_bus_name(index, bus_name)
 		AudioServer.set_bus_send(index, "Master")

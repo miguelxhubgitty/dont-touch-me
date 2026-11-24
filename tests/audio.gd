@@ -54,6 +54,16 @@ func run() -> void:
 	check(AudioServer.get_bus_index("CharacterSFX") >= 0, "action bus exists")
 	check(AudioServer.get_bus_index("Environment") >= 0, "environment bus reserved")
 	check(AudioServer.get_bus_index("Music") >= 0, "music bus reserved")
+	# Web regression (plans/web-audio-bus-order.md): category buses are appended after Master,
+	# in order, each sending to Master; bus creation must not use add_bus() (it misorders Web buses).
+	check(AudioServer.get_bus_name(0) == "Master", "Master stays bus 0")
+	var bus_names := ["UserSFX", "CharacterVoice", "CharacterSFX", "Environment", "Music"]
+	var first := AudioServer.get_bus_index(bus_names[0])
+	for offset in bus_names.size():
+		check(AudioServer.get_bus_index(bus_names[offset]) == first + offset, bus_names[offset] + " is appended in order")
+		check(AudioServer.get_bus_send(first + offset) == &"Master", bus_names[offset] + " sends to Master")
+	var manager_source := FileAccess.get_file_as_string("res://scripts/audio_manager.gd")
+	check(not manager_source.contains("AudioServer.add_bus("), "buses are not created with add_bus()")
 	var covered := {}
 	# Exercise all configured cues, including optional ones, through real reactions.
 	for pass_index in range(2):
