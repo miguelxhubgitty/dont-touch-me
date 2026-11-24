@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "shared_catalog": "release/catalog/game.json",
-  "policy": "All destinations remain unpublished. Never infer publication from a local build or source push. Publication updates require verified live URL/version/date and owner authorization.",
+  "policy": "Record only verified publications. itch.io, Game Jolt and GitHub Releases carry the published v0.1.0-alpha (see release/distribution/manifest-v0.1.0-alpha.json). Every other destination is unpublished. Never infer publication from a local build, source push, upload or store record. Publication updates require a verified live URL/version/date and owner authorization.",
   "platforms": [
     {
       "id": "itch",
@@ -37,9 +37,19 @@
       "requirements_checked": "2026-10-31",
       "console_review_required": true,
       "publication": {
-        "status": "not_published",
-        "live_url": null,
-        "last_successfully_published_version": null
+        "status": "published",
+        "live_url": "https://wandiel.itch.io/dont-touch-me",
+        "last_successfully_published_version": "v0.1.0-alpha",
+        "publication_date": "2026-10-31",
+        "artifacts": [
+          "windows",
+          "web",
+          "linux",
+          "macos",
+          "android-debug"
+        ],
+        "evidence": "release/distribution/manifest-v0.1.0-alpha.json",
+        "note": "Windows and Web were published on 2026-10-31; Linux, macOS and the debug APK were verified anonymously on 2026-11-01, with exact upload dates unknown."
       },
       "required_assets": [
         "assets.branding",
@@ -98,9 +108,18 @@
       "requirements_checked": null,
       "console_review_required": true,
       "publication": {
-        "status": "not_published",
-        "live_url": null,
-        "last_successfully_published_version": null
+        "status": "published",
+        "live_url": "https://gamejolt.com/games/dont-touch-me/1114418",
+        "last_successfully_published_version": "v0.1.0-alpha",
+        "publication_date": null,
+        "artifacts": [
+          "windows",
+          "web",
+          "linux",
+          "macos"
+        ],
+        "evidence": "release/distribution/manifest-v0.1.0-alpha.json",
+        "note": "Published listing confirmed; per-build verification is partial and the exact date is unknown."
       },
       "required_assets": [
         "assets.branding",
@@ -943,7 +962,13 @@
       "publication": {
         "status": "not_published",
         "live_url": null,
-        "last_successfully_published_version": null
+        "last_successfully_published_version": null,
+        "pending_submission": {
+          "application_id": "com.wandiel.donttouchme",
+          "last_known_version_code": 3,
+          "status": "Existing Play app; live track status and highest version code unverified",
+          "note": "Verify the highest code in Play Console App bundle explorer before choosing the 0.1.1 code. See release/ANDROID_IDENTITY.md."
+        }
       },
       "required_assets": [
         "assets.branding",
@@ -1004,7 +1029,13 @@
       "publication": {
         "status": "not_published",
         "live_url": null,
-        "last_successfully_published_version": null
+        "last_successfully_published_version": null,
+        "pending_submission": {
+          "app_store_connect_version": "0.1.0",
+          "testflight_build": "0.1.0 (1)",
+          "status": "App Store Connect record and TestFlight build exist; not published. App Review status is not recorded here.",
+          "note": "Preserve unchanged. Version 0.1.1 (build 2) will be a new App Store Connect version. See release/IOS_EXPORT.md."
+        }
       },
       "required_assets": [
         "assets.branding",
