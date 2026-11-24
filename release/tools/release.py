@@ -23,7 +23,9 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[2]
 CATALOG = ROOT / 'release/catalog/game.json'
 REGISTRY = ROOT / 'release/distribution/platforms.json'
-TEXT = {'.gd', '.tres', '.tscn', '.godot', '.cfg', '.json', '.md', '.txt', '.import', '.uid'}
+# Must cover every extension the inventory hashes as utf8-lf (Android XML included),
+# or a Windows CRLF checkout hashes differently from verify_inventory.ps1.
+TEXT = {'.gd', '.tres', '.tscn', '.godot', '.cfg', '.json', '.md', '.txt', '.import', '.uid', '.xml'}
 TARGETS = {
     'windows': ('Windows', 'windows_release_x86_64.exe', 'DontTouchMe.exe', False),
     'web': ('Web', 'web_nothreads_release.zip', 'index.html', False),
@@ -64,6 +66,20 @@ def macos_signing_defaults(text):
         text, count = re.subn(pattern, migrate, text)
         if not count:
             text += f'\n[preset.{index}.options]\ncodesign/codesign=1\n'
+    return text
+
+def macos_versions(text, catalog):
+    """Version only macOS presets. iOS uses the same key names but has its own approved build."""
+    for match in list(re.finditer(r'(?m)^\[preset\.(\d+)\]\s*$', text)):
+        index = match[1]
+        section = re.search(r'(?ms)^\[preset\.'+index+r'\]\n(.*?)(?=^\[|\Z)', text)
+        if not section or not re.search(r'(?m)^platform="macOS"$', section[1]):
+            continue
+        def update(options):
+            body = re.sub(r'(?m)^application/short_version="[^"]+"', f'application/short_version="{catalog["native_version"]}"', options[2])
+            body = re.sub(r'(?m)^application/version="[^"]+"', f'application/version="{catalog["macos_build_version"]}"', body)
+            return options[1] + body
+        text = re.sub(r'(?ms)(^\[preset\.'+index+r'\.options\]\n)(.*?)(?=^\[|\Z)', update, text)
     return text
 
 def inspect_macos_zip(path):
@@ -293,8 +309,7 @@ def sync():
             index = len(re.findall(r'(?m)^\[preset\.\d+\]$', text))
             text += f'\n[preset.{index}]\nname="{name}"\nplatform="{target}"\n' + common + f'\n[preset.{index}.options]\n' + options
     # Ensure future syncs update existing macOS numeric versions too.
-    text = re.sub(r'(?m)^application/short_version="[^"]+"', f'application/short_version="{c["native_version"]}"', text)
-    text = re.sub(r'(?m)^application/version="[^"]+"', f'application/version="{c["macos_build_version"]}"', text)
+    text = macos_versions(text, c)
     check_android_presets(text, c)
     presets.write_text(audio_export_filters(macos_signing_defaults(text)), encoding='utf-8')
     print('Synchronized alpha metadata and six native/Web export presets; no images generated.')
@@ -317,6 +332,9 @@ def inventory_refresh():
 def asset_input():
     # Source-only invalidation: a docs change must not re-render screenshots.
     paths = ['scripts/blob.gd','scripts/typography.gd','release/tools/generate_assets.gd','release/tools/generate_branding.gd','icon.svg']
+    # Store screenshots render the shipping scene: its renderer and HUD sources count too.
+    paths += ['main.tscn','scripts/blob_animationplayer.gd','scenes/blob/blob.tscn','scripts/bubble_foreground.gd',
+              'scripts/audio_mute_button.gd','scripts/audio_volume_controls.gd','scripts/sound_hud_layout.gd','scripts/privacy_policy_button.gd']
     paths += [p.relative_to(ROOT).as_posix() for p in (ROOT / 'assets').rglob('*') if p.is_file() and p.suffix != '.uid']
     return {p: sha(ROOT / p, True) for p in sorted(set(paths))}
 
@@ -416,7 +434,7 @@ class Release:
         self.run([self.godot,'--path',ROOT,'--script','release/tools/generate_assets.gd','--','--finalize-release'], 'finalize-assets')
         self.run([self.godot,'--path',ROOT,'--script','release/tools/generate_branding.gd','--','--finalize-release'], 'finalize-branding')
         inventory_refresh()
-        save(receipt, {'inputs':inputs,'generated_at':stamp(),'phrases':'Reused approved complete-phrase graphics; no phrase regeneration.'})
+        save(receipt, {'inputs':inputs,'generated_at':stamp(),'phrases':'Used the cached complete-phrase graphics as committed; finalize-assets never renders phrases (generate_typography.gd does, separately).'})
         print('Final store captures generated once; inventory refreshed.')
 
     def runtime_hash(self):

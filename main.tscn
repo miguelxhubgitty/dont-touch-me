@@ -1,4 +1,4 @@
-[gd_scene load_steps=7 format=3]
+[gd_scene load_steps=8 format=3]
 
 [ext_resource type="Script" path="res://scripts/blob_animationplayer.gd" id="1"]
 
@@ -7,6 +7,7 @@
 [ext_resource type="Script" path="res://scripts/audio_volume_controls.gd" id="3"]
 [ext_resource type="Script" path="res://scripts/privacy_policy_button.gd" id="4"]
 [ext_resource type="Script" path="res://scripts/sound_hud_layout.gd" id="5"]
+[ext_resource type="Theme" path="res://assets/fonts/hud_theme.tres" id="6"]
 
 [sub_resource type="StyleBoxFlat" id="SoundButtonNormal"]
 bg_color = Color(0.91, 0.89, 0.85, 1)
@@ -32,6 +33,7 @@ offset_top = 20.0
 offset_right = -20.0
 offset_bottom = 100.0
 grow_horizontal = 0
+theme = ExtResource("6")
 theme_override_colors/font_color = Color(0.20, 0.19, 0.17, 1)
 theme_override_font_sizes/font_size = 24
 theme_override_styles/normal = SubResource("SoundButtonNormal")
@@ -43,6 +45,7 @@ offset_left = 20.0
 offset_top = 20.0
 offset_right = 182.0
 offset_bottom = 100.0
+theme = ExtResource("6")
 theme_override_colors/font_color = Color(0.20, 0.19, 0.17, 1)
 theme_override_font_sizes/font_size = 24
 theme_override_styles/normal = SubResource("SoundButtonNormal")

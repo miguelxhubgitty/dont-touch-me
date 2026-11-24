@@ -16,7 +16,12 @@ func _initialize() -> void:
 		return
 	call_deferred("run")
 
+## The Blob plays its start cue on _ready; drain that playback before quitting
+## so Godot reports no leak at exit (same helper as the test suites).
+var audio_cleanup = preload("res://tests/audio_test_cleanup.gd").new()
+
 func run() -> void:
+	audio_cleanup.attach(self)
 	var viewport := SubViewport.new()
 	viewport.size = Vector2i(630, 500)
 	viewport.render_target_update_mode = SubViewport.UPDATE_ALWAYS
@@ -39,4 +44,4 @@ func run() -> void:
 	var error := image.save_png("res://release/catalog/branding/itch-cover-630x500.png")
 	print("Actual-renderer 630x500 cover: ", error)
 	viewport.queue_free()
-	quit(error)
+	await audio_cleanup.finish(self, error)

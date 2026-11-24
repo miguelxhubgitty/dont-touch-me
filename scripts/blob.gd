@@ -1,4 +1,6 @@
 extends Node2D
+
+const Typography = preload("res://scripts/typography.gd")
 ## One clock owns every pose. No asynchronous reactions or overlapping tweens.
 const AudioManager = preload("res://scripts/audio_manager.gd")
 
@@ -117,7 +119,8 @@ var audio_manager: Node
 func _ready() -> void:
 	free_jump_enabled = free_jump_enabled or "--free-jump" in OS.get_cmdline_user_args()
 	rng.randomize()
-	font = ThemeDB.fallback_font
+	font = Typography.BODY_FONT
+	texture_filter = CanvasItem.TEXTURE_FILTER_LINEAR_WITH_MIPMAPS
 	_resize()
 	audio_manager = AudioManager.new()
 	audio_manager.name = "BlobAudio"
@@ -739,11 +742,11 @@ func _sleep_eye_fringe() -> float:
 	var screen := viewport_transform * body_transform
 	return 0.5 / maxf(0.01, screen.y.length())
 
-func _text_center(text: String, center: Vector2, size: int, color: Color, canvas: CanvasItem = null) -> void:
+func _text_center(text: String, center: Vector2, size: int, color: Color, canvas: CanvasItem = null, title := false) -> void:
 	if canvas == null:
 		canvas = self
-	var width := font.get_string_size(text, HORIZONTAL_ALIGNMENT_LEFT, -1, size).x
-	canvas.draw_string(font, center - Vector2(width * 0.5, 0), text, HORIZONTAL_ALIGNMENT_LEFT, -1, size, color)
+	var width := Typography.width(text, size, title)
+	Typography.draw_text(canvas, text, center - Vector2(width * 0.5, 0), size, color, title)
 
 func _draw() -> void:
 	if font == null:
@@ -751,7 +754,7 @@ func _draw() -> void:
 	# Restrained editorial title fades away after the first interaction.
 	if intro_alpha > 0.0:
 		_text_center("a little personal space, please.", Vector2(last_size.x * 0.5, last_size.y * 0.25), 23, Color(MUTED, intro_alpha))
-		_text_center("Don't Touch Me", Vector2(last_size.x * 0.5, last_size.y * 0.25 - 42), 40, Color(INK, intro_alpha))
+		_text_center("Don't Touch Me", Vector2(last_size.x * 0.5, last_size.y * 0.25 - 42), 40, Color(INK, intro_alpha), self, true)
 		_text_center("(especially the little one)", Vector2(last_size.x * 0.5, last_size.y * 0.84), 19, Color(MUTED, intro_alpha * 0.8))
 	var height := maxf(0.0, anchor.y - body_position.y)
 	_ellipse(Vector2(body_position.x, anchor.y + 5), Vector2(111.0 - minf(height * 0.2, 45), 13), Color(0.35, 0.31, 0.24, 0.075))
@@ -841,7 +844,7 @@ func _draw_bubble(canvas: CanvasItem = null) -> void:
 	if canvas == null:
 		canvas = self
 	var size := 31 if reaction != Reaction.STOP else 43
-	var width := font.get_string_size(bubble, HORIZONTAL_ALIGNMENT_LEFT, -1, size).x + 54.0
+	var width := Typography.width(bubble, size) + 54.0
 	var center := Vector2(clampf(body_position.x, width * 0.5 + 18, last_size.x - width * 0.5 - 18), maxf(110, body_position.y - 290))
 	center.y += (1.0 - bubble_alpha) * 10.0
 	var paper := Color(WHITE, bubble_alpha)

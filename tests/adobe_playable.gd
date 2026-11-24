@@ -14,6 +14,25 @@ func run() -> void:
 	await process_frame
 	var checks := 0
 	var failures := 0 if actor.free_jump_enabled and actor.use_adobe_idle and actor.use_adobe_reactions else 1
+	# Polygon2D redraws break on Web in Godot 4.7.2 (godotengine/godot#124726), so the
+	# shipping scene must not contain any; the eyes keep the authored shape and colour.
+	var pending: Array[Node] = [actor]
+	while not pending.is_empty():
+		var node: Node = pending.pop_back()
+		checks += 1
+		if node is Polygon2D:
+			failures += 1
+			printerr("FAIL: Polygon2D in shipping scene: ", node.get_path())
+		pending.append_array(node.get_children())
+	var authored_art: Node = preload("res://scenes/blob/blob.tscn").instantiate()
+	for eye_name in ["Left", "Right"]:
+		var source: Polygon2D = authored_art.get_node("Breathing/Eyes/" + eye_name)
+		var eye: Node2D = actor.visual.get_node("Breathing/Eyes/" + eye_name)
+		checks += 1
+		if eye.polygon != source.polygon or eye.color != source.color or eye.position != source.position:
+			failures += 1
+			printerr("FAIL: replacement eye differs from authored art: ", eye_name)
+	authored_art.free()
 	for authored in [true,false]:
 		actor.use_adobe_idle = authored
 		for which in actor.DURATIONS:
