@@ -50,3 +50,24 @@ class Publishing(unittest.TestCase):
         self.assertFalse(any(m in ('POST','PATCH','DELETE') for m,r in api.calls))
 
 if __name__=='__main__': unittest.main()
+
+
+class MixedSourceCommits(unittest.TestCase):
+    """Packages from an earlier commit are accepted only if nothing that ships changed."""
+    def test_preset_sections_pick_one_platform(self):
+        text = '[preset.0]\nname="Android"\nversion/code=4\n[preset.0.options]\na=1\n[preset.1]\nname="Windows"\n[preset.1.options]\nb=2\n'
+        self.assertIn('version/code=4', module.preset_sections(text, 'Android'))
+        self.assertNotIn('version/code', module.preset_sections(text, 'Windows'))
+        self.assertIsNone(module.preset_sections(text, 'macOS'))
+    def _require(self, *commits):
+        import subprocess
+        for c in commits:
+            if subprocess.run(['git', 'cat-file', '-e', c + '^{commit}'], cwd=module.ROOT, capture_output=True).returncode:
+                self.skipTest('history not available in this clone')
+    def test_tooling_only_changes_keep_earlier_packages_valid(self):
+        self._require('5660a2e', '0f639b7')
+        module.check_source_commit('windows', '5660a2e', '0f639b7')
+    def test_game_changes_require_a_new_export(self):
+        self._require('e5d106e', '5660a2e')
+        with self.assertRaisesRegex(ValueError, 'game files changed'):
+            module.check_source_commit('web', 'e5d106e', '5660a2e')

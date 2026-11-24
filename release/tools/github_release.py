@@ -21,6 +21,39 @@ def read(file):
 def git(*args):
     return subprocess.run(['git', *args], cwd=ROOT, check=True, capture_output=True, text=True).stdout.strip()
 
+# Packages may come from an earlier commit than the tag (e.g. desktop builds kept while
+# only the Android version code changed). They stay valid only if nothing that ships in
+# the game changed between their source commit and the tag commit.
+RUNTIME_PATHS = ['scripts', 'scenes', 'assets', 'audio', 'release/licenses', 'main.tscn', 'project.godot',
+                 'icon.svg', 'THIRD_PARTY_NOTICES.txt', 'release/audio-manifest.json', 'release/tools/generate_notices.gd']
+PRESET_NAMES = {'windows': 'Windows', 'linux': 'Linux', 'macos': 'macOS', 'web': 'Web', 'android-apk': 'Android'}
+
+def preset_sections(text, name):
+    """The [preset.N] and [preset.N.options] text of the export preset called `name`."""
+    blocks, current = {}, None
+    for line in text.splitlines():
+        if line.startswith('[preset.'):
+            current = line.strip()
+            blocks[current] = []
+        elif current:
+            blocks[current].append(line)
+    for header, lines in blocks.items():
+        if header.count('.') == 1 and f'name="{name}"' in lines:
+            return '\n'.join(blocks[header] + blocks.get(header[:-1] + '.options]', []))
+    return None
+
+def check_source_commit(target, source, tag_commit, root=ROOT):
+    if not source or source == tag_commit:
+        return
+    run = lambda *a: subprocess.run(['git', *a], cwd=root, capture_output=True, text=True)
+    if run('merge-base', '--is-ancestor', source, tag_commit).returncode != 0:
+        raise ValueError(f'{target} was built from {source[:7]}, which is not an ancestor of {tag_commit[:7]}')
+    if run('diff', '--quiet', source, tag_commit, '--', *RUNTIME_PATHS).returncode != 0:
+        raise ValueError(f'{target}: game files changed since its source commit {source[:7]}; re-export it')
+    old, new = (run('show', f'{c}:export_presets.cfg').stdout for c in (source, tag_commit))
+    if preset_sections(old, PRESET_NAMES[target]) != preset_sections(new, PRESET_NAMES[target]):
+        raise ValueError(f'{target}: its export preset changed since {source[:7]}; re-export it')
+
 def plan(root=ROOT):
     catalog = read(root/'release/catalog/game.json')
     version = catalog['version']
@@ -53,7 +86,9 @@ def plan(root=ROOT):
         with zipfile.ZipFile(file) as archive:
             if archive.testzip():
                 raise ValueError('Damaged ZIP/APK: '+relative)
-        assets.append({'target':target, 'path':relative, 'name':file.name, 'label':label, 'sha256':digest, 'size':file.stat().st_size})
+        check_source_commit(target, entry.get('source_commit'), manifest['repository_commit'], root)
+        assets.append({'target':target, 'path':relative, 'name':file.name, 'label':label, 'sha256':digest, 'size':file.stat().st_size,
+                       'source_commit':entry.get('source_commit')})
     if not assets:
         raise ValueError('No distributable builds')
     checksums = out/'SHA256SUMS'

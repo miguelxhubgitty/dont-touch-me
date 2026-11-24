@@ -7,14 +7,17 @@
 Open the existing `com.wandiel.donttouchme` record. Compare the SHA-256 of its **Upload key certificate** in App integrity with the authorized local key and the prior upload AAB signer. Play App Signing uses a separate app signing key for delivery to users. Stop before signing if the fingerprints differ or the key cannot be found. Keep credentials in private storage outside the repository and enter passwords only at the local prompt.
 
 ```powershell
-$uploadKey = Join-Path $env:USERPROFILE 'AppSigning\DontTouchMe\play-upload.p12'
+$uploadKey = Join-Path $env:USERPROFILE 'AppSigning\DontTouchMe\google-play-upload.p12'
 & "$env:JAVA_HOME\bin\keytool.exe" -list -v `
-  -keystore $uploadKey -alias donttouchme-upload
+  -keystore $uploadKey -storetype PKCS12
 ```
 
 Record the alias, certificate SHA-256 fingerprint, package ID, and account ownership in your private release records.
 
 ## Sign the existing bundle without rebuilding the game
+
+**0.1.1 and later:** run `pwsh -File release/tools/sign_android_upload.ps1` from the project folder. It lists the keystore aliases, signs a copy of `builds/v<version>/android/raw-android-aab/dont-touch-me-unsigned.aab` as `builds/v<version>/android/DontTouchMe-v<version>-vc<code>-google-play-upload.aab`, verifies the signature, and deletes the copy unless its certificate SHA-256 is the Play upload certificate `45:50:16:B1:…:3B:77` (verified 2026-11-24; the vc2/vc3 uploads used the same key, alias beginning `DONTTOUC`). Passwords are typed only at keytool/jarsigner prompts. The manual steps below remain valid.
+
 
 The existing `builds/android/dont-touch-me-unsigned.aab` is release-mode and non-debuggable, but has no upload signature. Copy it before signing so the audited unsigned original stays intact:
 
