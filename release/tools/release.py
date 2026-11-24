@@ -66,6 +66,20 @@ def macos_signing_defaults(text):
             text += f'\n[preset.{index}.options]\ncodesign/codesign=1\n'
     return text
 
+def macos_versions(text, catalog):
+    """Version only macOS presets. iOS uses the same key names but has its own approved build."""
+    for match in list(re.finditer(r'(?m)^\[preset\.(\d+)\]\s*$', text)):
+        index = match[1]
+        section = re.search(r'(?ms)^\[preset\.'+index+r'\]\n(.*?)(?=^\[|\Z)', text)
+        if not section or not re.search(r'(?m)^platform="macOS"$', section[1]):
+            continue
+        def update(options):
+            body = re.sub(r'(?m)^application/short_version="[^"]+"', f'application/short_version="{catalog["native_version"]}"', options[2])
+            body = re.sub(r'(?m)^application/version="[^"]+"', f'application/version="{catalog["macos_build_version"]}"', body)
+            return options[1] + body
+        text = re.sub(r'(?ms)(^\[preset\.'+index+r'\.options\]\n)(.*?)(?=^\[|\Z)', update, text)
+    return text
+
 def inspect_macos_zip(path):
     """Check bundle structure everywhere, and verify native signatures on macOS."""
     with zipfile.ZipFile(path) as archive:
@@ -293,8 +307,7 @@ def sync():
             index = len(re.findall(r'(?m)^\[preset\.\d+\]$', text))
             text += f'\n[preset.{index}]\nname="{name}"\nplatform="{target}"\n' + common + f'\n[preset.{index}.options]\n' + options
     # Ensure future syncs update existing macOS numeric versions too.
-    text = re.sub(r'(?m)^application/short_version="[^"]+"', f'application/short_version="{c["native_version"]}"', text)
-    text = re.sub(r'(?m)^application/version="[^"]+"', f'application/version="{c["macos_build_version"]}"', text)
+    text = macos_versions(text, c)
     check_android_presets(text, c)
     presets.write_text(audio_export_filters(macos_signing_defaults(text)), encoding='utf-8')
     print('Synchronized alpha metadata and six native/Web export presets; no images generated.')

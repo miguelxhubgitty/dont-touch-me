@@ -45,6 +45,9 @@ class IosPresetTests(unittest.TestCase):
         self.assertEqual(options['application/targeted_device_family'], '0', 'iPhone only')
         self.assertEqual(options['architectures/arm64'], 'true')
         self.assertEqual(options['icons/app_store_1024x1024'], '"res://assets/icon_ios.png"')
+        # Approved 0.1.1 iOS version and build (release/IOS_EXPORT.md); never the macOS build.
+        self.assertEqual(options['application/short_version'], '"0.1.1"')
+        self.assertEqual(options['application/version'], '"2"')
 
     def test_production_preset_keeps_preview_orientation_and_content(self):
         presets = ios_presets()
@@ -52,7 +55,9 @@ class IosPresetTests(unittest.TestCase):
         production, production_options = presets['iOS']
         for key in ('custom_features', 'export_filter', 'include_filter', 'exclude_filter', 'script_export_mode'):
             self.assertEqual(production[key], preview[key], key)
-        ignored = {'application/bundle_identifier', 'application/min_ios_version'}
+        # Version and build are release metadata of the production preset only.
+        ignored = {'application/bundle_identifier', 'application/min_ios_version',
+                   'application/short_version', 'application/version'}
         self.assertEqual({k: v for k, v in production_options.items() if k not in ignored},
                          {k: v for k, v in preview_options.items() if k not in ignored})
 

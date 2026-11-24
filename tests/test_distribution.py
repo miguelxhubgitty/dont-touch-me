@@ -24,7 +24,7 @@ class CatalogTests(unittest.TestCase):
 
     def test_android_identity_and_version_are_independent_of_apple(self):
         self.assertEqual(self.catalog['application_id'], 'com.littlebutterflyproductions.donttouchme')
-        self.assertEqual(self.catalog['macos_build_version'], 2)
+        self.assertEqual(self.catalog['macos_build_version'], 3)
         presets = (ROOT / 'export_presets.cfg').read_text()
         dist.check_android_presets(presets, self.catalog)
         for old in (presets.replace('com.wandiel.donttouchme', self.catalog['application_id'], 1),
@@ -40,6 +40,12 @@ class CatalogTests(unittest.TestCase):
             changed = {**self.catalog, field: bad}
             with self.subTest(field=field), self.assertRaisesRegex(ValueError, message):
                 dist.check_catalog(changed, self.registry)
+    def test_macos_versions_leave_ios_build_alone(self):
+        text = ('[preset.0]\nplatform="iOS"\n[preset.0.options]\napplication/short_version="0.1.1"\napplication/version="2"\n'
+                '[preset.1]\nplatform="macOS"\n[preset.1.options]\napplication/short_version="0.1.0"\napplication/version="2"\n')
+        result = dist.macos_versions(text, {'native_version': '0.1.1', 'macos_build_version': 3})
+        self.assertIn('[preset.0.options]\napplication/short_version="0.1.1"\napplication/version="2"\n', result)
+        self.assertIn('[preset.1.options]\napplication/short_version="0.1.1"\napplication/version="3"\n', result)
     def test_monetization_rejected(self):
         self.catalog['pricing']['payments']=True
         with self.assertRaises(ValueError): dist.check_catalog(self.catalog,self.registry)

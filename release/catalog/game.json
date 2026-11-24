@@ -1,13 +1,13 @@
 {
   "schema_version": 1,
-  "version": "0.1.0-alpha",
+  "version": "0.1.1",
   "phase": "Public Alpha",
   "engine": "4.7.2.stable",
   "android_application_id": "com.wandiel.donttouchme",
   "android_version_code": 4,
-  "macos_build_version": 2,
-  "native_version": "0.1.0",
-  "windows_version": "0.1.0.0",
+  "macos_build_version": 3,
+  "native_version": "0.1.1",
+  "windows_version": "0.1.1.0",
   "application_id": "com.littlebutterflyproductions.donttouchme",
   "pricing": {
     "model": "free",
