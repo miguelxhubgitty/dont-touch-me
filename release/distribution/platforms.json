@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "shared_catalog": "release/catalog/game.json",
-  "policy": "Record only verified publications. itch.io, Game Jolt and GitHub Releases carry the published v0.1.0-alpha (see release/distribution/manifest-v0.1.0-alpha.json). Every other destination is unpublished. Never infer publication from a local build, source push, upload or store record. Publication updates require a verified live URL/version/date and owner authorization.",
+  "policy": "Record only verified publications. v0.1.0-alpha is live on GitHub Releases, itch.io, Game Jolt, Google Play, the Amazon Appstore and the Microsoft Store (two listings). Every other destination is unpublished or unverified. Never infer publication from a local build, source push, upload or store record. Publication updates require a verified live URL/version/date and owner authorization.",
   "platforms": [
     {
       "id": "itch",
@@ -960,15 +960,20 @@
       "requirements_checked": "2026-10-31",
       "console_review_required": true,
       "publication": {
-        "status": "not_published",
-        "live_url": null,
-        "last_successfully_published_version": null,
-        "pending_submission": {
-          "application_id": "com.wandiel.donttouchme",
-          "last_known_version_code": 3,
-          "status": "Existing Play app; live track status and highest version code unverified",
-          "note": "Verify the highest code in Play Console App bundle explorer before choosing the 0.1.1 code. See release/ANDROID_IDENTITY.md."
-        }
+        "status": "published",
+        "live_url": "https://play.google.com/store/apps/details?id=com.wandiel.donttouchme",
+        "last_successfully_published_version": "v0.1.0-alpha",
+        "publication_date": "2026-11-12",
+        "application_id": "com.wandiel.donttouchme",
+        "version_code": 3,
+        "track": "production",
+        "uploaded_version_codes": [
+          2,
+          3
+        ],
+        "next_version_code": 4,
+        "upload_certificate_sha256": "45:50:16:B1:96:F4:A6:4E:4F:A1:01:4E:91:FA:34:68:3D:73:2A:F5:B6:F8:92:68:1C:19:FB:04:1E:41:3B:77",
+        "evidence": "Verified read-only in the owner's signed-in consoles and public store pages on 2026-11-24. App bundle explorer lists only codes 2 (inactive) and 3 (active); the upload key certificate matches the local vc2/vc3 upload AAB signer."
       },
       "required_assets": [
         "assets.branding",
@@ -1150,9 +1155,27 @@
       "requirements_checked": "2026-11-03",
       "console_review_required": true,
       "publication": {
-        "status": "not_published",
-        "live_url": null,
-        "last_successfully_published_version": null
+        "status": "published",
+        "live_url": "https://apps.microsoft.com/detail/9NFJ9ZTZVBVP",
+        "last_successfully_published_version": "v0.1.0-alpha",
+        "publication_date": "2026-11-14",
+        "update_listing": {
+          "store_id": "9NFJ9ZTZVBVP",
+          "type": "MSIX or PWA game",
+          "identity_name": "WANDIEL.240274D89DCE5",
+          "publisher": "CN=8CE35EED-B749-46EF-8167-D1A15D2D0476",
+          "publisher_display_name": "WANDIEL",
+          "package_family_name": "WANDIEL.240274D89DCE5_xdctdev522pxj",
+          "live_package": "DontTouchMe-v0.1.0-alpha-x64.msix (0.1.0.0, x64, Windows.Desktop 10.0.19041.0+)"
+        },
+        "other_live_listing": {
+          "store_id": "9NFKZSQVSRG1",
+          "type": "MSIX or PWA app",
+          "live_since": "2026-11-07",
+          "identity_name": "WANDIEL.50808B05906ED",
+          "note": "Owner decision 2026-11-24: leave untouched; future updates go to 9NFJ9ZTZVBVP."
+        },
+        "evidence": "Verified read-only in the owner's signed-in consoles and public store pages on 2026-11-24."
       },
       "required_assets": [
         "assets.branding",
@@ -1327,9 +1350,12 @@
       "requirements_checked": "2026-10-31",
       "console_review_required": true,
       "publication": {
-        "status": "not_published",
-        "live_url": null,
-        "last_successfully_published_version": null
+        "status": "published",
+        "live_url": "https://www.amazon.com/gp/product/B0HRJWC1BS",
+        "last_successfully_published_version": "v0.1.0-alpha",
+        "publication_date": "2026-11-15",
+        "asin": "B0HRJWC1BS",
+        "evidence": "Verified read-only in the owner's signed-in consoles and public store pages on 2026-11-24. Amazon.com lists version 0.1.0-alpha, first listed November 15, 2026; Fire devices only."
       },
       "required_assets": [
         "assets.branding",

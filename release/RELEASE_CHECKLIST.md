@@ -9,8 +9,10 @@ Approved by the owner on 2026-11-23. This file is the plan; it changes no versio
 | GitHub Releases, itch.io, Game Jolt | **Published** | `v0.1.0-alpha` (frozen, audio-free). See [the Alpha manifest](distribution/manifest-v0.1.0-alpha.json). |
 | Playgama | Public sandbox of a separate adapter build | `v0.1.0-alpha` |
 | Apple App Store | **Not published.** App Store Connect record `0.1.0` and TestFlight build `0.1.0 (1)` exist. | Preserve unchanged |
-| Google Play (`com.wandiel.donttouchme`) | Existing app with a code-3 `0.1.0-alpha` upload. Live track status and highest code unverified. | Verify in Play Console |
-| Microsoft Store and all other destinations | Not submitted | — |
+| Google Play (`com.wandiel.donttouchme`) | **Published** (production, code 3, Nov 12 2026). Only codes 2 and 3 exist; **0.1.1 uses code 4**. Upload certificate verified 2026-11-24. | `v0.1.0-alpha` |
+| Amazon Appstore (ASIN `B0HRJWC1BS`) | **Published** (first listed Nov 15 2026, Fire devices). | `v0.1.0-alpha` |
+| Microsoft Store | **Published**, two listings: Game `9NFJ9ZTZVBVP` (live Nov 14 2026; **receives future updates**) and App `9NFKZSQVSRG1` (live Nov 7 2026; leave untouched). | `0.1.0.0` MSIX |
+| Samsung Galaxy Store and all other destinations | Not published or unverified (Samsung console not signed in) | — |
 
 Live status is recorded only in [platforms.json](distribution/platforms.json), and only with a verified URL, version and date. A build, tag, upload or store record is not a publication.
 
@@ -33,9 +35,9 @@ Not included: PR #20 (sound candidates), PR #46 (frozen-Alpha iPhone wrapper), a
 | All (`project.godot`, release catalog) | `0.1.1` | — | |
 | iOS | `0.1.1` | `2` | A new App Store Connect version. Never alter the 0.1.0 record or TestFlight build. |
 | macOS | `0.1.1` | `3` | Unsigned and not notarized; label it clearly, as for the Alpha. The preset must be restored on the release branch. |
-| Android | `0.1.1` | Highest Play Console code + 1 (at least 4) | Verify the highest code in App bundle explorer before building. |
+| Android | `0.1.1` | `4` | Verified 2026-11-24: Play has only codes 2 and 3. |
 | Windows | `0.1.1.0` | — | Unsigned; label it. |
-| Microsoft MSIX | `0.1.1.0` | — | Built from the same verified Windows export. |
+| Microsoft MSIX | `0.1.1.0` | — | Built from the same verified Windows export, with the Game listing identity `WANDIEL.240274D89DCE5` / `CN=8CE35EED-B749-46EF-8167-D1A15D2D0476`. |
 | Web, Linux | `v0.1.1` | — | Release and file names only; no version field. The presets must be restored on the release branch. |
 
 Application identifiers stay unchanged. The Alpha's sideloaded APK used `com.littlebutterflyproductions.donttouchme`; 0.1.1 uses the Play ID, so it cannot upgrade that APK in place. The release notes must say so.
