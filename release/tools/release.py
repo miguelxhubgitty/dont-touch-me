@@ -23,7 +23,9 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[2]
 CATALOG = ROOT / 'release/catalog/game.json'
 REGISTRY = ROOT / 'release/distribution/platforms.json'
-TEXT = {'.gd', '.tres', '.tscn', '.godot', '.cfg', '.json', '.md', '.txt', '.import', '.uid'}
+# Must cover every extension the inventory hashes as utf8-lf (Android XML included),
+# or a Windows CRLF checkout hashes differently from verify_inventory.ps1.
+TEXT = {'.gd', '.tres', '.tscn', '.godot', '.cfg', '.json', '.md', '.txt', '.import', '.uid', '.xml'}
 TARGETS = {
     'windows': ('Windows', 'windows_release_x86_64.exe', 'DontTouchMe.exe', False),
     'web': ('Web', 'web_nothreads_release.zip', 'index.html', False),

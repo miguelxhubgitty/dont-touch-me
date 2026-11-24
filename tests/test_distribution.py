@@ -66,6 +66,14 @@ class CatalogTests(unittest.TestCase):
     def test_invalid_version_rejected(self):
         self.catalog['version']='../../outside'
         with self.assertRaises(ValueError): dist.check_catalog(self.catalog,self.registry)
+    def test_inventory_text_hashes_ignore_checkout_line_endings(self):
+        inventory = dist.load(ROOT/'release/assets-inventory.json')
+        for suffix in {Path(e['file']).suffix.lower() for e in inventory['files'] if e['hash_mode']=='utf8-lf'}:
+            self.assertIn(suffix, dist.TEXT, 'utf8-lf inventory extension not normalized: '+suffix)
+        with tempfile.TemporaryDirectory() as folder:
+            lf, crlf = Path(folder)/'a.xml', Path(folder)/'b.xml'
+            lf.write_bytes(b'<a>\n<b/>\n</a>\n'); crlf.write_bytes(b'<a>\r\n<b/>\r\n</a>\r\n')
+            self.assertEqual(dist.sha(lf, True), dist.sha(crlf, True))
 
 class PackagingTests(unittest.TestCase):
     def setUp(self):
