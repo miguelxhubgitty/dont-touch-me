@@ -672,7 +672,7 @@ def main():
     parser.add_argument('--approval',default='')
     parser.add_argument('--expected-tag-commit',default='')
     parser.add_argument('--godot',default=os.environ.get('GODOT'))
-    parser.add_argument('--targets',nargs='+',choices=list(TARGETS),default=list(TARGETS))
+    parser.add_argument('--targets',nargs='+',choices=list(TARGETS),default=None,help='limit export/package to these targets (default: all)')
     args=parser.parse_args()
     require_release()
     if args.command=='github-release':
@@ -683,12 +683,12 @@ def main():
     if args.command=='doctor': print(json.dumps(release.doctor(),indent=2))
     elif args.command=='finalize-assets': release.finalize_assets()
     elif args.command=='validate': release.validate()
-    elif args.command=='export': release.export(args.targets)
-    elif args.command=='package': release.package(args.targets if '--targets' in sys.argv else None)
+    elif args.command=='export': release.export(args.targets or list(TARGETS))
+    elif args.command=='package': release.package(args.targets)
     elif args.command=='web-test': release.web_test()
     elif args.command=='report': release.report()
     elif args.command=='prepare':
-        release.validate(); release.export(args.targets); release.package(); release.report()
+        release.validate(); release.export(args.targets or list(TARGETS)); release.package(args.targets); release.report()
     elif args.command=='verify':
         for line in (release.out/'SHA256SUMS').read_text().splitlines():
             digest,relative=line.split('  ',1)
