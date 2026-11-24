@@ -297,7 +297,7 @@ func _draw() -> void:
 	visual.show()
 	if intro_alpha > 0:
 		_text_center("a little personal space, please.", Vector2(last_size.x*.5,last_size.y*.25),23,Color(MUTED,intro_alpha))
-		_text_center("Don't Touch Me", Vector2(last_size.x*.5,last_size.y*.25-42),40,Color(INK,intro_alpha))
+		_text_center("Don't Touch Me", Vector2(last_size.x*.5,last_size.y*.25-42),40,Color(INK,intro_alpha),self,true)
 		_text_center("(especially the little one)",Vector2(last_size.x*.5,last_size.y*.84),19,Color(MUTED,intro_alpha*.8))
 	var height := maxf(0, anchor.y-body_position.y)
 	_ellipse(Vector2(body_position.x,anchor.y+5),Vector2(111-minf(height*.2,45),13),Color(.35,.31,.24,.075))
