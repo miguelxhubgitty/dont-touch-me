@@ -41,8 +41,12 @@ func initialize() -> void:
 	panel.visibility_changed.connect(_panel_visibility_changed)
 
 	settings_menu = VBoxContainer.new()
+	# Every screen matches the slider width, so the card keeps one size between screens.
+	settings_menu.custom_minimum_size.x = 292
 	panel.add_child(settings_menu)
 	volume_menu = VBoxContainer.new()
+	# Each label sits on its own slider; the theme's label margin separates the groups.
+	volume_menu.add_theme_constant_override("separation", -6)
 	panel.add_child(volume_menu)
 	volume_menu.hide()
 	_add_menu_button(settings_menu, "Volume", _show_menu.bind(volume_menu))
@@ -67,9 +71,14 @@ func initialize() -> void:
 		slider.gui_input.connect(_slider_touch.bind(slider))
 		volume_menu.add_child(slider)
 		sliders[bus] = slider
+	var back_gap := Control.new()
+	back_gap.custom_minimum_size.y = 18
+	back_gap.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	volume_menu.add_child(back_gap)
 	_add_menu_button(volume_menu, "Back", _show_menu.bind(settings_menu))
 	if _supports_manual_orientation():
 		orientation_menu = VBoxContainer.new()
+		orientation_menu.custom_minimum_size.x = 292
 		panel.add_child(orientation_menu)
 		orientation_menu.hide()
 		_add_menu_button(settings_menu, "Orientation", _show_menu.bind(orientation_menu))
